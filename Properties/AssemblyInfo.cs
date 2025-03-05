@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("neo-act-plugin")]
-[assembly: AssemblyCopyright("Copyright ©  2025")]
+[assembly: AssemblyCopyright("Copyright ©  2025 Aymane D. Hlamnach")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
