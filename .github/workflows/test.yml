@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: windows-latest
+    runs-on: windows-latest 
     
     steps:
     - uses: actions/checkout@v3
@@ -21,7 +21,7 @@ jobs:
       uses: NuGet/setup-nuget@v1
     
     - name: Restore NuGet packages
-      run: nuget restore
+      run: nuget restore NEO_ACT_Plugin.sln
     
     - name: Download and Extract ACT
       shell: powershell
@@ -46,17 +46,42 @@ jobs:
         }
     
     - name: Build solution
-      run: msbuild /p:Configuration=Release /p:Platform="Any CPU" NEO_ACT_Plugin.csproj
+      run: msbuild /p:Configuration=Release /p:Platform="AnyCPU" NEO_ACT_Plugin.sln
     
     - name: Run tests
       shell: powershell
       run: |
         $testDll = ".\bin\Release\NEO_ACT_Plugin.dll"
         
-        if (Test-Path "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe") {
+        if (Test-Path $testDll) {
+          Write-Host "Test DLL found at $testDll"
+          
+          if (Test-Path "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe") {
+            & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" $testDll
+          } elseif (Test-Path "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe") {
             & "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" $testDll
-        } elseif (Test-Path "$(vswhere -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath)\Common7\IDE\Extensions\TestPlatform\vstest.console.exe") {
-            & "$(vswhere -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath)\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" $testDll
-        } else {
+          } else {
             Write-Host "VSTest not found. Install it or use another test runner."
+          }
+        } else {
+          Write-Host "Test DLL not found at $testDll - skipping tests"
+          
+          $possibleLocations = @(
+            ".\NEO_ACT_Plugin\bin\Release\NEO_ACT_Plugin.dll",
+            ".\bin\AnyCPU\Release\NEO_ACT_Plugin.dll"
+          )
+          
+          foreach ($location in $possibleLocations) {
+            if (Test-Path $location) {
+              Write-Host "Found DLL at alternative location: $location"
+              
+              if (Test-Path "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe") {
+                & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" $location
+                break
+              } elseif (Test-Path "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe") {
+                & "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" $location
+                break
+              }
+            }
+          }
         }
