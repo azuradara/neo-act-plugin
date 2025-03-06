@@ -14,6 +14,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1.3
+
     - name: Download ACT Bundle
       run: |
         $url = "https://advancedcombattracker.com/download.php?id=57"
