@@ -1,0 +1,34 @@
+# Blade & Soul NEO: ACT Plugin
+
+This is a POC [ACT](https://advancedcombattracker.com/home.php) plugin for BnS NEO.
+
+> [!WARNING]  
+> This plugin connects to the game's memory to read combat log data, this is very much against the game's EULA. I am not sure whether the Anti-cheat detects memory reads, but, if it makes you feel better - I am using this personally on my main account.
+
+## Usage
+
+### Installation
+
+1. Download the latest `.cs` file from [Releases](https://github.com/azuradara/neo-act-plugin/releases).
+2. Run ACT as an administrator, otherwise the plugin will not be able to access your game's memory.
+3. Go to the "Plugins" tab and click the "Browse" button then locate the file you just downloaded and click OK.
+4. Enable the plugin and run BnS.
+
+### Adding overlays
+
+This plugin is only responsible for parsing combat logs to a form that ACT can understand, if you want an overlay over your game you will have to install other plugins on top of this one. Here's a quick walkthrough of how to install "Ember" (The only overlay I tested).
+
+1. Open ACT and go to the "Plugins" tab.
+2. Click "Get Plugins..." on the right and pick "Overlay Plugin" then click "Download and Enable".
+3. Once finished, click the "OverlayPlugin.dll" tab and click "New" on the left.
+4. Pick "Ember Overlay" from the Preset dropdown and then give it any name you'd like.
+5. That's all, just move the overlay or customize it.
+
+There are tons of overlay configuration videos on YouTube - mostly related to FFXIV - but it's the same principal, overlays should be mostly game-agnostic.
+
+## Limitations
+
+- This is a POC - it works fine but it's missing support for a lot of features provided by ACT (e.g. blocks, buffs, debuffs, etc..)
+- Zone names are not provided in the combat log, so all logs are combined into a single zone on ACT.
+- This will break every time NC updates the .exe, which means you will have to wait a while until I (or a benevolent soul) update the offsets.
+- It works on my machine.
