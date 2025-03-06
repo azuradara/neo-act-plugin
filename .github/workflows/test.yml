@@ -18,11 +18,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup .NET 6.x
+    - name: Setup .NET 4.8.1
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: |
-          6.0.x
+          4.8.1
 
     - name: Cache NuGet packages
       uses: actions/cache@v3
