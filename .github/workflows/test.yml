@@ -29,12 +29,3 @@ jobs:
         vstest.console.exe \
         "NEO_ACT_Plugin.Test\bin\Release\net481\NEO_ACT_Plugin.Test.dll" \
         /logger:trx
-      
-    - name: Upload test results
-      uses: actions/upload-artifact@v3
-      if: always()
-      with:
-        name: TestResults
-        path: |
-          *.trx
-          TestResults/
