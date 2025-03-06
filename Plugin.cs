@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 
 namespace neo_act_plugin
 {
-    #region ACT Plugin Code
     public class Plugin : UserControl, Advanced_Combat_Tracker.IActPluginV1
     {
         #region Designer Created Code (Avoid editing)
@@ -102,7 +101,6 @@ namespace neo_act_plugin
         private static System.Windows.Forms.ListBox lstMessages;
         private System.Windows.Forms.Button cmdClearMessages;
         private System.Windows.Forms.Button cmdCopyProblematic;
-
         #endregion Designer Created Code (Avoid editing)
 
         public Plugin()
@@ -151,7 +149,7 @@ namespace neo_act_plugin
                 Advanced_Combat_Tracker.ActGlobals.oFormActMain.BeforeLogLineRead += LogParse.BeforeLogLineRead;
 
                 // Hard-code zone name
-                Advanced_Combat_Tracker.ActGlobals.oFormActMain.ChangeZone("Blade and Soul");
+                Advanced_Combat_Tracker.ActGlobals.oFormActMain.ChangeZone("Blade & Soul");
 
                 // Initialize logging thread
                 LogWriter.Initialize();
@@ -167,11 +165,10 @@ namespace neo_act_plugin
 
         public void DeInitPlugin()
         {
-            // remove event handler
+            LogWriter.Uninitialize();
+
             Advanced_Combat_Tracker.ActGlobals.oFormActMain.UpdateCheckClicked -= this.UpdateCheckClicked;
             Advanced_Combat_Tracker.ActGlobals.oFormActMain.BeforeLogLineRead -= LogParse.BeforeLogLineRead;
-
-            LogWriter.Uninitialize();
 
             if (lblStatus != null)
             {
@@ -183,30 +180,7 @@ namespace neo_act_plugin
 
         public void UpdateCheckClicked()
         {
-            /*
-            try
-            {
-                DateTime localDate = Advanced_Combat_Tracker.ActGlobals.oFormActMain.PluginGetSelfDateUtc(this);
-                DateTime remoteDate = Advanced_Combat_Tracker.ActGlobals.oFormActMain.PluginGetRemoteDateUtc(m_PluginId);
-                if (localDate.AddHours(2) < remoteDate)
-                {
-                    DialogResult result = MessageBox.Show("There is an updated version of the BnS Parsing Plugin.  Update it now?\n\n(If there is an update to ACT, you should click No and update ACT first.)", "New Version", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (result == DialogResult.Yes)
-                    {
-                        Advanced_Combat_Tracker.ActPluginData pluginData = Advanced_Combat_Tracker.ActGlobals.oFormActMain.PluginGetSelfData(this);
-                        System.IO.FileInfo updatedFile = Advanced_Combat_Tracker.ActGlobals.oFormActMain.PluginDownload(m_PluginId);
-                        pluginData.pluginFile.Delete();
-                        updatedFile.MoveTo(pluginData.pluginFile.FullName);
-                        Advanced_Combat_Tracker.ThreadInvokes.CheckboxSetChecked(Advanced_Combat_Tracker.ActGlobals.oFormActMain, pluginData.cbEnabled, false);
-                        Application.DoEvents();
-                        Advanced_Combat_Tracker.ThreadInvokes.CheckboxSetChecked(Advanced_Combat_Tracker.ActGlobals.oFormActMain, pluginData.cbEnabled, true);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Advanced_Combat_Tracker.ActGlobals.oFormActMain.WriteExceptionLog(ex, "BnS Plugin Update Check.");
-            }*/
+
         }
 
         private void UpdateACTTables()
@@ -217,7 +191,7 @@ namespace neo_act_plugin
 
         public static void LogParserMessage(string message)
         {
-            if (lstMessages != null)
+            if (lstMessages != null && !lstMessages.IsDisposed)
                 lstMessages.Invoke(new Action(() => lstMessages.Items.Add(message)));
         }
 
@@ -236,9 +210,6 @@ namespace neo_act_plugin
                 System.Windows.Forms.Clipboard.SetText(sb.ToString());
         }
     }
-    #endregion ACT Plugin Code
-
-    #region Memory Scanning code
 
     public static class LogWriter
     {
@@ -310,14 +281,18 @@ namespace neo_act_plugin
 
                     foreach (var result in reader.Read())
                     {
+                        if (_stopRequested)
+                        {
+                            break;
+                        }
+
                         var message = string.Format("{0}|{1}", DateTime.Now.ToString("HH:mm:ss.fff"), result);
                         File.AppendAllText(_logFilePath, message);
                         Plugin.LogParserMessage(message);
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
-                    LogError("LogWriter.WorkerMain", ex);
                     System.Threading.Thread.Sleep(1000);
                 }
             }
@@ -326,7 +301,6 @@ namespace neo_act_plugin
 
         private static void LogError(string context, Exception ex)
         {
-            Plugin.LogParserMessage("hii err" + ex.ToString());
             try
             {
                 string errorMessage = string.Format("{0}|Error [{1}] {2}", DateTime.Now.ToString("HH:mm:ss.fff"), context, ex.ToString());
@@ -336,10 +310,6 @@ namespace neo_act_plugin
             catch { /* Prevent logging failures from crashing thread */ }
         }
     }
-
-    #endregion Memory Scanning code
-
-    #region Parser Code
 
     public static class LogParse
     {
@@ -370,18 +340,18 @@ namespace neo_act_plugin
 
             try
             {
-                if (message == null)
-                    return ret;
-                if (message.IndexOf('|') > 0)
-                {
-                    if (!DateTime.TryParse(message.Substring(0, message.IndexOf('|')), out ret))
-                        return DateTime.MinValue;
+                if (message == null) return ret;
 
-                }
-                else if (message.IndexOf(' ') > 5)
+                if (message.Contains("|"))
                 {
-                    if (!DateTime.TryParse(message.Substring(0, message.IndexOf(' ')), out ret))
+                    int pipeIndex = message.IndexOf('|');
+                    string timestampPart = message.Substring(0, pipeIndex);
+                    if (!DateTime.TryParse(timestampPart, out ret))
+                    {
+
+                        Plugin.LogParserMessage("Failed to parse timestamp");
                         return DateTime.MinValue;
+                    }
                 }
             }
             catch (Exception ex)
@@ -394,34 +364,21 @@ namespace neo_act_plugin
         public static void BeforeLogLineRead(bool isImport, Advanced_Combat_Tracker.LogLineEventArgs logInfo)
         {
             string logLine = logInfo.logLine;
+            Plugin.LogParserMessage("BeforeLogLineRead: " + logLine);
 
             if (_ACT == null)
                 throw new ApplicationException("ACT Wrapper not initialized.");
 
             try
             {
-                // parse datetime
                 DateTime timestamp = ParseLogDateTime(logLine);
-                int chatLogType = 0;
-                if (logLine.IndexOf('|') > 5)
+                if (logLine.Contains("|"))
                 {
-                    logLine = logLine.Substring(logLine.IndexOf('|') + 1);
-                    if (logLine.IndexOf('|') > 0)
-                    {
-                        chatLogType = Convert.ToInt32(logLine.Substring(0, logLine.IndexOf('|')), 16);
-                        logLine = logLine.Substring(logLine.IndexOf('|') + 1);
-                    }
+                    int pipeIndex = logLine.IndexOf('|');
+                    logLine = logLine.Substring(pipeIndex + 1);
                 }
-                else if (logLine.IndexOf(' ') > 5)
-                    logLine = logLine.Substring(logLine.IndexOf(' '));
 
-                // reformat logline
-                logInfo.logLine = "[" + timestamp.ToString("HH:mm:ss.fff") + "] " + logLine;
-                // timestamp = DateTime.ParseExact(logLine.Substring(1, logLine.IndexOf(']') - 1), "HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture);
-
-                // Exclude certain chat codes
-                if (chatLogType == 0x0c) // 0x0c = NPC talking, not parsed.
-                    return;
+                logInfo.logLine = string.Format("[{0:HH:mm:ss.fff}] {1}", timestamp, logLine);
 
                 Match m;
 
@@ -643,10 +600,6 @@ namespace neo_act_plugin
         }
     }
 
-    #endregion Parser Code
-
-    #region Advanced Combat Tracker abstraction
-
     public interface IACTWrapper
     {
         bool SetEncounter(DateTime Time, string Attacker, string Victim);
@@ -679,8 +632,6 @@ namespace neo_act_plugin
             return Advanced_Combat_Tracker.ActGlobals.oFormActMain.SetEncounter(Time, Attacker, Victim);
         }
     }
-
-    #endregion Advanced Combat Tracker abstraction
 
     class Reader
     {
