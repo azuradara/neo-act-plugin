@@ -712,7 +712,7 @@ namespace neo_act_plugin
 
         private byte[] ReadMemory(IntPtr address, int size)
         {
-            IntPtr processHandle = OpenProcess(ProcessAccessFlags.PROCESS_VM_READ | ProcessAccessFlags.PROCESS_QUERY_INFORMATION, false, _pid);
+            IntPtr processHandle = OpenProcess(ProcessAccessFlags.PROCESS_VM_READ, false, _pid);
             if (processHandle == IntPtr.Zero)
                 return null;
 
@@ -721,6 +721,7 @@ namespace neo_act_plugin
                 var buffer = new byte[size];
                 int bytesRead;
                 bool success = ReadProcessMemory(processHandle, address, buffer, size, out bytesRead);
+
                 return success && bytesRead == size ? buffer : null;
             }
             finally
