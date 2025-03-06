@@ -35,6 +35,11 @@ This plugin is only responsible for parsing combat logs to a form that ACT can u
 
 There are tons of overlay configuration videos on YouTube - mostly related to FFXIV - but it's the same principal, overlays should be mostly game-agnostic.
 
+### Troubleshooting
+
+- The parser does not read DPS and/or reads logs from a different chat (e.g. faction chat).
+  - Fix: Click "Chat Tab Options" (the cog icon on the left of ur chat tabs) > Reset > All Settings. This is because the plugin reads from the default combat chat tab and does not support custom ones.
+
 ## Limitations
 
 - This is a POC - it works fine but it's missing support for a lot of features provided by ACT (e.g. blocks, buffs, debuffs, etc..)
