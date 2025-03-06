@@ -1,45 +1,62 @@
-name: Test
+name: .NET Framework Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
-  build:
+  build-and-test:
     runs-on: windows-latest
+    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
+    - uses: actions/checkout@v3
+    
     - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1.3
-
-    - name: Download ACT Bundle
+      uses: microsoft/setup-msbuild@v1.1
+    
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1
+    
+    - name: Restore NuGet packages
+      run: nuget restore
+    
+    - name: Download and Extract ACT
+      shell: powershell
       run: |
         $url = "https://advancedcombattracker.com/download.php?id=57"
-        Invoke-WebRequest -Uri $url -OutFile ACT-Bundle.zip
-
-    - name: Extract ACT Files
+        $outputPath = "$env:TEMP\ACT.zip"
+        
+        Invoke-WebRequest -Uri $url -OutFile $outputPath
+        
+        $actTargetDir = "C:\Program Files (x86)\Advanced Combat Tracker"
+        if (-not (Test-Path $actTargetDir)) {
+            New-Item -ItemType Directory -Path $actTargetDir -Force
+        }
+        
+        Expand-Archive -Path $outputPath -DestinationPath $actTargetDir -Force
+        
+        Get-ChildItem -Path $actTargetDir
+        
+        if (-not (Test-Path "$actTargetDir\Advanced Combat Tracker.exe")) {
+            Write-Error "Advanced Combat Tracker.exe not found at $actTargetDir\Advanced Combat Tracker.exe"
+            exit 1
+        }
+    
+    - name: Build solution
+      run: msbuild /p:Configuration=Release /p:Platform="Any CPU" NEO_ACT_Plugin.csproj
+    
+    - name: Run tests
+      shell: powershell
       run: |
-        Expand-Archive -Path ACT-Bundle.zip -DestinationPath "C:\Program Files (x86)\Advanced Combat Tracker\"
-        dir "C:\Program Files (x86)\Advanced Combat Tracker"
-
-    - name: Setup Build Environment
-      run: |
-        echo "C:\Program Files (x86)\Advanced Combat Tracker\" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-        echo "C:\Program Files (x86)\Advanced Combat Tracker\" > referencepath.txt
-
-    - name: Install .NET Framework 4.8.1 Targeting Pack
-      run: |
-        choco install netfx-4.8.1-devpack -y
-
-    - name: Build Solution
-      run: |
-        nuget restore NEO_ACT_Plugin.sln
-        msbuild NEO_ACT_Plugin.sln /p:Configuration=Release /p:Platform="Any CPU" /p:ReferencePath="C:\Program Files (x86)\Advanced Combat Tracker\"
-
-    - name: Run Tests
-      run: |
-        vstest.console.exe "NEO_ACT_Plugin.Test\bin\Release\NEO_ACT_Plugin.Test.dll"
+        $testDll = ".\bin\Release\NEO_ACT_Plugin.dll"
+        
+        if (Test-Path "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe") {
+            & "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" $testDll
+        } elseif (Test-Path "$(vswhere -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath)\Common7\IDE\Extensions\TestPlatform\vstest.console.exe") {
+            & "$(vswhere -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath)\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" $testDll
+        } else {
+            Write-Host "VSTest not found. Install it or use another test runner."
+        }
