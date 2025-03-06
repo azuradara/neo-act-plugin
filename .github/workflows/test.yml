@@ -14,20 +14,28 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Download ACT
+    - name: Create ACT directory
+      run: |
+        $actPath = "C:\Program Files (x86)\Advanced Combat Tracker"
+        New-Item -Path $actPath -ItemType Directory -Force
+
+    - name: Download and extract ACT
       run: |
         $downloadUrl = "https://advancedcombattracker.com/download.php?id=57"
-        Invoke-WebRequest -Uri $downloadUrl -OutFile "ACT-Installer.exe"
+        Invoke-WebRequest -Uri $downloadUrl -OutFile ACT-Installer.exe
+        
+        # Use 7-Zip to extract the installer
+        & "$env:ProgramFiles\7-Zip\7z.exe" x ACT-Installer.exe -o"C:\Program Files (x86)\Advanced Combat Tracker"
 
-    - name: Install ACT
+    - name: Add assembly reference
       run: |
-        mkdir C:\ACT
-        .\ACT-Installer.exe /S /D=C:\ACT
+        Add-Type -Path "C:\Program Files (x86)\Advanced Combat Tracker\Advanced Combat Tracker.exe"
+        echo "C:\Program Files (x86)\Advanced Combat Tracker" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
     - name: Build solution
       run: |
         nuget restore NEO_ACT_Plugin.sln
-        msbuild NEO_ACT_Plugin.sln /p:Configuration=Release /p:Platform="Any CPU" /p:ReferencePath="C:\ACT"
+        msbuild NEO_ACT_Plugin.sln /p:Configuration=Release /p:Platform="Any CPU" /p:ReferencePath="C:\Program Files (x86)\Advanced Combat Tracker"
 
     - name: Run tests
       run: |
