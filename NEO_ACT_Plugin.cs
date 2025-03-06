@@ -9,9 +9,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace neo_act_plugin
+namespace NEO_ACT_Plugin
 {
-    public class Plugin : UserControl, Advanced_Combat_Tracker.IActPluginV1
+    public class NEO_ACT_Plugin : UserControl, Advanced_Combat_Tracker.IActPluginV1
     {
         #region Designer Created Code (Avoid editing)
         /// <summary>
@@ -71,9 +71,6 @@ namespace neo_act_plugin
             this.cmdClearMessages.Text = "Clear";
             this.cmdClearMessages.UseVisualStyleBackColor = true;
             this.cmdClearMessages.Click += new System.EventHandler(this.cmdClearMessages_Click);
-            //
-            // cmdCopyProblematic
-            //
             this.cmdCopyProblematic.Location = new System.Drawing.Point(478, 311);
             this.cmdCopyProblematic.Name = "cmdCopyProblematic";
             this.cmdCopyProblematic.Size = new System.Drawing.Size(118, 26);
@@ -81,9 +78,6 @@ namespace neo_act_plugin
             this.cmdCopyProblematic.Text = "Copy to Clipboard";
             this.cmdCopyProblematic.UseVisualStyleBackColor = true;
             this.cmdCopyProblematic.Click += new System.EventHandler(this.cmdCopyProblematic_Click);
-            //
-            // UserControl1
-            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.cmdCopyProblematic);
@@ -101,14 +95,15 @@ namespace neo_act_plugin
         private static System.Windows.Forms.ListBox lstMessages;
         private System.Windows.Forms.Button cmdClearMessages;
         private System.Windows.Forms.Button cmdCopyProblematic;
+
         #endregion Designer Created Code (Avoid editing)
 
-        public Plugin()
+        public NEO_ACT_Plugin()
         {
             InitializeComponent();
         }
 
-        private System.Windows.Forms.Label lblStatus = null;
+        private Label lblStatus = null;
 
         public void InitPlugin(System.Windows.Forms.TabPage pluginScreenSpace, System.Windows.Forms.Label pluginStatusText)
         {
@@ -261,7 +256,7 @@ namespace neo_act_plugin
             }
             catch (Exception ex)
             {
-                Plugin.LogParserMessage("Error [BNS_Log.Uninitialize] " + ex.ToString().Replace(Environment.NewLine, " "));
+                NEO_ACT_Plugin.LogParserMessage("Error [BNS_Log.Uninitialize] " + ex.ToString().Replace(Environment.NewLine, " "));
             }
         }
 
@@ -340,14 +335,14 @@ namespace neo_act_plugin
                     if (!DateTime.TryParse(timestampPart, out ret))
                     {
 
-                        Plugin.LogParserMessage("Failed to parse timestamp");
+                        NEO_ACT_Plugin.LogParserMessage("Failed to parse timestamp");
                         return DateTime.MinValue;
                     }
                 }
             }
             catch (Exception ex)
             {
-                Plugin.LogParserMessage("Error [ParseLogDateTime] " + ex.ToString().Replace(Environment.NewLine, " "));
+                NEO_ACT_Plugin.LogParserMessage("Error [ParseLogDateTime] " + ex.ToString().Replace(Environment.NewLine, " "));
             }
             return ret;
         }
@@ -427,10 +422,12 @@ namespace neo_act_plugin
                     string damage = (m.Groups["damage"].Value ?? "").Replace(",", "");
                     string hpdrain = (m.Groups["HPDrain"].Value ?? "").Replace(",", "");
 
+                    // if skillname is blank, the skillname and actor may be transposed
                     if (string.IsNullOrWhiteSpace(skill))
                     {
                         if (!string.IsNullOrWhiteSpace(actor))
                         {
+                            // "Received 1373 damage from Rising Blaze&apos;s ."
                             skill = actor;
                         }
                     }
@@ -513,24 +510,28 @@ namespace neo_act_plugin
                 m = regex_debuff2.Match(logLine);
                 if (m.Success)
                 {
+                    // todo: add debuff support
                     return;
                 }
 
                 m = regex_debuff.Match(logLine);
                 if (m.Success)
                 {
+                    // todo: add debuff support
                     return;
                 }
 
                 m = regex_buff.Match(logLine);
                 if (m.Success)
                 {
+                    // todo: add buff support
                     return;
                 }
 
                 m = regex_evade.Match(logLine);
                 if (m.Success)
                 {
+                    // todo: add evade support
                     return;
                 }
 
@@ -566,12 +567,12 @@ namespace neo_act_plugin
                 if (ex.InnerException != null)
                     exception += " " + ex.InnerException.ToString().Replace(Environment.NewLine, " ");
 
-                Plugin.LogParserMessage("Error [LogParse.BeforeLogLineRead] " + exception + " " + logInfo.logLine);
+                NEO_ACT_Plugin.LogParserMessage("Error [LogParse.BeforeLogLineRead] " + exception + " " + logInfo.logLine);
             }
 
             // For debugging
             if (!string.IsNullOrWhiteSpace(logLine))
-                Plugin.LogParserMessage("Unhandled Line: " + logInfo.logLine);
+                NEO_ACT_Plugin.LogParserMessage("Unhandled Line: " + logInfo.logLine);
         }
 
         private static string DecodeString(string data)
@@ -697,7 +698,7 @@ namespace neo_act_plugin
             }
             catch (Exception ex)
             {
-                Plugin.LogParserMessage("Error refreshing pointers: " + ex.Message);
+                NEO_ACT_Plugin.LogParserMessage("Error refreshing pointers: " + ex.Message);
             }
         }
 
