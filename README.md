@@ -6,7 +6,7 @@ This is a POC [ACT](https://advancedcombattracker.com/home.php) plugin for BnS N
 > This plugin connects to the game's memory to read combat log data, this is very much against the game's EULA. I am not sure whether the Anti-cheat detects memory reads, but, if it makes you feel better - I am using this personally on my main account.
 > This is also the first time I'm writing any .NET/C# code so don't make fun of me thx.
 
-![image](https://github.com/user-attachments/assets/c0f04dea-eb8d-49fc-9059-c15aa6ff2908)
+![image](https://github.com/user-attachments/assets/766a99c0-7986-4164-8e9e-709ab4b0db77)
 
 ## Usage
 
