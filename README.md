@@ -4,6 +4,9 @@ This is a POC [ACT](https://advancedcombattracker.com/home.php) plugin for BnS N
 
 > [!WARNING]  
 > This plugin connects to the game's memory to read combat log data, this is very much against the game's EULA. I am not sure whether the Anti-cheat detects memory reads, but, if it makes you feel better - I am using this personally on my main account.
+> This is also the first time I'm writing any .NET/C# code so don't make fun of me thx.
+
+![image](https://github.com/user-attachments/assets/c0f04dea-eb8d-49fc-9059-c15aa6ff2908)
 
 ## Usage
 
@@ -30,5 +33,20 @@ There are tons of overlay configuration videos on YouTube - mostly related to FF
 
 - This is a POC - it works fine but it's missing support for a lot of features provided by ACT (e.g. blocks, buffs, debuffs, etc..)
 - Zone names are not provided in the combat log, so all logs are combined into a single zone on ACT.
+- It doesn't distinguish between encounters automatically, you will have to end/start encounters from ACT manually.
 - This will break every time NC updates the .exe, which means you will have to wait a while until I (or a benevolent soul) update the offsets.
 - It works on my machine.
+
+## Roadmap
+
+- Fix the limitations
+- Find more limitations
+- Repeat
+
+## Contributing
+
+I'm too lazy to wring a contribution guidelines doc, feel free to submit PRs or issues if you'd like. This project will always be free.
+
+## Motivation
+
+That shit ain't worth $15 dawg.
