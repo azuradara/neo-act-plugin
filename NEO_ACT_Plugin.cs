@@ -291,7 +291,7 @@ namespace NEO_ACT_Plugin
             {
                 string errorMessage = string.Format("{0}|Error [{1}] {2}", DateTime.Now.ToString("HH:mm:ss.fff"), context, ex.ToString());
                 _logWriter.WriteLine(_logFilePath, errorMessage);
-                Plugin.LogParserMessage(errorMessage);
+                NEO_ACT_Plugin.LogParserMessage(errorMessage);
             }
             catch { /* Prevent logging failures from crashing thread */ }
         }
