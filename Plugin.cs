@@ -354,7 +354,6 @@ namespace neo_act_plugin
         public static void BeforeLogLineRead(bool isImport, Advanced_Combat_Tracker.LogLineEventArgs logInfo)
         {
             string logLine = logInfo.logLine;
-            Plugin.LogParserMessage("BeforeLogLineRead: " + logLine);
 
             if (_ACT == null)
                 throw new ApplicationException("ACT Wrapper not initialized.");
@@ -431,7 +430,6 @@ namespace neo_act_plugin
                     {
                         if (!string.IsNullOrWhiteSpace(actor))
                         {
-                            // "Received 1373 damage from Rising Blaze."
                             skill = actor;
                         }
                     }
@@ -514,28 +512,24 @@ namespace neo_act_plugin
                 m = regex_debuff2.Match(logLine);
                 if (m.Success)
                 {
-                    // todo: add debuff support
                     return;
                 }
 
                 m = regex_debuff.Match(logLine);
                 if (m.Success)
                 {
-                    // todo: add debuff support
                     return;
                 }
 
                 m = regex_buff.Match(logLine);
                 if (m.Success)
                 {
-                    // todo: add buff support
                     return;
                 }
 
                 m = regex_evade.Match(logLine);
                 if (m.Success)
                 {
-                    // todo: add evade support
                     return;
                 }
 
@@ -675,6 +669,18 @@ namespace neo_act_plugin
 
             if (_originalAddress == IntPtr.Zero)
                 throw new InvalidOperationException("Failed to resolve pointer chain");
+
+            int currentOffset = 0;
+            while (true)
+            {
+                var targetAddress = new IntPtr(_originalAddress.ToInt64() + (currentOffset * 0x70));
+                var pointerBuffer = ReadMemory(targetAddress, 8);
+                if (pointerBuffer == null || IsAllZero(pointerBuffer))
+                    break;
+                currentOffset++;
+            }
+
+            _offsetCounter = currentOffset;
         }
 
         public IEnumerable<string> Read()
