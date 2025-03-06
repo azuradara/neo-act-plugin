@@ -267,23 +267,20 @@ namespace neo_act_plugin
                 try
                 {
                     var reader = new Reader();
-
-
                     foreach (var result in reader.Read())
                     {
-                        if (_stopRequested)
-                        {
-                            break;
-                        }
+                        if (_stopRequested) break;
 
-                        var message = string.Format("{0}|{1}", DateTime.Now.ToString("HH:mm:ss.fff"), result);
+                        var message = $"{DateTime.Now:HH:mm:ss.fff}|{result}";
                         File.AppendAllText(_logFilePath, message + Environment.NewLine);
                         Plugin.LogParserMessage(message);
                     }
+
+                    Thread.Sleep(14);
                 }
                 catch
                 {
-                    System.Threading.Thread.Sleep(1000);
+                    Thread.Sleep(1000);
                 }
             }
 
