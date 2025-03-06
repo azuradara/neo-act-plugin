@@ -35,10 +35,12 @@ This plugin is only responsible for parsing combat logs to a form that ACT can u
 
 There are tons of overlay configuration videos on YouTube - mostly related to FFXIV - but it's the same principal, overlays should be mostly game-agnostic.
 
+You can even use one provided in our github from [Overlays](https://github.com/azuradara/neo-act-plugin/tree/main/Overlays)
+
 ### Troubleshooting
 
 - The parser does not read DPS and/or reads logs from a different chat (e.g. faction chat).
-  - Fix: Click "Chat Tab Options" (the cog icon on the left of ur chat tabs) > Reset > All Settings. This is because the plugin reads from the default combat chat tab and does not support custom ones.
+    - Fix: Click "Chat Tab Options" (the cog icon on the left of ur chat tabs) > Reset > All Settings. This is because the plugin reads from the default combat chat tab and does not support custom ones.
 
 ## Limitations
 
@@ -47,7 +49,7 @@ There are tons of overlay configuration videos on YouTube - mostly related to FF
 - ~~It doesn't distinguish between encounters automatically, you will have to end/start encounters from ACT manually.~~
 - This will break every time NC updates the .exe, which means you will have to wait a while until I (or a benevolent soul) update the offsets.
 - ~~Sometimes the game goes crazy, probably because I skipped refreshing pointers cuz I was lazy but I'll fix that later.~~
-- Does not distinguish between crits and non-crits.
+- ~~Does not distinguish between crits and non-crits.~~
 - Skills with apostrophes are clunky.
 - Only supports EN.
 

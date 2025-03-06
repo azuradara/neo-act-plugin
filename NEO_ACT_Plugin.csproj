@@ -7,8 +7,8 @@
     <ProjectGuid>{6FC0C13A-B517-43C9-BA49-6E95C09FC45B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>neo_act_plugin</RootNamespace>
-    <AssemblyName>neo-act-plugin</AssemblyName>
+    <RootNamespace>NEO_ACT_Plugin</RootNamespace>
+    <AssemblyName>NEO_ACT_Plugin</AssemblyName>
     <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -48,14 +48,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Plugin.cs">
+    <Compile Include="NEO_ACT_Plugin.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Plugin.resx">
-      <DependentUpon>Plugin.cs</DependentUpon>
+    <EmbeddedResource Include="NEO_ACT_Plugin.resx">
+      <DependentUpon>NEO_ACT_Plugin.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
