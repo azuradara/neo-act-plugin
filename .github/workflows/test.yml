@@ -14,29 +14,29 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Create ACT directory
+    - name: Download ACT Bundle
       run: |
-        $actPath = "C:\Program Files (x86)\Advanced Combat Tracker"
-        New-Item -Path $actPath -ItemType Directory -Force
+        $url = "https://advancedcombattracker.com/download.php?id=57"
+        Invoke-WebRequest -Uri $url -OutFile ACT-Bundle.zip
 
-    - name: Download and extract ACT
+    - name: Extract ACT Files
       run: |
-        $downloadUrl = "https://advancedcombattracker.com/download.php?id=57"
-        Invoke-WebRequest -Uri $downloadUrl -OutFile ACT-Installer.exe
-        
-        # Use 7-Zip to extract the installer
-        & "$env:ProgramFiles\7-Zip\7z.exe" x ACT-Installer.exe -o"C:\Program Files (x86)\Advanced Combat Tracker"
+        Expand-Archive -Path ACT-Bundle.zip -DestinationPath "C:\Program Files (x86)\Advanced Combat Tracker\"
+        dir "C:\Program Files (x86)\Advanced Combat Tracker"
 
-    - name: Add assembly reference
+    - name: Setup Build Environment
       run: |
-        Add-Type -Path "C:\Program Files (x86)\Advanced Combat Tracker\Advanced Combat Tracker.exe"
-        echo "C:\Program Files (x86)\Advanced Combat Tracker" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        echo "C:\Program Files (x86)\Advanced Combat Tracker\" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        echo "C:\Program Files (x86)\Advanced Combat Tracker\" > referencepath.txt
 
-    - name: Build solution
+    - name: Build Solution
       run: |
         nuget restore NEO_ACT_Plugin.sln
-        msbuild NEO_ACT_Plugin.sln /p:Configuration=Release /p:Platform="Any CPU" /p:ReferencePath="C:\Program Files (x86)\Advanced Combat Tracker"
+        msbuild NEO_ACT_Plugin.sln ^
+          /p:Configuration=Release ^
+          /p:Platform="Any CPU" ^
+          /p:ReferencePath="C:\Program Files (x86)\Advanced Combat Tracker\"
 
-    - name: Run tests
+    - name: Run Tests
       run: |
         vstest.console.exe "NEO_ACT_Plugin.Test\bin\Release\NEO_ACT_Plugin.Test.dll"
