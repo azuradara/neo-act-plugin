@@ -41,6 +41,8 @@ You can even use one provided in our github from [Overlays](https://github.com/a
 
 - The parser does not read DPS and/or reads logs from a different chat (e.g. faction chat).
     - Fix: Click "Chat Tab Options" (the cog icon on the left of ur chat tabs) > Reset > All Settings. This is because the plugin reads from the default combat chat tab and does not support custom ones.
+- It keeps spewing "Failed to reolve pointer chain" errors:
+  - Make sure ACT is running as administrator.
 
 ## Limitations
 
