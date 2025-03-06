@@ -49,7 +49,7 @@ There are tons of overlay configuration videos on YouTube - mostly related to FF
 
 ## Contributing
 
-I'm too lazy to wring a contribution guidelines doc, feel free to submit PRs or issues if you'd like. This project will always be free.
+I'm too lazy to write a contribution guidelines doc, feel free to submit PRs or issues if you'd like. This project will always be free.
 
 ## Motivation
 
