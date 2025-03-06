@@ -708,8 +708,12 @@ namespace neo_act_plugin
                 RefreshPointers();
             }
 
+            int lastOffset = -1;
+
             while (true)
             {
+                lastOffset = _offsetCounter;
+
                 var targetAddress = new IntPtr(_currentAddress.ToInt64() + (_offsetCounter * 0x70));
                 _offsetCounter++;
 
@@ -733,11 +737,13 @@ namespace neo_act_plugin
                 }
 
                 var nextAddress = new IntPtr(BitConverter.ToInt64(pointerBuffer, 0));
+                if (nextAddress == IntPtr.Zero) yield break;
+
                 var stringBuffer = ReadMemory(nextAddress, 2048);
                 if (stringBuffer == null) yield break;
 
                 var decoded = DecodeString(stringBuffer);
-                if (!string.IsNullOrEmpty(decoded))
+                if (!string.IsNullOrEmpty(decoded) && _offsetCounter != lastOffset)
                     yield return decoded;
             }
         }
