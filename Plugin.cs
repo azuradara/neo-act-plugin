@@ -690,6 +690,8 @@ namespace neo_act_plugin
                 var pointerBuffer = ReadMemory(targetAddress, 8);
                 if (pointerBuffer == null) yield break;
 
+                Thread.Sleep(1);
+
                 while (IsAllZero(pointerBuffer))
                 {
                     Thread.Sleep(100);
