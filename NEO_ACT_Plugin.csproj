@@ -48,14 +48,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Plugin.cs">
+    <Compile Include="NEO_ACT_Plugin.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Plugin.resx">
-      <DependentUpon>Plugin.cs</DependentUpon>
+    <EmbeddedResource Include="NEO_ACT_Plugin.resx">
+      <DependentUpon>NEO_ACT_Plugin.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
