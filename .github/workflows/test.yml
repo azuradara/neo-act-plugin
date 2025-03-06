@@ -1,4 +1,4 @@
-name: .NET Framework 4.8.1 Tests
+name: Test
 
 on:
   push:
