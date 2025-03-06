@@ -9,7 +9,6 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -39,10 +38,7 @@ jobs:
     - name: Build Solution
       run: |
         nuget restore NEO_ACT_Plugin.sln
-        msbuild NEO_ACT_Plugin.sln ^
-          /p:Configuration=Release ^
-          /p:Platform="Any CPU" ^
-          /p:ReferencePath="C:\Program Files (x86)\Advanced Combat Tracker\"
+        msbuild NEO_ACT_Plugin.sln /p:Configuration=Release /p:Platform="Any CPU" /p:ReferencePath="C:\Program Files (x86)\Advanced Combat Tracker\"
 
     - name: Run Tests
       run: |
