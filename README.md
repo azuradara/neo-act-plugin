@@ -7,6 +7,7 @@ This is a POC [ACT](https://advancedcombattracker.com/home.php) plugin for BnS N
 > This is also the first time I'm writing any .NET/C# code so don't make fun of me thx.
 
 ![image](https://github.com/user-attachments/assets/766a99c0-7986-4164-8e9e-709ab4b0db77)
+![image](https://github.com/user-attachments/assets/ffb0abf6-b8a9-49ef-bd15-0e8fc2cf0183)
 
 ## Usage
 
