@@ -1,4 +1,4 @@
-name: Test
+name: .NET Framework 4.8.1 Tests
 
 on:
   push:
@@ -8,37 +8,33 @@ on:
 
 jobs:
   test:
-    name: Run Tests on Windows
+    name: Run Tests
     runs-on: windows-latest
-    env:
-      DOTNET_NOLOGO: true
-      DOTNET_CLI_TELEMETRY_OPTOUT: true
-
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup .NET 4.8.1
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: |
-          4.8.1
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1
+      
+    - name: Restore NuGet packages
+      run: nuget restore NEO_ACT_Plugin.sln
 
-    - name: Cache NuGet packages
-      uses: actions/cache@v3
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
+    - name: Build solution
+      run: msbuild NEO_ACT_Plugin.sln /p:Configuration=Release /p:Platform="Any CPU"
 
-    - name: Build and Test
+    - name: Run tests
       run: |
-        dotnet build ./NEO_ACT_Plugin.sln -c Release -p:Platform="Any CPU"
-        
-        dotnet test ./NEO_ACT_Plugin.csproj \
-          -c Release \
-          --no-build \
-          --logger "trx;LogFileName=test-results.trx" \
-          --collect:"XPlat Code Coverage" \
-          --settings coverlet.runsettings
+        vstest.console.exe \
+        "NEO_ACT_Plugin.Test\bin\Release\net481\NEO_ACT_Plugin.Test.dll" \
+        /logger:trx
+      
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: TestResults
+        path: |
+          *.trx
+          TestResults/
