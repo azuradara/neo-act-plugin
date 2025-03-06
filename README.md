@@ -29,7 +29,9 @@ This plugin is only responsible for parsing combat logs to a form that ACT can u
 2. Click "Get Plugins..." on the right and pick "Overlay Plugin" then click "Download and Enable".
 3. Once finished, click the "OverlayPlugin.dll" tab and click "New" on the left.
 4. Pick "Ember Overlay" from the Preset dropdown and then give it any name you'd like.
-5. That's all, just move the overlay or customize it.
+5. For the time being, overlay doesn't recognize BNSR.exe as being the game client, so you will need to do some extra steps to make it stay on top:
+  a. Go to Plugins > OverlayPlugin.dll > General
+  b. Uncheck "Automatically hide overlays when the game is in the background"
 
 There are tons of overlay configuration videos on YouTube - mostly related to FFXIV - but it's the same principal, overlays should be mostly game-agnostic.
 
@@ -42,7 +44,7 @@ There are tons of overlay configuration videos on YouTube - mostly related to FF
 - Sometimes the game goes crazy, probably because I skipped refreshing pointers cuz I was lazy but I'll fix that later.
 - Does not distinguish between crits and non-crits.
 - Skills with apostrophes are clunky.
-- Only support EN.
+- Only supports EN.
 
 ## Roadmap
 
