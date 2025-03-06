@@ -44,6 +44,7 @@ There are tons of overlay configuration videos on YouTube - mostly related to FF
 - Fix the limitations
 - Find more limitations
 - Repeat
+- Custom overlay (?)
 
 ## Contributing
 
