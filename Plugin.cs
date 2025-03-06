@@ -143,10 +143,10 @@ namespace neo_act_plugin
                 Advanced_Combat_Tracker.ActGlobals.oFormActMain.TimeStampLen = DateTime.Now.ToString("HH:mm:ss.fff").Length + 1;
 
                 // Set Date time format parsing.
-                Advanced_Combat_Tracker.ActGlobals.oFormActMain.GetDateTimeFromLog = new Advanced_Combat_Tracker.FormActMain.DateTimeLogParser(LogParse.ParseLogDateTime);
+                Advanced_Combat_Tracker.ActGlobals.oFormActMain.GetDateTimeFromLog = new FormActMain.DateTimeLogParser(LogParse.ParseLogDateTime);
 
                 // Set primary parser delegate for processing data
-                Advanced_Combat_Tracker.ActGlobals.oFormActMain.BeforeLogLineRead += LogParse.BeforeLogLineRead;
+                Advanced_Combat_Tracker.ActGlobals.oFormActMain.BeforeLogLineRead += new LogLineEventDelegate(LogParse.BeforeLogLineRead);
 
                 // Hard-code zone name
                 Advanced_Combat_Tracker.ActGlobals.oFormActMain.ChangeZone("Blade & Soul");
@@ -287,7 +287,7 @@ namespace neo_act_plugin
                         }
 
                         var message = string.Format("{0}|{1}", DateTime.Now.ToString("HH:mm:ss.fff"), result);
-                        File.AppendAllText(_logFilePath, message);
+                        File.AppendAllText(_logFilePath, message + Environment.NewLine);
                         Plugin.LogParserMessage(message);
                     }
                 }
@@ -571,7 +571,6 @@ namespace neo_act_plugin
                             _ACT.GlobalTimeSorter,
                             target,
                             "");
-
                     }
 
                     return;
