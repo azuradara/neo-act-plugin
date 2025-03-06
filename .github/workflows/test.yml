@@ -22,47 +22,57 @@ jobs:
     
     - name: Restore NuGet packages
       run: nuget restore NEO_ACT_Plugin.sln
-
-    - name: Check Solution Configuration
-      shell: powershell
-      run: |
-        $slnFile = "NEO_ACT_Plugin.sln"
-        Write-Host "Checking available configurations in $slnFile"
-        
-        $content = Get-Content $slnFile -Raw
-        if ($content -match "GlobalSection\(SolutionConfigurationPlatforms\)(.*?)EndGlobalSection") {
-            $configSection = $matches[1]
-            Write-Host "Available solution configurations:"
-            $configSection -split "`n" | ForEach-Object { 
-                $line = $_.Trim()
-                if ($line -ne "") {
-                    Write-Host "  $line" 
-                }
-            }
-        } else {
-            Write-Host "Could not find configuration section in solution file."
-        }
     
     - name: Download and Extract ACT
       shell: powershell
       run: |
         $url = "https://advancedcombattracker.com/download.php?id=57"
         $outputPath = "$env:TEMP\ACT.zip"
-        
-        Invoke-WebRequest -Uri $url -OutFile $outputPath
         $actTargetDir = "C:\Program Files (x86)\Advanced Combat Tracker"
-        if (-not (Test-Path $actTargetDir)) {
-            New-Item -ItemType Directory -Path $actTargetDir -Force
-        }
-        
+        if (-not (Test-Path $actTargetDir)) { New-Item -ItemType Directory -Path $actTargetDir -Force }
         Expand-Archive -Path $outputPath -DestinationPath $actTargetDir -Force
-        
         Get-ChildItem -Path $actTargetDir
-        
-        if (-not (Test-Path "$actTargetDir\Advanced Combat Tracker.exe")) {
-            Write-Error "Advanced Combat Tracker.exe not found at $actTargetDir\Advanced Combat Tracker.exe"
-            exit 1
+        if (-not (Test-Path "$actTargetDir\Advanced Combat Tracker.exe")) { Write-Error "Advanced Combat Tracker.exe not found"; exit 1 }
+        $asmInfoFile = "C:\Program Files (x86)\Advanced Combat Tracker\AssemblyInfo.cs"
+        @"
+        using System.Reflection;
+        [assembly: AssemblyTitle("Advanced Combat Tracker")]
+        [assembly: AssemblyDescription("Advanced Combat Tracker")]
+        [assembly: AssemblyProduct("Advanced Combat Tracker")]
+        [assembly: AssemblyVersion("3.6.0.0")]
+        [assembly: AssemblyFileVersion("3.6.0.0")]
+        "@ | Out-File -FilePath $asmInfoFile -Encoding utf8
+    
+    - name: Fix ACT reference in project file
+      shell: powershell
+      run: |
+        $projectFile = "NEO_ACT_Plugin.csproj"
+        [xml]$proj = Get-Content $projectFile
+        $actRefs = $proj.Project.ItemGroup.Reference | Where-Object { $_.Include -like "*Advanced Combat Tracker*" }
+        if ($actRefs) {
+          foreach ($ref in $actRefs) {
+            $hintPaths = $ref.ChildNodes | Where-Object { $_.Name -eq "HintPath" }
+            foreach ($path in $hintPaths) { $ref.RemoveChild($path) | Out-Null }
+            $hintPath = $proj.CreateElement("HintPath", $proj.Project.xmlns)
+            $hintPath.InnerText = "C:\Program Files (x86)\Advanced Combat Tracker\Advanced Combat Tracker.exe"
+            $ref.AppendChild($hintPath) | Out-Null
+          }
+          $proj.Save($projectFile)
+        } else {
+          $refGroup = $proj.Project.ItemGroup | Where-Object { $_.Reference -ne $null } | Select-Object -First 1
+          if (-not $refGroup) {
+            $refGroup = $proj.CreateElement("ItemGroup", $proj.Project.xmlns)
+            $proj.Project.AppendChild($refGroup) | Out-Null
+          }
+          $newRef = $proj.CreateElement("Reference", $proj.Project.xmlns)
+          $newRef.SetAttribute("Include", "Advanced Combat Tracker")
+          $hintPath = $proj.CreateElement("HintPath", $proj.Project.xmlns)
+          $hintPath.InnerText = "C:\Program Files (x86)\Advanced Combat Tracker\Advanced Combat Tracker.exe"
+          $newRef.AppendChild($hintPath) | Out-Null
+          $refGroup.AppendChild($newRef) | Out-Null
+          $proj.Save($projectFile)
         }
+        Get-Content $projectFile | Select-String -Pattern "Advanced Combat Tracker" -Context 2,2
     
     - name: Build solution
       run: msbuild /p:Configuration=Release "/p:Platform=Any CPU" NEO_ACT_Plugin.sln
@@ -70,41 +80,18 @@ jobs:
     - name: Run tests
       shell: powershell
       run: |
-        Write-Host "Looking for output directories..."
-        $potentialDirs = @(
-            ".\bin\Release",
-            ".\NEO_ACT_Plugin\bin\Release",
-            ".\bin\Any CPU\Release",
-            ".\NEO_ACT_Plugin\bin\Any CPU\Release"
-        )
-        
+        $potentialDirs = @(".\bin\Release", ".\NEO_ACT_Plugin\bin\Release", ".\bin\Any CPU\Release", ".\NEO_ACT_Plugin\bin\Any CPU\Release")
         $testDll = $null
-        
         foreach ($dir in $potentialDirs) {
-            if (Test-Path $dir) {
-                Write-Host "Found directory: $dir"
-                Get-ChildItem -Path $dir -Recurse | ForEach-Object {
-                    Write-Host "  $($_.FullName)"
-                }
-                
-                if (Test-Path "$dir\NEO_ACT_Plugin.dll") {
-                    $testDll = "$dir\NEO_ACT_Plugin.dll"
-                    Write-Host "Found test DLL: $testDll"
-                    break
-                }
-            }
+          if (Test-Path $dir) {
+            Get-ChildItem -Path $dir -Recurse
+            if (Test-Path "$dir\NEO_ACT_Plugin.dll") { $testDll = "$dir\NEO_ACT_Plugin.dll"; break }
+          }
         }
-        
         if ($testDll) {
-            Write-Host "Running tests on $testDll"
-            
-            if (Test-Path "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe") {
-                & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" $testDll
-            } elseif (Test-Path "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe") {
-                & "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" $testDll
-            } else {
-                Write-Host "VSTest not found. Install it or use another test runner."
-            }
-        } else {
-            Write-Host "Test DLL not found in common locations. Skipping tests."
+          if (Test-Path "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe") {
+            & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" $testDll
+          } elseif (Test-Path "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe") {
+            & "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe" $testDll
+          }
         }
