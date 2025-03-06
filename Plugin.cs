@@ -206,6 +206,7 @@ namespace neo_act_plugin
         private static Thread _workerThread;
         private static volatile bool _stopRequested;
         private static string _logFilePath;
+        private static StreamWriter _logWriter;
 
         public static void Initialize()
         {
@@ -218,7 +219,9 @@ namespace neo_act_plugin
                 Directory.CreateDirectory(logDir);
 
                 _logFilePath = Path.Combine(logDir, string.Format("combatlog_{0}.log", DateTime.Now.ToString("yyyy-MM-dd")));
-                File.WriteAllText(_logFilePath, string.Empty);
+                _logWriter = new StreamWriter(_logFilePath, append: true) { AutoFlush = true };
+
+                _logWriter.WriteLine(string.Empty);
 
                 ActGlobals.oFormActMain.LogFilePath = _logFilePath;
                 ActGlobals.oFormActMain.OpenLog(false, false);
@@ -252,6 +255,8 @@ namespace neo_act_plugin
                         _workerThread.Abort();
 
                     _workerThread = null;
+
+                    _logWriter.Dispose();
                 }
             }
             catch (Exception ex)
@@ -271,8 +276,8 @@ namespace neo_act_plugin
                     {
                         if (_stopRequested) break;
 
-                        var message = $"{DateTime.Now:HH:mm:ss.fff}|{result}";
-                        File.AppendAllText(_logFilePath, message + Environment.NewLine);
+                        var message = string.Format("{0}|{1}", DateTime.Now.ToString("HH:mm:ss.fff"), result);
+                        _logWriter.WriteLine(message);
                     }
 
                     Thread.Sleep(14);
@@ -290,7 +295,7 @@ namespace neo_act_plugin
             try
             {
                 string errorMessage = string.Format("{0}|Error [{1}] {2}", DateTime.Now.ToString("HH:mm:ss.fff"), context, ex.ToString());
-                File.AppendAllText(_logFilePath, errorMessage + Environment.NewLine);
+                _logWriter.WriteLine(_logFilePath, errorMessage);
                 Plugin.LogParserMessage(errorMessage);
             }
             catch { /* Prevent logging failures from crashing thread */ }
