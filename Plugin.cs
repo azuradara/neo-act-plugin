@@ -653,8 +653,14 @@ namespace neo_act_plugin
         }
 
         private readonly int _pid;
-        private readonly IntPtr _originalAddress;
+        private IntPtr _baseAddress;
+        private IntPtr _currentAddress;
         private int _offsetCounter = 1;
+        private readonly long[] _offsets = { 0x07423C90, 0x490, 0x490, 0x670, 0x8, 0x70 };
+        private DateTime _lastRefreshTime = DateTime.MinValue;
+
+        // not sure what i should set this to, but i like 4
+        private TimeSpan _refreshInterval = TimeSpan.FromSeconds(4);
 
         public Reader()
         {
@@ -663,32 +669,48 @@ namespace neo_act_plugin
                 throw new ArgumentException("Process not found: " + "BNSR");
 
             _pid = pid.Value;
-            var baseAddress = GetBaseAddress(_pid);
+            RefreshPointers();
+        }
 
-            long[] offsets = { 0x07423C90, 0x490, 0x490, 0x670, 0x8, 0x70 };
-            _originalAddress = FollowPointerChain(_pid, baseAddress, offsets);
-
-            if (_originalAddress == IntPtr.Zero)
-                throw new InvalidOperationException("Failed to resolve pointer chain");
-
-            int currentOffset = 0;
-            while (true)
+        private void RefreshPointers()
+        {
+            try
             {
-                var targetAddress = new IntPtr(_originalAddress.ToInt64() + (currentOffset * 0x70));
-                var pointerBuffer = ReadMemory(targetAddress, 8);
-                if (pointerBuffer == null || IsAllZero(pointerBuffer))
-                    break;
-                currentOffset++;
-            }
+                _baseAddress = GetBaseAddress(_pid);
+                _currentAddress = FollowPointerChain(_pid, _baseAddress, _offsets);
 
-            _offsetCounter = currentOffset;
+                if (_currentAddress == IntPtr.Zero)
+                    throw new InvalidOperationException("Failed to resolve pointer chain");
+
+                int currentOffset = 0;
+                while (true)
+                {
+                    var targetAddress = new IntPtr(_currentAddress.ToInt64() + (currentOffset * 0x70));
+                    var pointerBuffer = ReadMemory(targetAddress, 8);
+                    if (pointerBuffer == null || IsAllZero(pointerBuffer))
+                        break;
+                    currentOffset++;
+                }
+
+                _offsetCounter = currentOffset;
+                _lastRefreshTime = DateTime.Now;
+            }
+            catch (Exception ex)
+            {
+                Plugin.LogParserMessage("Error refreshing pointers: " + ex.Message);
+            }
         }
 
         public IEnumerable<string> Read()
         {
+            if (DateTime.Now - _lastRefreshTime > _refreshInterval)
+            {
+                RefreshPointers();
+            }
+
             while (true)
             {
-                var targetAddress = new IntPtr(_originalAddress.ToInt64() + (_offsetCounter * 0x70));
+                var targetAddress = new IntPtr(_currentAddress.ToInt64() + (_offsetCounter * 0x70));
                 _offsetCounter++;
 
                 var pointerBuffer = ReadMemory(targetAddress, 8);
@@ -699,6 +721,13 @@ namespace neo_act_plugin
                 while (IsAllZero(pointerBuffer))
                 {
                     Thread.Sleep(100);
+
+                    if (DateTime.Now - _lastRefreshTime > _refreshInterval)
+                    {
+                        RefreshPointers();
+                        targetAddress = new IntPtr(_currentAddress.ToInt64() + ((_offsetCounter - 1) * 0x70));
+                    }
+
                     pointerBuffer = ReadMemory(targetAddress, 8);
                     if (pointerBuffer == null) yield break;
                 }
