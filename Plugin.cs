@@ -273,7 +273,6 @@ namespace neo_act_plugin
 
                         var message = $"{DateTime.Now:HH:mm:ss.fff}|{result}";
                         File.AppendAllText(_logFilePath, message + Environment.NewLine);
-                        Plugin.LogParserMessage(message);
                     }
 
                     Thread.Sleep(14);
