@@ -304,7 +304,7 @@ namespace neo_act_plugin
 
     public static class LogParse
     {
-        public static Regex regex_incomingdamage1 = new Regex(@"(?<target>.+?)?\s*(received|Received)\s+(?<damage>\d+(,\d+)*)\s+(?<critical>Critical\s+)?damage\s+from\s+((?<actor>.+?)&apos;s\s+)?(?<skill>.+?)\.", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        public static Regex regex_incomingdamage1 = new Regex(@"(?<target>.+?)?\s*(received|Received)\s+(?<damage>\d+(,\d+)*)\s+(?<critical>(Critical Damage)|(damage))\s+from\s+((?<actor>.+?)&apos;s\s+)?(?<skill>.+?)\.", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         public static Regex regex_incomingdamage2 = new Regex(@"((?<target>.+?) )?(Blocked|blocked|partially blocked|countered)( (?<actor>.+)&apos;s)? (?<skill>.+?) (but received|receiving)( (?<damage>\d+(,\d+)*) damage)?(( and)? (?<HPDrain>\d+(,\d+)*) HP drain)?( and?)?( (?<debuff>.+?))?\.", RegexOptions.Compiled);
         public static Regex regex_incomingdamage3 = new Regex(@"(?<actor>.+?)&apos;s (?<skill>.+?) inflicted( (?<damage>\d+(,\d+)*) damage)?( and)?( (?<debuff>.+?))*?( to (?<target>.+?))?\.", RegexOptions.Compiled);
         public static Regex regex_yourdamage = new Regex(@"(?<skill>.+?) (?<critical>(critically hit)|(hit)) (?<target>.+?) for (?<damage>\d+(,\d+)*) damage(((, draining| and drained) ((?<HPDrain>\d+(,\d+)*) HP)?( and )?((?<FocusDrain>\d+) Focus)?))?(, removing (?<skillremove>.+?))?\.", RegexOptions.Compiled);
