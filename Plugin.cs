@@ -107,17 +107,15 @@ namespace neo_act_plugin
         {
             InitializeComponent();
         }
-        // reference to the ACT plugin status label
+
         private System.Windows.Forms.Label lblStatus = null;
 
         public void InitPlugin(System.Windows.Forms.TabPage pluginScreenSpace, System.Windows.Forms.Label pluginStatusText)
         {
-            // store a reference to plugin's status label
             lblStatus = pluginStatusText;
 
             try
             {
-                // Configure ACT for updates, and check for update.
                 Advanced_Combat_Tracker.ActGlobals.oFormActMain.UpdateCheckClicked += new Advanced_Combat_Tracker.FormActMain.NullDelegate(UpdateCheckClicked);
                 if (Advanced_Combat_Tracker.ActGlobals.oFormActMain.GetAutomaticUpdatesAllowed())
                 {
@@ -126,32 +124,24 @@ namespace neo_act_plugin
                     updateThread.Start();
                 }
 
-                // Update the listing of columns inside ACT.
                 UpdateACTTables();
 
-                // Configure ACT Wrapper
                 LogParse.Initialize(new ACTWrapper());
 
-                pluginScreenSpace.Controls.Add(this);   // Add this UserControl to the tab ACT provides
-                this.Dock = DockStyle.Fill; // Expand the UserControl to fill the tab's client space
+                pluginScreenSpace.Controls.Add(this);
+                this.Dock = DockStyle.Fill;
 
-                // character name cannot be parsed from logfile name
                 Advanced_Combat_Tracker.ActGlobals.oFormActMain.LogPathHasCharName = false;
                 Advanced_Combat_Tracker.ActGlobals.oFormActMain.LogFileFilter = "*.log";
 
-                // Default Timestamp length, but this can be overridden in parser code.
                 Advanced_Combat_Tracker.ActGlobals.oFormActMain.TimeStampLen = DateTime.Now.ToString("HH:mm:ss.fff").Length + 1;
 
-                // Set Date time format parsing.
                 Advanced_Combat_Tracker.ActGlobals.oFormActMain.GetDateTimeFromLog = new FormActMain.DateTimeLogParser(LogParse.ParseLogDateTime);
 
-                // Set primary parser delegate for processing data
                 Advanced_Combat_Tracker.ActGlobals.oFormActMain.BeforeLogLineRead += new LogLineEventDelegate(LogParse.BeforeLogLineRead);
 
-                // Hard-code zone name
                 Advanced_Combat_Tracker.ActGlobals.oFormActMain.ChangeZone("Blade & Soul");
 
-                // Initialize logging thread
                 LogWriter.Initialize();
 
                 lblStatus.Text = "BnS Plugin Started.";
@@ -437,12 +427,11 @@ namespace neo_act_plugin
                     string damage = (m.Groups["damage"].Value ?? "").Replace(",", "");
                     string hpdrain = (m.Groups["HPDrain"].Value ?? "").Replace(",", "");
 
-                    // if skillname is blank, the skillname and actor may be transposed
                     if (string.IsNullOrWhiteSpace(skill))
                     {
                         if (!string.IsNullOrWhiteSpace(actor))
                         {
-                            // "Received 1373 damage from Rising Blaze&apos;s ."
+                            // "Received 1373 damage from Rising Blaze."
                             skill = actor;
                         }
                     }
