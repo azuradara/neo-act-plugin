@@ -7,25 +7,28 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
-    name: Run Tests
+  build:
     runs-on: windows-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v1
-      
-    - name: Restore NuGet packages
-      run: nuget restore NEO_ACT_Plugin.sln
+    - name: Download ACT
+      run: |
+        $downloadUrl = "https://advancedcombattracker.com/download.php?id=57"
+        Invoke-WebRequest -Uri $downloadUrl -OutFile "ACT-Installer.exe"
+
+    - name: Install ACT
+      run: |
+        mkdir C:\ACT
+        .\ACT-Installer.exe /S /D=C:\ACT
 
     - name: Build solution
-      run: msbuild NEO_ACT_Plugin.sln /p:Configuration=Release /p:Platform="Any CPU"
+      run: |
+        nuget restore NEO_ACT_Plugin.sln
+        msbuild NEO_ACT_Plugin.sln /p:Configuration=Release /p:Platform="Any CPU" /p:ReferencePath="C:\ACT"
 
     - name: Run tests
       run: |
-        vstest.console.exe \
-        "NEO_ACT_Plugin.Test\bin\Release\net481\NEO_ACT_Plugin.Test.dll" \
-        /logger:trx
+        vstest.console.exe "NEO_ACT_Plugin.Test\bin\Release\NEO_ACT_Plugin.Test.dll"
