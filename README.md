@@ -41,7 +41,7 @@ There are tons of overlay configuration videos on YouTube - mostly related to FF
 - Zone names are not provided in the combat log, so all logs are combined into a single zone on ACT.
 - ~~It doesn't distinguish between encounters automatically, you will have to end/start encounters from ACT manually.~~
 - This will break every time NC updates the .exe, which means you will have to wait a while until I (or a benevolent soul) update the offsets.
-- Sometimes the game goes crazy, probably because I skipped refreshing pointers cuz I was lazy but I'll fix that later.
+- ~~Sometimes the game goes crazy, probably because I skipped refreshing pointers cuz I was lazy but I'll fix that later.~~
 - Does not distinguish between crits and non-crits.
 - Skills with apostrophes are clunky.
 - Only supports EN.
