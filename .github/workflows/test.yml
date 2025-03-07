@@ -1,0 +1,63 @@
+name: .NET Framework Tests with ACT
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Restore NuGet packages
+        run: nuget restore NeoActPlugin.sln
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: Download ACT zip
+        run: |
+          $actUrl = "https://advancedcombattracker.com/download.php?id=57"
+          $zipPath = "$env:USERPROFILE\AdvancedCombatTracker.zip"
+          Invoke-WebRequest -Uri $actUrl -OutFile $zipPath
+
+      - name: Extract ACT zip
+        run: |
+          $destination = "$env:USERPROFILE\AdvancedCombatTracker"
+          Expand-Archive -Path "$env:USERPROFILE\AdvancedCombatTracker.zip" -DestinationPath $destination -Force
+
+      - name: Set up ACT reference
+        run: |
+          $actTarget = "C:\Program Files (x86)\Advanced Combat Tracker"
+          if (!(Test-Path $actTarget)) {
+            New-Item -ItemType Directory -Path $actTarget -Force | Out-Null
+          }
+          Copy-Item -Path "$env:USERPROFILE\AdvancedCombatTracker\Advanced Combat Tracker.exe" -Destination "$actTarget\Advanced Combat Tracker.exe" -Force
+
+      - name: Build solution
+        run: msbuild NeoActPlugin.sln /m /p:Configuration=Debug /p:ReferencePath="C:\Program Files (x86)\Advanced Combat Tracker" /p:RunAnalyzers=false
+
+      - name: List built DLLs
+        shell: powershell
+        run: Get-ChildItem -Path . -Recurse -Filter *.dll
+
+      - name: Run tests
+        shell: powershell
+        run: |
+          $vsPath = &"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -property installationPath
+          if (-not $vsPath) {
+              Write-Error "Visual Studio installation not found."
+              exit 1
+          }
+          $vstest = Get-ChildItem -Path $vsPath -Filter vstest.console.exe -Recurse | Select-Object -First 1
+          if (-not $vstest) {
+              Write-Error "vstest.console.exe not found in Visual Studio installation at $vsPath"
+              exit 1
+          }
+          Write-Host "Using vstest.console.exe at $($vstest.FullName)"
+          & $vstest.FullName "**/**/NeoActPlugin.Test.dll"
