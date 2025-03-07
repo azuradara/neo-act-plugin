@@ -43,5 +43,17 @@ jobs:
         run: msbuild NEO_ACT_Plugin.sln /p:Configuration=Debug /p:ReferencePath="C:\Program Files (x86)\Advanced Combat Tracker"
 
       - name: Run tests
+        shell: powershell
         run: |
-          vstest.console.exe "**/bin/Debug/*Test*.dll"
+          $vsPath = &"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.TestTools -property installationPath
+          if (-not $vsPath) {
+              Write-Error "Visual Studio installation with test platform not found."
+              exit 1
+          }
+          $vstest = Join-Path $vsPath "Common7\IDE\Extensions\TestPlatform\vstest.console.exe"
+          if (-not (Test-Path $vstest)) {
+              Write-Error "vstest.console.exe not found at $vstest"
+              exit 1
+          }
+          Write-Host "Using vstest.console.exe at $vstest"
+          & $vstest "**/bin/Debug/*Test*.dll"
