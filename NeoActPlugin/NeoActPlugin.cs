@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using System.Linq;
 
 namespace NeoActPlugin
 {
@@ -456,6 +457,19 @@ namespace NeoActPlugin
                             // "Received 1373 damage from Rising Blaze&apos;s ."
                             skill = actor;
                         }
+                    }
+
+                    // Fix for "Received 1373 damage from Balefire&apos;s Bleed
+                    string[] invalidSkills = { "Hellfire", "Venom", "Lasting Effects", "Bleed" };
+
+                    if (!string.IsNullOrWhiteSpace(actor) && Array.Exists(invalidSkills, e => e == skill))
+                    {
+                        // using the actor rather than the skill allows users to
+                        // recognize their skills by checking Unknown's skill breakdown.
+                        // the damage lost here should be negligible in the grand scheme of things
+
+                        skill = actor;
+                        actor = "Unknown";
                     }
 
                     if (string.IsNullOrWhiteSpace(target))
