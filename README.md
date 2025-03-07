@@ -66,6 +66,7 @@ You can even use one provided in our github from [Overlays](https://github.com/a
 ## Contributing
 
 I'm too lazy to write a contribution guidelines doc, feel free to submit PRs or issues if you'd like. This project will always be free.
+If you don't want to submit an issue, contact `azuradara` on Discord.
 
 ## Motivation
 
