@@ -40,7 +40,7 @@ jobs:
           Copy-Item -Path "$env:USERPROFILE\AdvancedCombatTracker\Advanced Combat Tracker.exe" -Destination "$actTarget\Advanced Combat Tracker.exe" -Force
 
       - name: Build solution
-        run: msbuild NEO_ACT_Plugin.sln /m /p:Configuration=Debug /p:ReferencePath="C:\Program Files (x86)\Advanced Combat Tracker" /p:RunAnalyzers=false
+        run: msbuild NeoActPlugin.sln /m /p:Configuration=Debug /p:ReferencePath="C:\Program Files (x86)\Advanced Combat Tracker" /p:RunAnalyzers=false
 
       - name: List built DLLs
         shell: powershell
@@ -60,4 +60,4 @@ jobs:
               exit 1
           }
           Write-Host "Using vstest.console.exe at $($vstest.FullName)"
-          & $vstest.FullName "**/bin/Debug/NEO_ACT_Plugin.Test.dll"
+          & $vstest.FullName "**/bin/Debug/NeoActPlugin.Test.dll"
