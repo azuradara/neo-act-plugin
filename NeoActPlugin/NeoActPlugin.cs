@@ -462,7 +462,7 @@ namespace NeoActPlugin
                         target = "You";
 
                     if (string.IsNullOrWhiteSpace(actor))
-                        actor = "You";
+                        actor = "Unknown";
 
                     // todo: in the future, if damage is missing, still parse the buff portion
                     if (!m.Groups["damage"].Success)

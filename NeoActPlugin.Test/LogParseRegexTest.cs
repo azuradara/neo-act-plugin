@@ -127,8 +127,27 @@ namespace NeoActPlugin.Test
             Assert.IsFalse(m.Groups["resistdebuff"].Success);
             Assert.IsTrue(m.Groups["actor"].Success && m.Groups["actor"].Value == "PLAYERNAME");
             Assert.IsTrue(m.Groups["skill"].Success && m.Groups["skill"].Value == "Sundering Sword");
+        }
+
+        [TestMethod]
+        public void LogParse_Regex_incomingdamage1_unknown()
+        {
+            const string testLine = "Infernal Lord received 777 damage from Bleed.";
+
+            Match m = LogParse.regex_incomingdamage1.Match(testLine);
+
+            Assert.IsTrue(m.Groups["target"].Success && m.Groups["target"].Value == "Infernal Lord");
+            Assert.IsTrue(m.Groups["damage"].Success && m.Groups["damage"].Value == "777");
+            Assert.IsFalse(m.Groups["critical"].Success);
+            Assert.IsFalse(m.Groups["HPDrain"].Success);
+            Assert.IsFalse(m.Groups["FocusDrain"].Success);
+            Assert.IsFalse(m.Groups["debuff"].Success);
+            Assert.IsFalse(m.Groups["resistdebuff"].Success);
+            Assert.IsTrue(m.Groups["skill"].Success && m.Groups["skill"].Value == "Bleed");
+            Assert.IsFalse(m.Groups["actor"].Success);
 
         }
+
         [TestMethod]
         public void LogParse_Regex_incomingdamage1_HPDrain_Crit()
         {
