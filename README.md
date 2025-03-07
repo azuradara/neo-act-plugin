@@ -47,13 +47,14 @@ You can even use one provided in our github from [Overlays](https://github.com/a
 ## Limitations
 
 - This is a POC - it works fine but it's missing support for a lot of features provided by ACT (e.g. blocks, buffs, debuffs, etc..)
+- Only supports EN.
+- Damage over time skills and damage from effects that have no explicit actor in the combat log will be attributed to an "Unknown" actor.
 - Zone names are not provided in the combat log, so all logs are combined into a single zone on ACT.
-- ~~It doesn't distinguish between encounters automatically, you will have to end/start encounters from ACT manually.~~
 - This will break every time NC updates the .exe, which means you will have to wait a while until I (or a benevolent soul) update the offsets.
+- ~~It doesn't distinguish between encounters automatically, you will have to end/start encounters from ACT manually.~~
 - ~~Sometimes the game goes crazy, probably because I skipped refreshing pointers cuz I was lazy but I'll fix that later.~~
 - ~~Does not distinguish between crits and non-crits.~~
-- Skills with apostrophes are clunky.
-- Only supports EN.
+- ~~Skills with apostrophes are clunky.~~
 
 ## Roadmap
 
