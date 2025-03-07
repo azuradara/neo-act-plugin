@@ -56,4 +56,5 @@ jobs:
               exit 1
           }
           Write-Host "Using vstest.console.exe at $($vstest.FullName)"
-          & $vstest.FullName "**/bin/Debug/*Test*.dll"
+          & $vstest.FullName "**/bin/Debug/NEO_ACT_Plugin.Test.dll"
+
