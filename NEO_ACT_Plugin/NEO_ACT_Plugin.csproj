@@ -66,8 +66,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".github\workflows\test.yml" />
-    <None Include="nuget.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="packages\MSTest.Analyzers.3.8.2\analyzers\dotnet\cs\MSTest.Analyzers.CodeFixes.dll" />

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35825.156
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEO_ACT_Plugin", "NEO_ACT_Plugin.csproj", "{6FC0C13A-B517-43C9-BA49-6E95C09FC45B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEO_ACT_Plugin", "NEO_ACT_Plugin\NEO_ACT_Plugin.csproj", "{6FC0C13A-B517-43C9-BA49-6E95C09FC45B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEO_ACT_Plugin.Test", "..\NEO_ACT_Plugin.Test\NEO_ACT_Plugin.Test.csproj", "{F3BB88B6-A2E2-42A3-882D-10F6D3ED0F6E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NEO_ACT_Plugin.Test", "NEO_ACT_Plugin.Test\NEO_ACT_Plugin.Test.csproj", "{F3BB88B6-A2E2-42A3-882D-10F6D3ED0F6E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
