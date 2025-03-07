@@ -1,4 +1,4 @@
-name: .NET Framework Tests with ACT
+name: Test
 
 on:
   push:
@@ -45,15 +45,15 @@ jobs:
       - name: Run tests
         shell: powershell
         run: |
-          $vsPath = &"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.TestTools -property installationPath
+          $vsPath = &"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -property installationPath
           if (-not $vsPath) {
-              Write-Error "Visual Studio installation with test platform not found."
+              Write-Error "Visual Studio installation not found."
               exit 1
           }
-          $vstest = Join-Path $vsPath "Common7\IDE\Extensions\TestPlatform\vstest.console.exe"
-          if (-not (Test-Path $vstest)) {
-              Write-Error "vstest.console.exe not found at $vstest"
+          $vstest = Get-ChildItem -Path $vsPath -Filter vstest.console.exe -Recurse | Select-Object -First 1
+          if (-not $vstest) {
+              Write-Error "vstest.console.exe not found in Visual Studio installation at $vsPath"
               exit 1
           }
-          Write-Host "Using vstest.console.exe at $vstest"
-          & $vstest "**/bin/Debug/*Test*.dll"
+          Write-Host "Using vstest.console.exe at $($vstest.FullName)"
+          & $vstest.FullName "**/bin/Debug/*Test*.dll"
