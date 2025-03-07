@@ -1,4 +1,4 @@
-name: Test
+name: .NET Framework Tests with ACT
 
 on:
   push:
@@ -13,6 +13,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Restore NuGet packages
+        run: nuget restore NEO_ACT_Plugin.sln
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.1
@@ -37,7 +40,7 @@ jobs:
           Copy-Item -Path "$env:USERPROFILE\AdvancedCombatTracker\Advanced Combat Tracker.exe" -Destination "$actTarget\Advanced Combat Tracker.exe" -Force
 
       - name: Build solution
-        run: msbuild NEO_ACT_Plugin.sln /p:Configuration=Debug
+        run: msbuild NEO_ACT_Plugin.sln /p:Configuration=Debug /p:ReferencePath="C:\Program Files (x86)\Advanced Combat Tracker"
 
       - name: Run tests
         run: |
