@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
 
 namespace NeoActPlugin
 {
@@ -109,6 +110,22 @@ namespace NeoActPlugin
         {
             lblStatus = pluginStatusText;
 
+            if (!IsRunningAsAdmin())
+            {
+                lblStatus.Text = "Error: Run ACT as Administrator.";
+
+                MessageBox.Show(
+                    "NeoActPlugin requires ACT to be run as Administrator. Please restart ACT with elevated privileges.",
+                    "Admin Rights Required",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+
+                this.DeInitPlugin();
+
+                return;
+            }
+
             try
             {
                 Advanced_Combat_Tracker.ActGlobals.oFormActMain.UpdateCheckClicked += new Advanced_Combat_Tracker.FormActMain.NullDelegate(UpdateCheckClicked);
@@ -145,6 +162,15 @@ namespace NeoActPlugin
             {
                 LogParserMessage("Exception during InitPlugin: " + ex.ToString().Replace(Environment.NewLine, " "));
                 lblStatus.Text = "InitPlugin Error.";
+            }
+        }
+
+        private bool IsRunningAsAdmin()
+        {
+            using (WindowsIdentity identity = WindowsIdentity.GetCurrent())
+            {
+                WindowsPrincipal principal = new WindowsPrincipal(identity);
+                return principal.IsInRole(WindowsBuiltInRole.Administrator);
             }
         }
 
@@ -436,7 +462,7 @@ namespace NeoActPlugin
                         target = "You";
 
                     if (string.IsNullOrWhiteSpace(actor))
-                        actor = "You";
+                        actor = "Unknown";
 
                     // todo: in the future, if damage is missing, still parse the buff portion
                     if (!m.Groups["damage"].Success)
