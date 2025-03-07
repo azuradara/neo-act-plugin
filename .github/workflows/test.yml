@@ -1,4 +1,4 @@
-name: Test
+name: .NET Framework Tests with ACT
 
 on:
   push:
@@ -40,7 +40,11 @@ jobs:
           Copy-Item -Path "$env:USERPROFILE\AdvancedCombatTracker\Advanced Combat Tracker.exe" -Destination "$actTarget\Advanced Combat Tracker.exe" -Force
 
       - name: Build solution
-        run: msbuild NEO_ACT_Plugin.sln /p:Configuration=Debug /p:ReferencePath="C:\Program Files (x86)\Advanced Combat Tracker"
+        run: msbuild NEO_ACT_Plugin.sln /m /p:Configuration=Debug /p:ReferencePath="C:\Program Files (x86)\Advanced Combat Tracker" /p:RunAnalyzers=false
+
+      - name: List built DLLs
+        shell: powershell
+        run: Get-ChildItem -Path . -Recurse -Filter *.dll
 
       - name: Run tests
         shell: powershell
@@ -57,4 +61,3 @@ jobs:
           }
           Write-Host "Using vstest.console.exe at $($vstest.FullName)"
           & $vstest.FullName "**/bin/Debug/NEO_ACT_Plugin.Test.dll"
-
