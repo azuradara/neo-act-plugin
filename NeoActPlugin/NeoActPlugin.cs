@@ -9,9 +9,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace NEO_ACT_Plugin
+namespace NeoActPlugin
 {
-    public class NEO_ACT_Plugin : UserControl, Advanced_Combat_Tracker.IActPluginV1
+    public class Plugin : UserControl, Advanced_Combat_Tracker.IActPluginV1
     {
         #region Designer Created Code (Avoid editing)
         /// <summary>
@@ -98,12 +98,12 @@ namespace NEO_ACT_Plugin
 
         #endregion Designer Created Code (Avoid editing)
 
-        public NEO_ACT_Plugin()
+        public Plugin()
         {
             InitializeComponent();
         }
 
-        private Label lblStatus = null;
+        private System.Windows.Forms.Label lblStatus = null;
 
         public void InitPlugin(System.Windows.Forms.TabPage pluginScreenSpace, System.Windows.Forms.Label pluginStatusText)
         {
@@ -243,7 +243,7 @@ namespace NEO_ACT_Plugin
                         if (_workerThread.ThreadState == System.Threading.ThreadState.Stopped)
                             break;
                         System.Threading.Thread.Sleep(50);
-                        Application.DoEvents();
+                        System.Windows.Forms.Application.DoEvents();
                     }
 
                     if (_workerThread.ThreadState != System.Threading.ThreadState.Stopped)
@@ -256,7 +256,7 @@ namespace NEO_ACT_Plugin
             }
             catch (Exception ex)
             {
-                NEO_ACT_Plugin.LogParserMessage("Error [BNS_Log.Uninitialize] " + ex.ToString().Replace(Environment.NewLine, " "));
+                Plugin.LogParserMessage("Error [BNS_Log.Uninitialize] " + ex.ToString().Replace(Environment.NewLine, " "));
             }
         }
 
@@ -291,7 +291,7 @@ namespace NEO_ACT_Plugin
             {
                 string errorMessage = string.Format("{0}|Error [{1}] {2}", DateTime.Now.ToString("HH:mm:ss.fff"), context, ex.ToString());
                 _logWriter.WriteLine(_logFilePath, errorMessage);
-                NEO_ACT_Plugin.LogParserMessage(errorMessage);
+                Plugin.LogParserMessage(errorMessage);
             }
             catch { /* Prevent logging failures from crashing thread */ }
         }
@@ -335,14 +335,14 @@ namespace NEO_ACT_Plugin
                     if (!DateTime.TryParse(timestampPart, out ret))
                     {
 
-                        NEO_ACT_Plugin.LogParserMessage("Failed to parse timestamp");
+                        Plugin.LogParserMessage("Failed to parse timestamp");
                         return DateTime.MinValue;
                     }
                 }
             }
             catch (Exception ex)
             {
-                NEO_ACT_Plugin.LogParserMessage("Error [ParseLogDateTime] " + ex.ToString().Replace(Environment.NewLine, " "));
+                Plugin.LogParserMessage("Error [ParseLogDateTime] " + ex.ToString().Replace(Environment.NewLine, " "));
             }
             return ret;
         }
@@ -567,12 +567,12 @@ namespace NEO_ACT_Plugin
                 if (ex.InnerException != null)
                     exception += " " + ex.InnerException.ToString().Replace(Environment.NewLine, " ");
 
-                NEO_ACT_Plugin.LogParserMessage("Error [LogParse.BeforeLogLineRead] " + exception + " " + logInfo.logLine);
+                Plugin.LogParserMessage("Error [LogParse.BeforeLogLineRead] " + exception + " " + logInfo.logLine);
             }
 
             // For debugging
             if (!string.IsNullOrWhiteSpace(logLine))
-                NEO_ACT_Plugin.LogParserMessage("Unhandled Line: " + logInfo.logLine);
+                Plugin.LogParserMessage("Unhandled Line: " + logInfo.logLine);
         }
 
         private static string DecodeString(string data)
@@ -698,7 +698,7 @@ namespace NEO_ACT_Plugin
             }
             catch (Exception ex)
             {
-                NEO_ACT_Plugin.LogParserMessage("Error refreshing pointers: " + ex.Message);
+                Plugin.LogParserMessage("Error refreshing pointers: " + ex.Message);
             }
         }
 

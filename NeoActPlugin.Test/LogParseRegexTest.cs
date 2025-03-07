@@ -1,9 +1,10 @@
 ﻿using System.Text.RegularExpressions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace NEO_ACT_Plugin.Test
+namespace NeoActPlugin.Test
 {
     [TestClass]
-    public class LogParse_Regex
+    public class LogParseRegex
     {
         [TestMethod]
         public void LogParse_Regex_yourdamage_simple()

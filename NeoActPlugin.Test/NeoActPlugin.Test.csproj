@@ -13,14 +13,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NEO_ACT_Plugin\NEO_ACT_Plugin.csproj" />
+    <ProjectReference Include="..\NeoActPlugin\NeoActPlugin.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="Advanced Combat Tracker">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Advanced Combat Tracker\Advanced Combat Tracker.exe</HintPath>
     </Reference>
-    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 
   <ItemGroup>
