@@ -20,7 +20,7 @@ This is a POC [ACT](https://advancedcombattracker.com/home.php) plugin for BnS N
 2. Run ACT as an administrator, otherwise the plugin will not be able to access your game's memory.
 3. Go to the "Plugins" tab and click the "Browse" button then locate the file you just downloaded and click OK.
 4. Enable the plugin and run BnS.
-5. Make sure you always run it with other characters **shown**, otherwise their crit damage cannot be parsed (See limitations below).
+5. Make sure you always run it with other characters **shown**, otherwise their crit hit rate will always 0%.
 
 ### Adding overlays
 
@@ -48,7 +48,7 @@ You can even use one provided in our github from [Overlays](https://github.com/a
 ## Limitations
 
 - This is a POC - it works fine but it's missing support for a lot of features provided by ACT (e.g. blocks, buffs, debuffs, etc..).
-- The combat log does not include other players' crit damage if you have characters hidden (CTRL + F), so this plugin cannot parse it.
+- If you have characters hidden (CTRL+F, either partially or fully), the combat log does not specify if their damage is a crit or not, so their %CH will always be 0, but the damage itself will be parsed correctly.
 - Only supports EN.
 - Damage over time skills and damage from effects that have no explicit actor in the combat log will be attributed to an "Unknown" actor.
 - Zone names are not provided in the combat log, so all logs are combined into a single zone on ACT.
