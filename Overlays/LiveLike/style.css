@@ -1,0 +1,210 @@
+/* DPS Meter Container */
+.dps-meter {
+    position: fixed;
+    top: 10%;
+    right: 0;
+    background: rgba(10, 10, 10, 0.85);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    min-width: 263px; /* Increased default size */
+    max-width: 263px;
+    width: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    resize: horizontal;
+    border-radius: 8px;
+    padding: 10px;
+    color: #fff;
+}
+
+/* Ensure fonts and elements scale correctly */
+.dps-meter, .encounter-info, .dps-bar, .skill-details-container {
+    font-family: Arial, sans-serif;
+}
+
+/* Encounter Info (Global DPS & Boss Name) */
+.encounter-info {
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    padding-bottom: 8px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 8px;
+}
+
+/* DPS Bars */
+.dps-bar {
+    width: 100%;
+    height: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 3px;
+    position: relative;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    display: flex;
+    align-items: center;
+}
+
+/* Inner DPS Bar */
+.dps-bar span {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    transition: width 0.5s ease-in-out;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0 8px;
+    white-space: nowrap;
+}
+
+/* DPS Bar Text */
+.dps-bar-text {
+    flex-grow: 1;
+    padding-left: 5px;
+    text-align: right;
+}
+
+/* Total Damage and % Contribution */
+.dps-total {
+    padding-right: 8px;
+    text-align: right;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* Colors for DPS Bars */
+.player.you .dps-bar span {
+    background: #ff9933;
+}
+
+.player .dps-bar span {
+    background: #4caf50;
+}
+
+/* Skill Details Popup */
+.skill-details-container {
+    position: absolute;
+    /* Let the container auto-size rather than forcing a 263px minimum */
+    width: auto;
+    overflow: visible;
+    background: rgba(15, 15, 15, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    padding: 10px;
+    display: none;
+    z-index: 100;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+/* Dynamically Position Left or Right */
+.skill-details-container.left {
+    right: calc(100% + 10px);
+}
+
+.skill-details-container.right {
+    left: calc(100% + 10px);
+}
+
+/* Total Damage Header */
+.skill-summary {
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    padding-bottom: 5px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    margin-bottom: 8px;
+}
+
+/* Skill Labels Section */
+.skill-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: bold;
+    color: #bbb;
+    margin-bottom: 5px;
+    text-align: center;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.skill-labels span {
+    flex: 1;
+    text-align: center;
+}
+
+/* Skill Row */
+.skill {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    padding: 4px 0;
+    justify-content: space-between;
+}
+
+/* Skill Name */
+.skill-name {
+    flex: 1;
+    color: white;
+    text-align: center;
+}
+
+/* Hits Number */
+.skill-hits {
+    flex: 1;
+    text-align: center;
+    color: #ffcc00;
+}
+
+/* Critical Hit % */
+.skill-crit {
+    flex: 1;
+    text-align: center;
+    color: #ff6666;
+    font-size: 12px;
+}
+
+/* Skill Progress Bar */
+.skill-bar {
+    flex: 2;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Inner Skill Bar */
+.skill-bar span {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    transition: width 0.5s ease-in-out;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0 8px;
+    white-space: nowrap;
+}
+
+/* Skill Bar Text */
+.skill-bar-text {
+    flex-grow: 1;
+    text-align: right;
+    padding-right: 8px;
+}
+
+/* Colors for Skill Bars */
+.skill:nth-child(1) .skill-bar span { background: #ff4d4d; }
+.skill:nth-child(2) .skill-bar span { background: #ffcc00; }
+.skill:nth-child(n+3) .skill-bar span { background: #4caf50; }

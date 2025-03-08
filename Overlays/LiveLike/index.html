@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Fixed width viewport to allow wider overlays -->
+    <meta name="viewport" content="width=800, initial-scale=1.0" />
+    <title>DPS Meter UI</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://overlayplugin.github.io/OverlayPlugin/assets/shared/common.min.js"></script>
+  </head>
+  <body>
+    <div class="skill-details-container" id="skill-details"></div>
+    <div class="dps-meter">
+      <div class="encounter-info">
+        <span id="boss-name">Boss Name</span> -
+        <span id="global-dps">0 DPS</span>
+      </div>
+      <div class="player-list" id="combatantTable"></div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
