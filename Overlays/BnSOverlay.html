@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACT DPS Overlay</title>
+    <style>
+        * {
+            font-family: "Meiryo";
+            font-size: 18px;
+        }
+        html {
+            height: 100%;
+            overflow: hidden;
+            background-color: transparent;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: rgba(0, 0, 0, 0);
+            color: white;
+        }
+        .resizeHandle {
+            background-image: url(handle.png);
+            background-size: 35px;
+            background-position: bottom right;
+            background-repeat: no-repeat;
+            box-sizing: border-box;
+        }
+        .meter {
+            width: 94%;
+            background: rgba(25, 25, 25, 0.9);
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+        }
+        .title {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        #combatantTable {
+            width: 100%;
+        }
+        .meter tr {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to right, #b58900, #9b4a00);
+            padding: 8px;
+            margin: 6px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+            font-weight: bold;
+            text-shadow: 2px 2px 2px black;
+        }
+        .meter tr:hover {
+            transform: scale(1.05);
+        }
+        .overlay {
+            position: absolute;
+            background: rgba(20, 20, 20, 0.95);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            text-align: center;
+            font-size: 14px;
+            overflow: hidden;
+            display: none;
+            transition: height 0.3s ease-out;
+            max-height: 500px;
+            height: 0px;
+        }
+        .overlay.expanded {
+            height: auto;
+            display: block;
+        }
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .details-table th, .details-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+        .details-table th {
+            background: rgba(50, 50, 50, 0.8);
+            color: #b58900;
+            font-weight: bold;
+        }
+        .details-table td {
+            background: rgba(40, 40, 40, 0.8);
+            color: #ddd;
+        }
+        .details-table tr:hover {
+            background-color: rgba(60, 60, 60, 0.8);
+        }
+    </style>
+    <script src="https://overlayplugin.github.io/OverlayPlugin/assets/shared/common.min.js"></script>
+    <script>
+        let bodyDefine = [
+            { text: "{name}", align: "left"},
+            { text: "{encdps-*}/sec", align: "right"},
+        ];
+
+        let encounterDefine = "{title} - Time: {duration} - Overall DPS: {encdps-*}";
+
+        let useHTMLEncounterDefine = false;
+
+        document.addEventListener("onOverlayStateUpdate", function (e) {
+            if (!e.detail.isLocked) {
+                displayResizeHandle();
+            } else {
+                hideResizeHandle();
+            }
+        });
+
+        function displayResizeHandle() {
+            document.documentElement.classList.add("resizeHandle");
+        }
+
+        function hideResizeHandle() {
+            document.documentElement.classList.remove("resizeHandle");
+        }
+
+        addOverlayListener("CombatData", (e) => update(e));
+        startOverlayEvents();
+
+        function update(data) {
+            updateEncounter(data);
+            updateCombatantList(data);
+        }
+
+        function updateEncounter(data) {
+            let encounterElem = document.getElementById('currentBoss');
+
+            let elementText;
+            if (typeof encounterDefine === 'function') {
+                elementText = encounterDefine(data.Encounter);
+                if (typeof elementText !== 'string') {
+                    console.log("updateEncounter: 'encounterDefine' is declared as function but not returns a value as string.");
+                    return;
+                }
+            } else if (typeof encounterDefine === 'string') {
+                elementText = parseActFormat(encounterDefine, data.Encounter);
+            } else {
+                console.log("updateEncounter: 'encounterDefine' should be string or function that returns string.");
+                return;
+            }
+
+
+            if (!useHTMLEncounterDefine) {
+                encounterElem.innerText = parseActFormat(elementText, data.Encounter);
+            } else {
+                encounterElem.innerHTML = parseActFormat(elementText, data.Encounter);
+            }
+        }
+
+        function updateCombatantList(data) {
+            let table = document.getElementById('combatantTable');
+            let oldTableBody = table.tBodies.namedItem('combatantTableBody');
+            let newTableBody = document.createElement("tbody");
+            newTableBody.id = "combatantTableBody";
+
+            let combatantIndex = 0;
+            for (let combatantName in data.Combatant) {
+                let combatant = data.Combatant[combatantName];
+                let tableRow = newTableBody.insertRow(newTableBody.rows.length);
+                tableRow.onclick = (event) => showDetails(data.Combatant[combatantName], event);
+                for (let i = 0; i < bodyDefine.length; i++) {
+                    let cell = tableRow.insertCell(i);
+
+                    if (typeof bodyDefine[i].text !== 'undefined') {
+                        let cellText;
+                        if (typeof bodyDefine[i].text === 'function') {
+                            cellText = bodyDefine[i].text(combatant, combatantIndex);
+                        } else {
+                            cellText = parseActFormat(bodyDefine[i].text, combatant);
+                        }
+                        cell.innerText = cellText;
+                    } else if (typeof bodyDefine[i].html !== 'undefined') {
+                        let cellHTML;
+                        if (typeof bodyDefine[i].html === 'function') {
+                            cellHTML = bodyDefine[i].html(combatant, combatantIndex);
+                        } else {
+                            cellHTML = parseActFormat(bodyDefine[i].html, combatant);
+                        }
+                        cell.innerHTML = cellHTML;
+                    }
+
+                    cell.style.width = bodyDefine[i].width;
+                    cell.style.maxWidth = bodyDefine[i].width;
+
+                    if (typeof (bodyDefine[i].align) !== 'undefined') {
+                        cell.style.textAlign = bodyDefine[i].align;
+                    }
+
+                    if (typeof bodyDefine[i].effect === 'function') {
+                        bodyDefine[i].effect(cell, combatant, combatantIndex);
+                    }
+                }
+                combatantIndex++;
+            }
+
+            if (oldTableBody != void (0)) {
+                table.replaceChild(newTableBody, oldTableBody);
+            }
+            else {
+                table.appendChild(newTableBody);
+            }
+        }
+
+        function parseActFormat(str, dictionary) {
+            let result = "";
+
+            let currentIndex = 0;
+            do {
+                let openBraceIndex = str.indexOf('{', currentIndex);
+                if (openBraceIndex < 0) {
+                    result += str.slice(currentIndex);
+                    break;
+                }
+                else {
+                    result += str.slice(currentIndex, openBraceIndex);
+                    let closeBraceIndex = str.indexOf('}', openBraceIndex);
+                    if (closeBraceIndex < 0) {
+                        // parse error!
+                        console.log("parseActFormat: Parse error: missing close-brace for " + openBraceIndex.toString() + ".");
+                        return "ERROR";
+                    }
+                    else {
+                        let tag = str.slice(openBraceIndex + 1, closeBraceIndex);
+                        if (typeof dictionary[tag] !== 'undefined') {
+                            result += dictionary[tag];
+                        } else {
+                            console.log("parseActFormat: Unknown tag: " + tag);
+                            result += "ERROR";
+                        }
+                        currentIndex = closeBraceIndex + 1;
+                    }
+                }
+            } while (currentIndex < str.length);
+
+            return result;
+        }
+
+        function showDetails(combatant, event) {
+            let overlay = document.getElementById('overlay');
+    
+            let name = combatant.name || 'Unknown';
+            let damage = combatant['damage-*'] || 0;
+            let damagePercent = combatant['damage%'] || 0;
+            let hits = combatant['hits'] || 0;
+            let critPercent = combatant['crithit%'] || 0;
+
+            overlay.querySelector('#player').innerHTML = `<h2>${name}</h2>`;
+            
+            let statsContainer = overlay.querySelector('.details');
+            statsContainer.innerHTML = `
+                <table class="details-table">
+                    <tr>
+                        <th>Damage Done</th>
+                        <td>${damage}</td>
+                    </tr>
+                    <tr>
+                        <th>Total Damage %</th>
+                        <td>${damagePercent}</td>
+                    </tr>
+                    <tr>
+                        <th>Hits</th>
+                        <td>${hits}</td>
+                    </tr>
+                    <tr>
+                        <th>Critical Hit %</th>
+                        <td>${critPercent}</td>
+                    </tr>
+                </table>
+            `;
+
+            let meterWidth = document.getElementById('combatantTable').offsetWidth;
+            
+            let rowRect = event.currentTarget.getBoundingClientRect();
+            overlay.style.left = `${rowRect.left}px`;
+            overlay.style.top = `${rowRect.top + rowRect.height + window.scrollY}px`;
+            
+            overlay.style.width = `${meterWidth - 21}px`;
+
+            if (overlay.classList.contains('expanded')) {
+                overlay.classList.remove('expanded');
+            } else {
+                overlay.classList.add('expanded');
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="meter" id="dpsMeter">
+        <div class="title">
+            <p><span id="currentBoss">No Data</span></p>
+        </div>
+        <div>
+        <table id="combatantTable">
+
+        </table>
+        </div>
+    </div>
+
+    <div id="overlay" class="overlay">
+        <h2 id="player"></h2>
+        <div class="details">
+        </div>
+    </div>
+</body>
+</html>
