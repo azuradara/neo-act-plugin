@@ -1,9 +1,9 @@
-﻿<html>
+<html>
+
 <head>
     <meta charset="utf-8" />
     <title></title>
     <style>
-
         /*
             表示設定 (1)
         */
@@ -14,7 +14,8 @@
             font-size: 18px;
         }
 
-        body, html {
+        body,
+        html {
             margin: 0;
         }
 
@@ -23,11 +24,11 @@
 
             /* 外枠 */
             /*border: 1px solid rgba(0,0,0,0.1);*/
-            
+
             /* はみ出た内容はスクロールバーを表示させずに隠す
              * 今のところ、ブラウザへの入力はできないので表示させても無意味 */
             overflow: hidden;
-            
+
             /* 背景色 */
             background-color: transparent;
         }
@@ -73,7 +74,6 @@
         #combatantTableHeader tr {
             border-bottom: 1px solid #FFFFFF;
         }
-
     </style>
     <script src="https://overlayplugin.github.io/OverlayPlugin/assets/shared/common.min.js"></script>
     <script>
@@ -108,24 +108,24 @@
 
         // ヘッダの定義
         var headerDefine =
-        [
-            //{ text: "#", width: "5%", align: "center" },
-            { text: "Name", width: "25%", align: "left" },
-            { text: "DPS (%)", width: "25%", align: "center", span: 2 },
-            { text: "Crt.(%)", width: "10%", align: "right" },
-	    { text: "Max Hit", width: "25%", align: "right" },
-        ];
+            [
+                //{ text: "#", width: "5%", align: "center" },
+                { text: "Name", width: "25%", align: "left" },
+                { text: "DPS (%)", width: "25%", align: "center", span: 2 },
+                { text: "Crt.(%)", width: "10%", align: "right" },
+                { text: "Max Hit", width: "25%", align: "right" },
+            ];
 
         // 表示するデータの定義
         var bodyDefine =
-        [
-            //{ text: rankingText, width: "5%", align: "center", effect: deadYatsuEffect },
-            { text: "{name}", width: "25%" },
-            { text: "{encdps}", width: "13%", align: "right" },
-            { text: "{damage%}", width: "12%", align: "center" },
-            { text: "{crithit%}", width: "10%", align: "right" },
-	    { text: "{maxhit-*}", width: "25%", align: "right" },
-        ];
+            [
+                //{ text: rankingText, width: "5%", align: "center", effect: deadYatsuEffect },
+                { text: "{name}", width: "25%" },
+                { text: "{encdps}", width: "13%", align: "right" },
+                { text: "{damage%}", width: "12%", align: "center" },
+                { text: "{crithit%}", width: "10%", align: "right" },
+                { text: "{maxhit-*}", width: "25%", align: "right" },
+            ];
 
         // 順位を表示する（text に関数を指定する例）
         // 引数:
@@ -138,7 +138,6 @@
             // 1 から始まる番号を返す
             return (index + 1).toString();
         }
-        
         // 死亡奴を赤くする（effect の例）
         // 引数:
         //  cell : セルの DOM 要素
@@ -263,8 +262,7 @@
             for (var combatantName in data.Combatant) {
                 var combatant = data.Combatant[combatantName];
                 var tableRow = newTableBody.insertRow(newTableBody.rows.length);
-                for (var i = 0; i < bodyDefine.length; i++)
-                {
+                for (var i = 0; i < bodyDefine.length; i++) {
                     var cell = tableRow.insertCell(i);
                     // テキスト設定
                     if (typeof bodyDefine[i].text !== 'undefined') {
@@ -288,7 +286,7 @@
                     cell.style.width = bodyDefine[i].width;
                     cell.style.maxWidth = bodyDefine[i].width;
                     // 行構え設定
-                    if (typeof(bodyDefine[i].align) !== 'undefined') {
+                    if (typeof (bodyDefine[i].align) !== 'undefined') {
                         cell.style.textAlign = bodyDefine[i].align;
                     }
                     // エフェクト実行
@@ -300,7 +298,7 @@
             }
 
             // tbody が既に存在していたら置換、そうでないならテーブルに追加
-            if (oldTableBody != void(0)) {
+            if (oldTableBody != void (0)) {
                 table.replaceChild(newTableBody, oldTableBody);
             }
             else {
@@ -309,8 +307,7 @@
         }
 
         // Miniparse フォーマット文字列を解析し、表示文字列を取得する
-        function parseActFormat(str, dictionary)
-        {
+        function parseActFormat(str, dictionary) {
             var result = "";
 
             var currentIndex = 0;
@@ -340,7 +337,6 @@
                     }
                 }
             } while (currentIndex < str.length);
-            
             return result;
         }
 

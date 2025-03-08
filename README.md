@@ -20,6 +20,7 @@ This is a POC [ACT](https://advancedcombattracker.com/home.php) plugin for BnS N
 2. Run ACT as an administrator, otherwise the plugin will not be able to access your game's memory.
 3. Go to the "Plugins" tab and click the "Browse" button then locate the file you just downloaded and click OK.
 4. Enable the plugin and run BnS.
+5. Make sure you always run it with other characters **shown**, otherwise their crit damage cannot be parsed (See limitations below).
 
 ### Adding overlays
 
@@ -41,17 +42,21 @@ You can even use one provided in our github from [Overlays](https://github.com/a
 
 - The parser does not read DPS and/or reads logs from a different chat (e.g. faction chat).
     - Fix: Click "Chat Tab Options" (the cog icon on the left of ur chat tabs) > Reset > All Settings. This is because the plugin reads from the default combat chat tab and does not support custom ones.
+- It keeps spewing "Failed to reolve pointer chain" errors:
+  - Make sure ACT is running as administrator.
 
 ## Limitations
 
-- This is a POC - it works fine but it's missing support for a lot of features provided by ACT (e.g. blocks, buffs, debuffs, etc..)
+- This is a POC - it works fine but it's missing support for a lot of features provided by ACT (e.g. blocks, buffs, debuffs, etc..).
+- The combat log does not include other players' crit damage if you have characters hidden (CTRL + F), so this plugin cannot parse it.
+- Only supports EN.
+- Damage over time skills and damage from effects that have no explicit actor in the combat log will be attributed to an "Unknown" actor.
 - Zone names are not provided in the combat log, so all logs are combined into a single zone on ACT.
-- ~~It doesn't distinguish between encounters automatically, you will have to end/start encounters from ACT manually.~~
 - This will break every time NC updates the .exe, which means you will have to wait a while until I (or a benevolent soul) update the offsets.
+- ~~It doesn't distinguish between encounters automatically, you will have to end/start encounters from ACT manually.~~
 - ~~Sometimes the game goes crazy, probably because I skipped refreshing pointers cuz I was lazy but I'll fix that later.~~
 - ~~Does not distinguish between crits and non-crits.~~
-- Skills with apostrophes are clunky.
-- Only supports EN.
+- ~~Skills with apostrophes are clunky.~~
 
 ## Roadmap
 
@@ -63,6 +68,7 @@ You can even use one provided in our github from [Overlays](https://github.com/a
 ## Contributing
 
 I'm too lazy to write a contribution guidelines doc, feel free to submit PRs or issues if you'd like. This project will always be free.
+If you don't want to submit an issue, contact `azuradara` on Discord.
 
 ## Motivation
 
