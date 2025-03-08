@@ -256,6 +256,7 @@
             let damagePercent = combatant['damage%'] || 0;
             let hits = combatant['hits'] || 0;
             let critPercent = combatant['crithit%'] || 0;
+            let maxHit = combatant['maxhit-*'] || 'N/A';
 
             overlay.querySelector('#player').innerHTML = `<h2>${name}</h2>`;
             
@@ -277,6 +278,10 @@
                     <tr>
                         <th>Critical Hit %</th>
                         <td>${critPercent}</td>
+                    </tr>
+                    <tr>
+                        <th>Max Hit</th>
+                        <td>${maxHit}</td>
                     </tr>
                 </table>
             `;
