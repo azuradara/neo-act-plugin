@@ -142,6 +142,11 @@ function hideSkills() {
   }
 }
 
+document.addEventListener('DOMContentLoaded', function () {
+  addOverlayListener('CombatData', updateDPSMeter)
+  startOverlayEvents()
+})
+
 function setupZoomControls() {
   const zoomOutBtn = document.getElementById('zoom-out');
   const zoomInBtn = document.getElementById('zoom-in');
