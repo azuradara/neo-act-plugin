@@ -3,6 +3,8 @@ const nf = new Intl.NumberFormat('en-US')
 document.addEventListener('DOMContentLoaded', function () {
   addOverlayListener('CombatData', updateDPSMeter)
   startOverlayEvents()
+
+  setupZoomControls()
 })
 
 let popperInstance = null
@@ -140,7 +142,44 @@ function hideSkills() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  addOverlayListener('CombatData', updateDPSMeter)
-  startOverlayEvents()
-})
+function setupZoomControls() {
+  const zoomOutBtn = document.getElementById('zoom-out');
+  const zoomInBtn = document.getElementById('zoom-in');
+  const root = document.documentElement;
+
+  let currentZoom = 100; 
+  const minZoom = 50;
+  const maxZoom = 200;
+  const zoomStep = 10;
+
+  const savedZoom = localStorage.getItem('dpsMeterZoom');
+  if (savedZoom) {
+    currentZoom = parseInt(savedZoom);
+    applyZoom();
+  }
+
+  function applyZoom() {
+    root.style.fontSize = `${currentZoom / 100}rem`;
+    
+    localStorage.setItem('dpsMeterZoom', currentZoom);
+  }
+
+  zoomOutBtn.addEventListener('click', () => {
+    currentZoom = Math.max(minZoom, currentZoom - zoomStep);
+    applyZoom();
+  });
+
+  zoomInBtn.addEventListener('click', () => {
+    currentZoom = Math.min(maxZoom, currentZoom + zoomStep);
+    applyZoom();
+  });
+
+  document.querySelectorAll('.zoom-btn').forEach(element => {
+    element.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+    });
+  });
+}
+
+document.removeEventListener('DOMContentLoaded', setupZoomControls);
