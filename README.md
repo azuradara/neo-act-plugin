@@ -24,28 +24,30 @@ This is an [ACT](https://advancedcombattracker.com/home.php) plugin for BnS NEO.
 
 This plugin is only responsible for parsing combat logs to a form that ACT can understand, if you want an overlay over your game you will have to install other plugins on top of this one. Here's a quick walkthrough of how to install "Ember" (The only overlay I tested).
 
-1. Open ACT and go to the "Plugins" tab.
+1. Download the latest version of the ACT setup file from their [Downloads page](https://advancedcombattracker.com/download.php) and install it.
+
+2.  Open ACT and go to the "Plugins" tab.
 
 3. Click "Get Plugins..." on the right and pick "Overlay Plugin" then click "Download and Enable".
    
-5. Once finished, click the "OverlayPlugin.dll" tab and click "New" on the left.
+4. Once finished, click the "OverlayPlugin.dll" tab and click "New" on the left.
    
-7. Pick "Custom" from the Preset dropdown and then give it any name you'd like.
+5. Pick "Custom" from the Preset dropdown and then give it any name you'd like.
    
-9. Select "MiniParse" from the Type dropdown and click OK.
+6. Select "MiniParse" from the Type dropdown and click OK.
     
-11. Click the new overlay you just added on the sidebar on the left, and change the "URL" to:
+7. Click the new overlay you just added on the sidebar on the left, and change the "URL" to:
   ```
   https://azuradara.github.io/neo-act-plugin/overlays/live-like/
   ```
 
-9. Move it somewhere you like, then click "Enable clickthrough" to prevent your mouse from clicking it while you're playing.
+8. Move it somewhere you like, then click "Enable clickthrough" to prevent your mouse from clicking it while you're playing.
     
-11. For the time being, overlay doesn't recognize BNSR.exe as being the game client, so you will need to do some extra steps to make it stay on top:
+9. For the time being, overlay doesn't recognize BNSR.exe as being the game client, so you will need to do some extra steps to make it stay on top:
   - Go to Plugins > OverlayPlugin.dll > General
   - Uncheck "Automatically hide overlays when the game is in the background"
 
-12. If you would like to configure hotkeys for locking/unlocking and toggling visibility:
+10. If you would like to configure hotkeys for locking/unlocking and toggling visibility:
   - Click the overlay you just added on the sidebar and go to the "Hotkeys" tab.
   - Click "Add new hotkey", select your action, and bind it to whatever key you'd like.
 
