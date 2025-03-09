@@ -10,7 +10,7 @@ jobs:
       - name: Copy Files
         run: |
           mkdir -p public
-          cp Overlay/LiveLike/index.html public/
+          cp Overlays/LiveLike/index.html public/
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
