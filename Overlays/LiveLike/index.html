@@ -2,20 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- Fixed width viewport to allow wider overlays -->
-    <meta name="viewport" content="width=800, initial-scale=1.0" />
-    <title>DPS Meter UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NEO DPS Meter</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="reset.css" />
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://overlayplugin.github.io/OverlayPlugin/assets/shared/common.min.js"></script>
   </head>
   <body>
-    <div class="skill-details-container" id="skill-details"></div>
-    <div class="dps-meter">
-      <div class="encounter-info">
-        <span id="boss-name">Boss Name</span> -
-        <span id="global-dps">0 DPS</span>
+    <div class="overlay">
+      <div class="skill-details-container" id="skill-details"></div>
+      <div class="dps-meter">
+        <div class="encounter-info">
+          <span id="boss-name">Boss Name</span>
+        </div>
+        <div class="player-list" id="combatantTable"></div>
       </div>
-      <div class="player-list" id="combatantTable"></div>
     </div>
     <script src="script.js"></script>
   </body>

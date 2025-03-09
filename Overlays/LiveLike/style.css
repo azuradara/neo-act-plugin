@@ -1,210 +1,324 @@
-/* DPS Meter Container */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0 !important;
+  height: 100%;
+
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body.overlay {
+  margin: 0.5rem 0.25rem 0.25rem 0.25rem !important;
+  height: calc(100% - 0.25rem) !important;
+}
+
+body.overlay::after {
+  display: block;
+  content: '';
+
+  position: fixed;
+  right: 0;
+  bottom: 0;
+
+  width: 8px;
+  height: 8px;
+
+  background: rgba(0, 0, 0, 0.001);
+}
+
+body.collapsed::after {
+  display: none !important;
+}
+
+body.legacy-plugin .supports-end {
+  display: none !important;
+}
+body:not(.overlay) .overlay-only {
+  display: none !important;
+}
+body.overlay .browser-only {
+  display: none !important;
+}
+body:not(.ws) .ws-only {
+  display: none !important;
+}
+body.https .unsecure-only {
+  display: none !important;
+}
+
+.text-right.text-right {
+  text-align: right;
+}
+.hidden.hidden {
+  display: none;
+}
+
+mark {
+  background: none;
+  color: var(--color-accent);
+}
+a {
+  color: var(--color-accent);
+}
+
+.lang {
+  display: none;
+}
+
+::-webkit-scrollbar {
+  width: 0.25rem;
+  height: 0.25rem;
+  background: none;
+
+  margin-right: calc(var(--body-margin) * -1);
+}
+
+::-webkit-scrollbar-track {
+  background: none;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(63, 63, 63, 0.5);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-corner {
+  background: none;
+}
+
 .dps-meter {
-    position: fixed;
-    top: 10%;
-    right: 0;
-    background: rgba(10, 10, 10, 0.85);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    min-width: 263px; /* Increased default size */
-    max-width: 263px;
-    width: auto;
-    white-space: nowrap;
-    overflow: hidden;
-    resize: horizontal;
-    border-radius: 8px;
-    padding: 10px;
-    color: #fff;
+  background: rgba(255, 255, 255, 0.07);
+  
+  background-image: radial-gradient(
+    ellipse 80% 16px at top center, 
+    rgba(255, 255, 255, 0.3) 0%, 
+    rgba(255, 255, 255, 0.1) 40%, 
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  padding: 8px;
+  width: 260px;
+  color: white;
+  height: auto;
 }
 
-/* Ensure fonts and elements scale correctly */
-.dps-meter, .encounter-info, .dps-bar, .skill-details-container {
-    font-family: Arial, sans-serif;
-}
-
-/* Encounter Info (Global DPS & Boss Name) */
-.encounter-info {
-    text-align: center;
-    font-size: 14px;
-    font-weight: bold;
-    padding-bottom: 8px;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-    margin-bottom: 8px;
-}
-
-/* DPS Bars */
-.dps-bar {
-    width: 100%;
-    height: 25px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 5px;
-    overflow: hidden;
-    margin-top: 3px;
-    position: relative;
-    font-size: 12px;
-    font-weight: bold;
-    color: #fff;
-    display: flex;
-    align-items: center;
-}
-
-/* Inner DPS Bar */
-.dps-bar span {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 100%;
-    width: 100%;
-    transition: width 0.5s ease-in-out;
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 0 8px;
-    white-space: nowrap;
-}
-
-/* DPS Bar Text */
-.dps-bar-text {
-    flex-grow: 1;
-    padding-left: 5px;
-    text-align: right;
-}
-
-/* Total Damage and % Contribution */
-.dps-total {
-    padding-right: 8px;
-    text-align: right;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-/* Colors for DPS Bars */
-.player.you .dps-bar span {
-    background: #ff9933;
-}
-
-.player .dps-bar span {
-    background: #4caf50;
-}
-
-/* Skill Details Popup */
+.dps-meter,
+.encounter-info,
+.dps-bar,
 .skill-details-container {
-    position: absolute;
-    /* Let the container auto-size rather than forcing a 263px minimum */
-    width: auto;
-    overflow: visible;
-    background: rgba(15, 15, 15, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 5px;
-    padding: 10px;
-    display: none;
-    z-index: 100;
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+  font-family: Roboto, sans-serif;
 }
 
-/* Dynamically Position Left or Right */
+.encounter-info {
+  font-size: 14px;
+  padding-bottom: 6px;
+  font-weight: 500;
+  text-shadow: -1px -1px 0 #000, 0 -1px 0 #000, 1px -1px 0 #000, 1px 0 0 #000, 1px 1px 0 #000, 0 1px 0 #000, -1px 1px 0 #000, -1px 0 0 #000;
+}
+
+.dps-bar {
+  position: relative;
+  width: 100%;
+  height: 27px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 4px;
+  box-shadow: 
+    0 0 1px 1px rgba(0, 0, 0, 0.4),
+    0 2px 6px rgba(0, 0, 0, 0.25),
+    inset 0 1px 2px rgba(255, 255, 255, 0.15);
+}
+
+.gradient-bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transition: clip-path 0.5s ease-in-out;
+}
+
+.player .gradient-bg {
+  background: linear-gradient(to right, #eeb434, #b65717);
+}
+
+.player.you .gradient-bg {
+  background: linear-gradient(to right, #66ad2d, #407508);
+}
+
+.bar-content {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  padding: 0 8px;
+  z-index: 1;
+}
+
+.dps-bar-label,
+.dps-bar-value {
+  color: white;
+  text-shadow: -1px -1px 0 #000, 0 -1px 0 #000, 1px -1px 0 #000, 1px 0 0 #000, 1px 1px 0 #000, 0 1px 0 #000, -1px 1px 0 #000, -1px 0 0 #000;
+}
+
+.dps-bar-label {
+  font-size: 13px;
+}
+
+.dps-bar-value {
+  color: #9ddfa2;
+  font-size: 14px;
+}
+
+.player.you .bar-bg {
+  background: linear-gradient(to right, #66ad2d, #407508);
+}
+
+.player .bar-bg {
+  background: linear-gradient(to right, #eeb434, #b65717);
+}
+
+.skill-details-container {
+  background: rgba(15, 15, 15, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  padding: 10px;
+  display: none;
+  z-index: 100;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+  max-width: 300px;
+  max-height: 70vh;
+  overflow-y: auto;
+  position: absolute;
+  transition: opacity 0.15s ease-out;
+}
+
+.skill-details-container[data-show] {
+  display: block;
+  opacity: 1;
+}
+
 .skill-details-container.left {
-    right: calc(100% + 10px);
+  right: calc(100% + 10px);
 }
 
 .skill-details-container.right {
-    left: calc(100% + 10px);
+  left: calc(100% + 10px);
 }
 
 /* Total Damage Header */
 .skill-summary {
-    text-align: center;
-    font-size: 14px;
-    font-weight: bold;
-    color: white;
-    padding-bottom: 5px;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
-    margin-bottom: 8px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  padding-bottom: 5px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  margin-bottom: 8px;
 }
 
 /* Skill Labels Section */
 .skill-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    font-weight: bold;
-    color: #bbb;
-    margin-bottom: 5px;
-    text-align: center;
-    padding-bottom: 4px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: bold;
+  color: #bbb;
+  margin-bottom: 5px;
+  text-align: center;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .skill-labels span {
-    flex: 1;
-    text-align: center;
+  flex: 1;
+  text-align: center;
 }
 
 /* Skill Row */
 .skill {
-    display: flex;
-    align-items: center;
-    font-size: 12px;
-    padding: 4px 0;
-    justify-content: space-between;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  padding: 4px 0;
+  justify-content: space-between;
 }
 
 /* Skill Name */
 .skill-name {
-    flex: 1;
-    color: white;
-    text-align: center;
+  flex: 1;
+  color: white;
+  text-align: center;
 }
 
 /* Hits Number */
 .skill-hits {
-    flex: 1;
-    text-align: center;
-    color: #ffcc00;
+  flex: 1;
+  text-align: center;
+  color: #ffcc00;
 }
 
 /* Critical Hit % */
 .skill-crit {
-    flex: 1;
-    text-align: center;
-    color: #ff6666;
-    font-size: 12px;
+  flex: 1;
+  text-align: center;
+  color: #ff6666;
+  font-size: 12px;
 }
 
 /* Skill Progress Bar */
 .skill-bar {
-    flex: 2;
-    height: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-    overflow: hidden;
-    position: relative;
-    display: flex;
-    align-items: center;
+  flex: 2;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 /* Inner Skill Bar */
 .skill-bar span {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 100%;
-    width: 100%;
-    transition: width 0.5s ease-in-out;
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 0 8px;
-    white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  transition: width 0.5s ease-in-out;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0 8px;
+  white-space: nowrap;
 }
 
 /* Skill Bar Text */
 .skill-bar-text {
-    flex-grow: 1;
-    text-align: right;
-    padding-right: 8px;
+  flex-grow: 1;
+  text-align: right;
+  padding-right: 8px;
 }
 
 /* Colors for Skill Bars */
-.skill:nth-child(1) .skill-bar span { background: #ff4d4d; }
-.skill:nth-child(2) .skill-bar span { background: #ffcc00; }
-.skill:nth-child(n+3) .skill-bar span { background: #4caf50; }
+.skill:nth-child(1) .skill-bar span {
+  background: #ff4d4d;
+}
+.skill:nth-child(2) .skill-bar span {
+  background: #ffcc00;
+}
+.skill:nth-child(n + 3) .skill-bar span {
+  background: #4caf50;
+}
