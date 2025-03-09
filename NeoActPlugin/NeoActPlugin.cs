@@ -986,12 +986,10 @@ namespace NeoActPlugin
                         {
                             string text = page.GetText();
                             string match = _possibleZoneNames.FirstOrDefault(zone => text.Contains(zone));
-                            Plugin.LogParserMessage("Last zone: " + _lastZone);
                             if (!string.IsNullOrEmpty(match))
                             {
                                 if (_lastZone != match)
                                 {
-                                    Plugin.LogParserMessage("Changing zone to: " + match);
                                     Advanced_Combat_Tracker.ActGlobals.oFormActMain.ChangeZone(match);
                                     _lastZone = match;
                                 }
