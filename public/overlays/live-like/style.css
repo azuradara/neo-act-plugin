@@ -93,6 +93,14 @@ a {
   background: none;
 }
 
+.resizeHandle {
+  background-image: url(handle.png);
+  background-size: 35px;
+  background-position: bottom right;
+  background-repeat: no-repeat;
+  box-sizing: border-box;
+}
+
 .dps-meter {
   background: rgba(255, 255, 255, 0.07);
   

@@ -1,5 +1,21 @@
 const nf = new Intl.NumberFormat('en-US')
 
+document.addEventListener("onOverlayStateUpdate", function (e) {
+  if (!e.detail.isLocked) {
+      displayResizeHandle()
+  } else {
+      hideResizeHandle()
+  }
+});
+
+function displayResizeHandle() {
+  document.documentElement.classList.add("resizeHandle")
+}
+
+function hideResizeHandle() {
+  document.documentElement.classList.remove("resizeHandle")
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   addOverlayListener('CombatData', updateDPSMeter)
   startOverlayEvents()
@@ -74,7 +90,8 @@ function showSkills(combatant, event) {
       <div class="skill-summary">Total Damage: ${combatant['damage-*']} (${combatant['damage%']})</div>
       <div class="skill-summary">Hits: ${combatant['hits']}</div>
       <div class="skill-summary">Total Crit %: ${combatant['crithit%']}</div>
-      <div class="skill-summary">Max Hit: ${combatant['maxhit-*']}</div>
+      <div class="skill-summary">Max Hit: ${combatant['maxhit-*']}</div>`
+  /* TODO: Add skill details and stats for them.
       <div class="skill-labels">
           <span>Skill</span>
           <span>Hits</span>
@@ -99,7 +116,9 @@ function showSkills(combatant, event) {
   } else {
     skillHTML += `<div class="skill">No skill data available</div>`
   }
+  */
 
+  skillHTML += `<div class="skill">No skill data available</div>`
   skillDetails.innerHTML = skillHTML
   skillDetails.style.display = 'block'
 
