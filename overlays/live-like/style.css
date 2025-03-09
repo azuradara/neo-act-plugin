@@ -20,20 +20,6 @@ body.overlay {
   height: calc(100% - 0.25rem) !important;
 }
 
-body.overlay::after {
-  display: block;
-  content: '';
-
-  position: fixed;
-  right: 0;
-  bottom: 0;
-
-  width: 0.5rem;
-  height: 0.5rem;
-
-  background: rgba(0, 0, 0, 0.001);
-}
-
 body.collapsed::after {
   display: none !important;
 }
@@ -94,12 +80,21 @@ a {
   background: none;
 }
 
-.resizeHandle {
-  background-image: url(handle.png);
-  background-size: 35px;
-  background-position: bottom right;
-  background-repeat: no-repeat;
-  box-sizing: border-box;
+.resizeHandle::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 0 8px 8px;
+  border-color: transparent transparent rgba(120, 120, 120, 0.6) transparent;
+  transition: border-color 0.15s ease-out;
+}
+
+.resizeHandle:hover::before {
+  border-color: transparent transparent rgba(160, 160, 160, 0.8) transparent;
 }
 
 .dps-meter {
