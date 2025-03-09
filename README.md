@@ -29,10 +29,18 @@ This plugin is only responsible for parsing combat logs to a form that ACT can u
 1. Open ACT and go to the "Plugins" tab.
 2. Click "Get Plugins..." on the right and pick "Overlay Plugin" then click "Download and Enable".
 3. Once finished, click the "OverlayPlugin.dll" tab and click "New" on the left.
-4. Pick "Ember Overlay" from the Preset dropdown and then give it any name you'd like.
-5. For the time being, overlay doesn't recognize BNSR.exe as being the game client, so you will need to do some extra steps to make it stay on top:
+4. Pick "Custom" from the Preset dropdown and then give it any name you'd like.
+5. Select "MiniParse" from the Type dropdown and click OK.
+6. Click the new overlay you just added on the sidebar on the left, and change the "URL" to `https://azuradara.github.io/neo-act-plugin/overlays/live-like/`.
+7. Move it somewhere you like, then click "Enable clickthrough" to prevent your mouse from clicking it while you're playing.
+9. For the time being, overlay doesn't recognize BNSR.exe as being the game client, so you will need to do some extra steps to make it stay on top:
   a. Go to Plugins > OverlayPlugin.dll > General
   b. Uncheck "Automatically hide overlays when the game is in the background"
+10. If you would like to configure hotkeys for locking/unlocking and toggling visibility:
+  a. Click the overlay you just added on the sidebar and go to the "Hotkeys" tab.
+  b. Click "Add new hotkey", select your action, and bind it to whatever key you'd like.
+
+The overlay will update automatically every time we push something new to this repository (unlike the plugin), so check back from time to time to see what changed.
 
 There are tons of overlay configuration videos on YouTube - mostly related to FFXIV - but it's the same principal, overlays should be mostly game-agnostic.
 
@@ -53,6 +61,7 @@ You can even use one provided in our github from [Overlays](https://github.com/a
 - Damage over time skills and damage from effects that have no explicit actor in the combat log will be attributed to an "Unknown" actor.
 - Zone names are not provided in the combat log, so all logs are combined into a single zone on ACT.
 - This will break every time NC updates the .exe, which means you will have to wait a while until I (or a benevolent soul) update the offsets.
+- Overlay does not show skills breakdown like in live, you will have to use the ACT main window for that until we add it.
 - ~~It doesn't distinguish between encounters automatically, you will have to end/start encounters from ACT manually.~~
 - ~~Sometimes the game goes crazy, probably because I skipped refreshing pointers cuz I was lazy but I'll fix that later.~~
 - ~~Does not distinguish between crits and non-crits.~~
