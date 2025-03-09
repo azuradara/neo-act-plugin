@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function () {
 let popperInstance = null
 
 function updateDPSMeter(data) {
-  console.log(data)
   document.getElementById('boss-name').innerText = data.Encounter.title || 'No Data'
 
   let table = document.getElementById('combatantTable')
@@ -27,8 +26,8 @@ function updateDPSMeter(data) {
     playerDiv.className = 'player' + (combatant.name === data.Combatant?.You?.name ? ' you' : '')
     playerDiv.setAttribute('data-player', combatant.name)
     
-    // playerDiv.addEventListener('mouseenter', (event) => showSkills(combatant, event))
-    // playerDiv.addEventListener('mouseleave', hideSkills)
+    playerDiv.addEventListener('mouseenter', (event) => showSkills(combatant, event))
+    playerDiv.addEventListener('mouseleave', hideSkills)
 
     let dpsBar = document.createElement('div')
     dpsBar.className = 'dps-bar'
@@ -47,7 +46,6 @@ function updateDPSMeter(data) {
 
     const dps = document.createElement('span')
     dps.className = 'dps-bar-value'
-    console.log(combatant.ENCDPS)
     dps.textContent = `${nf.format(combatant.ENCDPS === '∞' ? 0 : combatant.ENCDPS)}/sec`
 
     barContent.appendChild(name)
@@ -73,7 +71,10 @@ function showSkills(combatant, event) {
   }
 
   let skillHTML = `
-      <div class="skill-summary">Total Damage: ${combatant['damage-*']}</div>
+      <div class="skill-summary">Total Damage: ${combatant['damage-*']} (${combatant['damage%']})</div>
+      <div class="skill-summary">Hits: ${combatant['hits']}</div>
+      <div class="skill-summary">Total Crit %: ${combatant['crithit%']}</div>
+      <div class="skill-summary">Max Hit: ${combatant['maxhit-*']}</div>
       <div class="skill-labels">
           <span>Skill</span>
           <span>Hits</span>
