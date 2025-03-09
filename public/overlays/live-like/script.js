@@ -90,15 +90,15 @@ function showSkills(combatant, event) {
       <div class="skill-summary">Total Damage: ${combatant['damage-*']} (${combatant['damage%']})</div>
       <div class="skill-summary">Hits: ${combatant['hits']}</div>
       <div class="skill-summary">Total Crit %: ${combatant['crithit%']}</div>
-      <div class="skill-summary">Max Hit: ${combatant['maxhit-*']}</div>`
-  /* TODO: Add skill details and stats for them.
+      <div class="skill-summary">Max Hit: ${combatant['maxhit-*']}</div>
       <div class="skill-labels">
           <span>Skill</span>
           <span>Hits</span>
           <span>Crit %</span>
           <span>Damage</span>
       </div>`
-
+      
+  /* TODO: Add skill details and stats for them.
   let damageTypes = combatant.Items || []
 
   if (damageTypes.length > 0) {
