@@ -10,6 +10,9 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Linq;
+using System.Drawing;
+using System.Drawing.Imaging;
+using Tesseract;
 
 namespace NeoActPlugin
 {
@@ -158,6 +161,8 @@ namespace NeoActPlugin
                 LogWriter.Initialize();
 
                 lblStatus.Text = "BnS Plugin Started.";
+
+                OCRReader.InitializeOCR();
             }
             catch (Exception ex)
             {
@@ -226,6 +231,7 @@ namespace NeoActPlugin
     public static class LogWriter
     {
         private static Thread _workerThread;
+        private static Thread _zoneThread;
         private static volatile bool _stopRequested;
         private static string _logFilePath;
         private static StreamWriter _logWriter;
@@ -236,6 +242,7 @@ namespace NeoActPlugin
             {
                 _stopRequested = false;
                 _workerThread = new Thread(WorkerMain) { IsBackground = true, Priority = ThreadPriority.BelowNormal };
+                _zoneThread = new Thread(zoneMain) { IsBackground = true, Priority = ThreadPriority.BelowNormal };
 
                 var logDir = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "BNSLogs");
                 Directory.CreateDirectory(logDir);
@@ -249,6 +256,7 @@ namespace NeoActPlugin
                 ActGlobals.oFormActMain.OpenLog(false, false);
 
                 _workerThread.Start();
+                _zoneThread.Start();
             }
             catch (Exception ex)
             {
@@ -303,6 +311,24 @@ namespace NeoActPlugin
                     }
 
                     Thread.Sleep(14);
+                }
+                catch
+                {
+                    Thread.Sleep(1000);
+                }
+            }
+
+        }
+
+        private static void zoneMain()
+        {
+            Thread.Sleep(1000);
+            while (!_stopRequested)
+            {
+                try
+                {
+                    if (_stopRequested) break;
+                    OCRReader.CaptureZoneName();
                 }
                 catch
                 {
@@ -871,6 +897,117 @@ namespace NeoActPlugin
                 currentAddress = new IntPtr(BitConverter.ToInt64(buffer, 0));
             }
             return currentAddress;
+        }
+    }
+
+    class OCRReader
+    {
+        [DllImport("user32.dll")]
+        public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+        [DllImport("user32.dll")]
+        public static extern bool PrintWindow(IntPtr hWnd, IntPtr hdcBlt, int nFlags);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RECT
+        {
+            public int Left, Top, Right, Bottom;
+        }
+
+        [Flags]
+        private enum PrintWindowFlags : int
+        {
+            PW_CLIENTONLY = 0x1,
+            PW_RENDERFULLCONTENT = 0x2
+        }
+
+        private static string _lastZone = Advanced_Combat_Tracker.ActGlobals.oFormActMain.ActiveZone.ZoneName;
+        private static TesseractEngine _engine;
+        private static readonly string[] _possibleZoneNames =
+            { "Jadestone Village", "Everdusk", "Bamboo Village", "Gloomdross Forest", "Pondskip Vale", "Songshu Isle", "Stillbrook Monastery", "Phantom Catacombs", "Blackram Narrows", "Yehera's Mirage", "Tomun Range", "Oakshade Village", "The Scorching Sands", "Sandstone Refuge", "Spirestone Canyons", "The Great Kiln", "Clear Sky Village", "Razorwing Ravine", "Joafang Village", "Blindeye Bazaar", "Tomb of the Exiles",
+              "Plague Hollow", "Lakeside Cache", "Black Adder Stronghold", "Bandit Hideout", "Defiled Tomb", "Abandoned Well", "The Dreamdrift", "Goldleaf Foundry", "Depleted Goldmine", "Tainted Grotto", "Cave of Mastery", "Cave of Judgement", "Necrotic Laboratory", "Adder's Nest", "Lair of the Yutay", "Tyrian Storehouse", "The Darkglimpse", "The Underroot", "Sacrificial Chamber", "Shadowmist Crypt", "Naryu Temple", "The Playpen", "Forgotten Tomb", "Vulture's Dig", "Jackal's Dig", "Yonkai Excavation", "Sentinel Ruins", "Altar of Champions", "Grimhorn Scullery", "Bockgon Hideout", "Shadowmist Mausoleum", "Jukto's Repose", "Grimhorn Scullery", "Mandrake Grotto", "The Ploghollows", "Storage Warehouse", "Shadowmist Keep", "The Boneyards", "Yes Man Fight Club", "Daggerbeak Rookery", "Jaofang Rootway",
+              "Bamboo Lookout", "Foshi Pyres", "Scouting Party", "Whalesong Cove", "Gloomdross Lookout", "Tanjay Kilns", "Pot Dog Shelter", "Sentinel Outpost", "Songshu Pavilion", "Roadside Camp", "Crimson Overlook", "Cerulean Overlook", "Crimson Command Post", "Cerulean Command Post", "Wanderer's Hut", "Croaker Lagoon", "Gunwon Garrison", "Earthseer Hermitage", "Earthseer Bulwark", "Wraithbloom Meadows", "Wispwater Spring", "The Dry Docks", "Yonkai Work Camp", "Raider's Arc", "Crescent Spring", "Raptor's Rise", "Vagrant's Rest", "Yonkai Command Post", "Yonkai Skeleton Crew", "Yonkai Forward Camp", "Observation Post", "Yonkai Checkpoint", "Bleachbone Outpost", "Sealed Tomb",
+              "Moonshade Cemetary", "Songstone Bridge", "Claypaw Kennels", "Roadside Shrine", "Lotus Lake", "Ancient Ossuary", "Sacrificial Grounds", "Fallwater Reservoir", "Raptor's Roost", "Drywing Gulch", "Soulstone Scar", "Dustwind Desert", "Guardian's Vigil", "Sands of Silence", "Singing Sands"
+            };
+
+        public static void InitializeOCR()
+        {
+            try
+            {
+                _engine = new TesseractEngine(@"./tessdata", "eng", EngineMode.Default);
+                Plugin.LogParserMessage("Tesseract OCR engine initialized.");
+            }
+            catch (Exception ex)
+            {
+                Plugin.LogParserMessage("Error initializing Tesseract OCR engine: " + ex.Message);
+            }
+        }
+
+        public static void CaptureZoneName()
+        {
+            IntPtr hWnd = Process.GetProcessesByName("BNSR").FirstOrDefault()?.MainWindowHandle ?? IntPtr.Zero;
+            if (hWnd == IntPtr.Zero)
+            {
+                Plugin.LogParserMessage("BNSR window not found.");
+                return;
+            }
+            RECT rect;
+            GetWindowRect(hWnd, out rect);
+
+            int width = (rect.Right - rect.Left);
+            int height = (rect.Bottom - rect.Top);
+            int targetWidth = width / 2;
+            int targetHeight = height / 32;
+
+            while (true)
+            {
+                try
+                {
+                    using (Bitmap bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb))
+                    using (Graphics graphicsBitmap = Graphics.FromImage(bitmap))
+                    {
+                        IntPtr hdcBitmap = graphicsBitmap.GetHdc();
+                        if (!PrintWindow(hWnd, hdcBitmap, (int)PrintWindowFlags.PW_CLIENTONLY | (int)PrintWindowFlags.PW_RENDERFULLCONTENT))
+                        {
+                            Plugin.LogParserMessage("PrintWindow failed.");
+                            graphicsBitmap.ReleaseHdc(hdcBitmap);
+                            continue;
+                        }
+                        graphicsBitmap.ReleaseHdc(hdcBitmap);
+
+                        Bitmap zoneBitmap = new Bitmap(targetWidth, targetHeight, PixelFormat.Format32bppArgb);
+                        zoneBitmap.SetResolution(300, 300);
+                        using (Graphics targetGraphics = Graphics.FromImage(zoneBitmap))
+                        {
+                            targetGraphics.DrawImage(bitmap, new Rectangle(0, 0, targetWidth, targetHeight), new Rectangle(width / 2, 0, targetWidth, targetHeight), GraphicsUnit.Pixel);
+                        }
+
+                        using (var page = _engine.Process(zoneBitmap))
+                        {
+                            string text = page.GetText();
+                            string match = _possibleZoneNames.FirstOrDefault(zone => text.Contains(zone));
+                            Plugin.LogParserMessage("Last zone: " + _lastZone);
+                            if (!string.IsNullOrEmpty(match))
+                            {
+                                if (_lastZone != match)
+                                {
+                                    Plugin.LogParserMessage("Changing zone to: " + match);
+                                    Advanced_Combat_Tracker.ActGlobals.oFormActMain.ChangeZone(match);
+                                    _lastZone = match;
+                                }
+                            }
+                        }
+                        zoneBitmap.Dispose();
+                    }
+
+                    Thread.Sleep(2000);
+                }
+                catch (Exception ex)
+                {
+                    Plugin.LogParserMessage("Error capturing zone name: " + ex.Message);
+                    Thread.Sleep(2000);
+                }
+            }
         }
     }
 }

@@ -70,7 +70,7 @@ You can even use one provided in our github from [Overlays](https://github.com/a
 - If you have characters hidden (CTRL+F, either partially or fully), the combat log does not specify if their damage is a crit or not, so their %CH will always be 0, but the damage itself will be parsed correctly.
 - Only supports EN.
 - Damage over time skills and damage from effects that have no explicit actor in the combat log will be attributed to an "Unknown" actor.
-- Zone names are not provided in the combat log, so all logs are combined into a single zone on ACT.
+- ~~Zone names are not provided in the combat log, so all logs are combined into a single zone on ACT.~~
 - This will break every time NC updates the .exe, which means you will have to wait a while until I (or a benevolent soul) update the offsets.
 - Overlay does not show skills breakdown like in live, you will have to use the ACT main window for that until we add it.
 - ~~It doesn't distinguish between encounters automatically, you will have to end/start encounters from ACT manually.~~
