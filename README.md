@@ -1,6 +1,4 @@
-# Blade & Soul NEO: ACT Plugin
-
-This is a POC [ACT](https://advancedcombattracker.com/home.php) plugin for BnS NEO.
+This is an [ACT](https://advancedcombattracker.com/home.php) plugin for BnS NEO.
 
 > [!WARNING]  
 > This plugin connects to the game's memory to read combat log data, this is very much against the game's EULA. I am not sure whether the Anti-cheat detects memory reads, but, if it makes you feel better - I am using this personally on my main account.
@@ -10,7 +8,7 @@ This is a POC [ACT](https://advancedcombattracker.com/home.php) plugin for BnS N
 > It is also still not 100% accurate, things like DOT damage and skill names with apostrophes are inconsistent.
 
 ![image](https://github.com/user-attachments/assets/766a99c0-7986-4164-8e9e-709ab4b0db77)
-![image](https://github.com/user-attachments/assets/ffb0abf6-b8a9-49ef-bd15-0e8fc2cf0183)
+![image](https://github.com/user-attachments/assets/9e32022f-e340-4d0b-934b-883d810b7702)
 
 ## Usage
 
@@ -27,18 +25,29 @@ This is a POC [ACT](https://advancedcombattracker.com/home.php) plugin for BnS N
 This plugin is only responsible for parsing combat logs to a form that ACT can understand, if you want an overlay over your game you will have to install other plugins on top of this one. Here's a quick walkthrough of how to install "Ember" (The only overlay I tested).
 
 1. Open ACT and go to the "Plugins" tab.
-2. Click "Get Plugins..." on the right and pick "Overlay Plugin" then click "Download and Enable".
-3. Once finished, click the "OverlayPlugin.dll" tab and click "New" on the left.
-4. Pick "Custom" from the Preset dropdown and then give it any name you'd like.
-5. Select "MiniParse" from the Type dropdown and click OK.
-6. Click the new overlay you just added on the sidebar on the left, and change the "URL" to `https://azuradara.github.io/neo-act-plugin/overlays/live-like/`.
-7. Move it somewhere you like, then click "Enable clickthrough" to prevent your mouse from clicking it while you're playing.
-9. For the time being, overlay doesn't recognize BNSR.exe as being the game client, so you will need to do some extra steps to make it stay on top:
-  a. Go to Plugins > OverlayPlugin.dll > General
-  b. Uncheck "Automatically hide overlays when the game is in the background"
-10. If you would like to configure hotkeys for locking/unlocking and toggling visibility:
-  a. Click the overlay you just added on the sidebar and go to the "Hotkeys" tab.
-  b. Click "Add new hotkey", select your action, and bind it to whatever key you'd like.
+
+3. Click "Get Plugins..." on the right and pick "Overlay Plugin" then click "Download and Enable".
+   
+5. Once finished, click the "OverlayPlugin.dll" tab and click "New" on the left.
+   
+7. Pick "Custom" from the Preset dropdown and then give it any name you'd like.
+   
+9. Select "MiniParse" from the Type dropdown and click OK.
+    
+11. Click the new overlay you just added on the sidebar on the left, and change the "URL" to:
+  ```
+  https://azuradara.github.io/neo-act-plugin/overlays/live-like/
+  ```
+
+9. Move it somewhere you like, then click "Enable clickthrough" to prevent your mouse from clicking it while you're playing.
+    
+11. For the time being, overlay doesn't recognize BNSR.exe as being the game client, so you will need to do some extra steps to make it stay on top:
+  - Go to Plugins > OverlayPlugin.dll > General
+  - Uncheck "Automatically hide overlays when the game is in the background"
+
+12. If you would like to configure hotkeys for locking/unlocking and toggling visibility:
+  - Click the overlay you just added on the sidebar and go to the "Hotkeys" tab.
+  - Click "Add new hotkey", select your action, and bind it to whatever key you'd like.
 
 The overlay will update automatically every time we push something new to this repository (unlike the plugin), so check back from time to time to see what changed.
 
