@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoActPlugin.Test", "NeoAct
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoActPlugin.Updater", "NeoActPlugin.Updater\NeoActPlugin.Updater.csproj", "{EB4B99E9-B101-427F-94A6-84F8A9500685}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoActPlugin.Common", "NeoActPlugin.Common\NeoActPlugin.Common.csproj", "{D01B65AE-BFDB-4245-8598-6A1CB71BC891}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{EB4B99E9-B101-427F-94A6-84F8A9500685}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB4B99E9-B101-427F-94A6-84F8A9500685}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB4B99E9-B101-427F-94A6-84F8A9500685}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D01B65AE-BFDB-4245-8598-6A1CB71BC891}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D01B65AE-BFDB-4245-8598-6A1CB71BC891}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D01B65AE-BFDB-4245-8598-6A1CB71BC891}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D01B65AE-BFDB-4245-8598-6A1CB71BC891}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

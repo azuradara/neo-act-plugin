@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CurlWrapper.cs" />
+    <Compile Include="HttpClientWrapper.cs" />
     <Compile Include="Installer.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="ProgressDisplay.cs">
@@ -86,11 +87,6 @@
     </Compile>
     <Compile Include="ProgressDisplay.Designer.cs">
       <DependentUpon>ProgressDisplay.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ProgressDisplay1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ProgressDisplay.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs" />
