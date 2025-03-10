@@ -921,7 +921,7 @@ namespace NeoActPlugin
             PW_RENDERFULLCONTENT = 0x2
         }
 
-        private static string _lastZone = Advanced_Combat_Tracker.ActGlobals.oFormActMain.ActiveZone.ZoneName;
+        private static string _lastZone;
         private static TesseractEngine _engine;
         private static readonly string[] _possibleZoneNames =
             { "Jadestone Village", "Everdusk", "Bamboo Village", "Gloomdross Forest", "Pondskip Vale", "Songshu Isle", "Stillbrook Monastery", "Phantom Catacombs", "Blackram Narrows", "Yehera's Mirage", "Tomun Range", "Oakshade Village", "The Scorching Sands", "Sandstone Refuge", "Spirestone Canyons", "The Great Kiln", "Clear Sky Village", "Razorwing Ravine", "Joafang Village", "Blindeye Bazaar", "Tomb of the Exiles",
@@ -945,6 +945,7 @@ namespace NeoActPlugin
 
         public static void CaptureZoneName()
         {
+            _lastZone = Advanced_Combat_Tracker.ActGlobals.oFormActMain.ActiveZone.ZoneName;
             IntPtr hWnd = Process.GetProcessesByName("BNSR").FirstOrDefault()?.MainWindowHandle ?? IntPtr.Zero;
             if (hWnd == IntPtr.Zero)
             {
