@@ -86,6 +86,7 @@
     <ProjectReference Include="..\NeoActPlugin.Core\NeoActPlugin.Core.csproj">
       <Project>{f5ab1af0-dedc-4bc3-8259-ba47255acd7a}</Project>
       <Name>NeoActPlugin.Core</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\NeoActPlugin.Updater\NeoActPlugin.Updater.csproj">
       <Project>{EB4B99E9-B101-427F-94A6-84F8A9500685}</Project>
