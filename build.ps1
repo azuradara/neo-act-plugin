@@ -53,7 +53,7 @@ try {
   if (Test-Path NeoActPlugin) { Remove-Item -Recurse NeoActPlugin }
   mkdir NeoActPlugin\libs
 
-  Copy-Item @("NeoActPlugin.dll", "NeoActPlugin.dll.config", "README.md", "LICENSE.txt") NeoActPlugin
+  Copy-Item @("NeoActPlugin.dll", "NeoActPlugin.dll.config", "README.md", "LICENSE") NeoActPlugin
   Copy-Item -Recurse libs\resources NeoActPlugin
   Copy-Item -Recurse libs\*.dll NeoActPlugin\libs
   Remove-Item NeoActPlugin\libs\CefSharp.*

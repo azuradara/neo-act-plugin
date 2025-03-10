@@ -48,7 +48,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Advanced Combat Tracker, Version=3.1.5.246, Culture=neutral, PublicKeyToken=a946b61e93d97868, processorArchitecture=x86">
+    <Reference Include="Advanced Combat Tracker, Version=3.8.2.285, Culture=neutral, PublicKeyToken=a946b61e93d97868, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Thirdparty\ACT\Advanced Combat Tracker.exe</HintPath>
       <Private>False</Private>
@@ -65,7 +65,9 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NeoActPlugin.cs" />
+    <Compile Include="NeoActPlugin.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -82,7 +84,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y /R "$(SolutionDir)README"* "$(TargetDir)"
-xcopy /Y /R "$(SolutionDir)LICENSE.txt" "$(TargetDir)"</PostBuildEvent>
+    <PostBuildEvent>
+    xcopy /Y /R "$(SolutionDir)README.md" "$(TargetDir)" || exit 0
+    xcopy /Y /R "$(SolutionDir)LICENSE*" "$(TargetDir)" || exit 0
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

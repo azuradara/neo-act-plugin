@@ -1,4 +1,5 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35825.156
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -24,10 +25,14 @@ Global
 		{47A35B8B-4285-4651-AC11-2D05756E2BEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47A35B8B-4285-4651-AC11-2D05756E2BEE}.Debug|x64.ActiveCfg = Debug|x64
 		{47A35B8B-4285-4651-AC11-2D05756E2BEE}.Debug|x64.Build.0 = Debug|x64
+		{47A35B8B-4285-4651-AC11-2D05756E2BEE}.Debug|x86.ActiveCfg = Debug|x86
+		{47A35B8B-4285-4651-AC11-2D05756E2BEE}.Debug|x86.Build.0 = Debug|x86
 		{47A35B8B-4285-4651-AC11-2D05756E2BEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47A35B8B-4285-4651-AC11-2D05756E2BEE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{47A35B8B-4285-4651-AC11-2D05756E2BEE}.Release|x64.ActiveCfg = Release|x64
 		{47A35B8B-4285-4651-AC11-2D05756E2BEE}.Release|x64.Build.0 = Release|x64
+		{47A35B8B-4285-4651-AC11-2D05756E2BEE}.Release|x86.ActiveCfg = Release|x86
+		{47A35B8B-4285-4651-AC11-2D05756E2BEE}.Release|x86.Build.0 = Release|x86
 		{A684922D-55D4-4094-96A4-D30AC92071BD}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{A684922D-55D4-4094-96A4-D30AC92071BD}.Debug|x64.ActiveCfg = Debug|x64
 		{A684922D-55D4-4094-96A4-D30AC92071BD}.Debug|x64.Build.0 = Debug|x64
