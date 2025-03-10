@@ -20,27 +20,8 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.1
 
-      - name: Download ACT zip
-        run: |
-          $actUrl = "https://advancedcombattracker.com/download.php?id=57"
-          $zipPath = "$env:USERPROFILE\AdvancedCombatTracker.zip"
-          Invoke-WebRequest -Uri $actUrl -OutFile $zipPath
-
-      - name: Extract ACT zip
-        run: |
-          $destination = "$env:USERPROFILE\AdvancedCombatTracker"
-          Expand-Archive -Path "$env:USERPROFILE\AdvancedCombatTracker.zip" -DestinationPath $destination -Force
-
-      - name: Set up ACT reference
-        run: |
-          $actTarget = "C:\Program Files (x86)\Advanced Combat Tracker"
-          if (!(Test-Path $actTarget)) {
-            New-Item -ItemType Directory -Path $actTarget -Force | Out-Null
-          }
-          Copy-Item -Path "$env:USERPROFILE\AdvancedCombatTracker\Advanced Combat Tracker.exe" -Destination "$actTarget\Advanced Combat Tracker.exe" -Force
-
       - name: Build solution
-        run: msbuild NeoActPlugin.sln /m /p:Configuration=Debug /p:ReferencePath="C:\Program Files (x86)\Advanced Combat Tracker" /p:RunAnalyzers=false
+        run: ./build.ps1
 
       - name: List built DLLs
         shell: powershell
