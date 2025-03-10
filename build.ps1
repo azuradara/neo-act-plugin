@@ -1,6 +1,12 @@
 try {
-  # This assumes Visual Studio 2019 is installed in C:. You might have to change this depending on your system.
-  $VS_PATH = "C:\Program Files\Microsoft Visual Studio\2022\Community"
+  $VS_PATH = &"${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -property installationPath
+  if (-not $VS_PATH) {
+      Write-Output "Error: Visual Studio not found!"
+      exit 1
+  }
+  
+  $env:Path += ";$VS_PATH\MSBuild\Current\Bin"
+  $env:Path += ";$VS_PATH\Common7\IDE"
 
   if ( -not (Test-Path "$VS_PATH")) {
       Write-Output "Error: VS_PATH isn't set correctly! Update the variable in build.ps1 for your system."

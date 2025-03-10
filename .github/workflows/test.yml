@@ -2,9 +2,9 @@ name: .NET Framework Tests with ACT
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
@@ -14,31 +14,31 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Restore NuGet packages
-        run: nuget restore NeoActPlugin.sln
+      - name: Find Visual Studio
+        id: vs
+        shell: pwsh
+        run: |
+          $vsPath = &"${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -property installationPath
+          if (-not $vsPath) {
+              Write-Error "Visual Studio not found"
+              exit 1
+          }
+          echo "VS_PATH=$vsPath" >> $env:GITHUB_ENV
+          echo "MSBUILD_PATH=$vsPath\MSBuild\Current\Bin" >> $env:GITHUB_ENV
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.1
+        with:
+          vs-version: "[-latest]"
 
       - name: Build solution
-        run: ./build.ps1
-
-      - name: List built DLLs
-        shell: powershell
-        run: Get-ChildItem -Path . -Recurse -Filter *.dll
+        shell: pwsh
+        run: |
+          $env:Path += ";$env:MSBUILD_PATH"
+          ./build.ps1
 
       - name: Run tests
-        shell: powershell
+        shell: pwsh
         run: |
-          $vsPath = &"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -property installationPath
-          if (-not $vsPath) {
-              Write-Error "Visual Studio installation not found."
-              exit 1
-          }
-          $vstest = Get-ChildItem -Path $vsPath -Filter vstest.console.exe -Recurse | Select-Object -First 1
-          if (-not $vstest) {
-              Write-Error "vstest.console.exe not found in Visual Studio installation at $vsPath"
-              exit 1
-          }
-          Write-Host "Using vstest.console.exe at $($vstest.FullName)"
-          & $vstest.FullName "**/**/NeoActPlugin.Test.dll"
+          $vstest = Get-ChildItem -Path "$env:VS_PATH" -Filter vstest.console.exe -Recurse | Select-Object -First 1
+          & "$($vstest.FullName)" "**/NeoActPlugin.Test.dll"
