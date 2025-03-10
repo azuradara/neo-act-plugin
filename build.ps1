@@ -85,6 +85,8 @@ try {
 
   if (Test-Path $archive) { Remove-Item $archive }
   7z a $archive NeoActPlugin
+
+  Set-Location ..\..
 } catch {
   Write-Error $Error[0]
 }
