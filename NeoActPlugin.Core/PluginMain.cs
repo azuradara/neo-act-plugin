@@ -1,19 +1,21 @@
-﻿using System;
-using System.Text;
-using System.Threading;
-using System.Text.RegularExpressions;
-using System.IO;
-using Advanced_Combat_Tracker;
-using System.Windows.Forms;
+﻿using Advanced_Combat_Tracker;
+using NeoActPlugin.Common;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
-namespace NeoActPlugin
+namespace NeoActPlugin.Core
 {
-    public class Plugin : UserControl, Advanced_Combat_Tracker.IActPluginV1
+    public class PluginMain : UserControl, Advanced_Combat_Tracker.IActPluginV1
     {
         #region Designer Created Code (Avoid editing)
         /// <summary>
@@ -100,8 +102,23 @@ namespace NeoActPlugin
 
         #endregion Designer Created Code (Avoid editing)
 
-        public Plugin()
+        private TinyIoCContainer _container;
+        private ILogger _logger;
+
+        internal string PluginDirectory { get; private set; }
+
+        public PluginMain(string pluginDirectory, Logger logger, TinyIoCContainer container)
         {
+            _container = container;
+            PluginDirectory = pluginDirectory;
+            _logger = logger;
+
+            //configSaveTimer = new Timer();
+            //configSaveTimer.Interval = 300000;
+            //configSaveTimer.Tick += (o, e) => SaveConfig();
+
+            _container.Register(this);
+
             InitializeComponent();
         }
 
@@ -283,7 +300,7 @@ namespace NeoActPlugin
             }
             catch (Exception ex)
             {
-                Plugin.LogParserMessage("Error [BNS_Log.Uninitialize] " + ex.ToString().Replace(Environment.NewLine, " "));
+                PluginMain.LogParserMessage("Error [BNS_Log.Uninitialize] " + ex.ToString().Replace(Environment.NewLine, " "));
             }
         }
 
@@ -318,7 +335,7 @@ namespace NeoActPlugin
             {
                 string errorMessage = string.Format("{0}|Error [{1}] {2}", DateTime.Now.ToString("HH:mm:ss.fff"), context, ex.ToString());
                 _logWriter.WriteLine(_logFilePath, errorMessage);
-                Plugin.LogParserMessage(errorMessage);
+                PluginMain.LogParserMessage(errorMessage);
             }
             catch { /* Prevent logging failures from crashing thread */ }
         }
@@ -362,14 +379,14 @@ namespace NeoActPlugin
                     if (!DateTime.TryParse(timestampPart, out ret))
                     {
 
-                        Plugin.LogParserMessage("Failed to parse timestamp");
+                        PluginMain.LogParserMessage("Failed to parse timestamp");
                         return DateTime.MinValue;
                     }
                 }
             }
             catch (Exception ex)
             {
-                Plugin.LogParserMessage("Error [ParseLogDateTime] " + ex.ToString().Replace(Environment.NewLine, " "));
+                PluginMain.LogParserMessage("Error [ParseLogDateTime] " + ex.ToString().Replace(Environment.NewLine, " "));
             }
             return ret;
         }
@@ -607,12 +624,12 @@ namespace NeoActPlugin
                 if (ex.InnerException != null)
                     exception += " " + ex.InnerException.ToString().Replace(Environment.NewLine, " ");
 
-                Plugin.LogParserMessage("Error [LogParse.BeforeLogLineRead] " + exception + " " + logInfo.logLine);
+                PluginMain.LogParserMessage("Error [LogParse.BeforeLogLineRead] " + exception + " " + logInfo.logLine);
             }
 
             // For debugging
             if (!string.IsNullOrWhiteSpace(logLine))
-                Plugin.LogParserMessage("Unhandled Line: " + logInfo.logLine);
+                PluginMain.LogParserMessage("Unhandled Line: " + logInfo.logLine);
         }
 
         private static string DecodeString(string data)
@@ -738,7 +755,7 @@ namespace NeoActPlugin
             }
             catch (Exception ex)
             {
-                Plugin.LogParserMessage("Error refreshing pointers: " + ex.Message);
+                PluginMain.LogParserMessage("Error refreshing pointers: " + ex.Message);
             }
         }
 

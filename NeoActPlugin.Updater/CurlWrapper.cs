@@ -1307,7 +1307,7 @@ namespace NeoActPlugin.Updater
 
         private static void _init()
         {
-            USER_AGENT = "azuradara/NeoActOverlay v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            USER_AGENT = "azuradara/NeoActPlugin v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
             var libPath = Path.Combine(pluginDirectory, "libs", Environment.Is64BitProcess ? "x64" : "x86", "libcurl.dll");
             if (!File.Exists(libPath))

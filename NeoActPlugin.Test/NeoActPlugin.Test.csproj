@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net481</TargetFramework>
@@ -13,6 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NeoActPlugin.Common\NeoActPlugin.Common.csproj" />
+    <ProjectReference Include="..\NeoActPlugin.Core\NeoActPlugin.Core.csproj" />
     <ProjectReference Include="..\NeoActPlugin\NeoActPlugin.csproj" />
   </ItemGroup>
 
