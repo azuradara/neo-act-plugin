@@ -460,7 +460,7 @@ namespace NeoActPlugin
                     }
 
                     // Fix for "Received 1373 damage from Balefire&apos;s Bleed
-                    string[] invalidSkills = { "Hellfire", "Venom", "Lasting Effects", "Bleed", "Poison" };
+                    string[] invalidSkills = { "Hellfire", "Venom", "Lasting Effects", "Bleed", "Poison", "Venom Swarm" };
 
                     if (!string.IsNullOrWhiteSpace(actor) && Array.Exists(invalidSkills, e => e == skill))
                     {
