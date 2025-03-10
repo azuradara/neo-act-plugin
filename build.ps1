@@ -54,9 +54,9 @@ try {
   mkdir NeoActPlugin\libs
 
   Copy-Item @("NeoActPlugin.dll", "NeoActPlugin.dll.config", "README.md", "LICENSE") NeoActPlugin
-  Copy-Item -Recurse libs\resources NeoActPlugin
-  Copy-Item -Recurse libs\*.dll NeoActPlugin\libs
-  Remove-Item NeoActPlugin\libs\CefSharp.*
+#   Copy-Item -Recurse libs\resources NeoActPlugin
+#   Copy-Item -Recurse libs\*.dll NeoActPlugin\libs
+#   Remove-Item NeoActPlugin\libs\CefSharp.*
 
   $text = [System.IO.File]::ReadAllText("$PWD\..\..\NeoActPlugin\Properties\AssemblyInfo.cs");
   $regex = [regex]::New('\[assembly: AssemblyVersion\("([0-9]+\.[0-9]+\.[0-9]+)\.[0-9]+"\)');

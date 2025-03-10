@@ -48,6 +48,9 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="Advanced Combat Tracker, Version=3.8.2.285, Culture=neutral, PublicKeyToken=a946b61e93d97868, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Thirdparty\ACT\Advanced Combat Tracker.exe</HintPath>
