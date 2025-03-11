@@ -96,7 +96,7 @@ namespace NeoActPlugin.Core
 
                 LogWriter.Initialize();
 
-                this.label.Text = "BnS Plugin Started.";
+                this.label.Text = "Initialized.";
             }
             catch (Exception ex)
             {
