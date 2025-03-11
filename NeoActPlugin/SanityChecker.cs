@@ -12,16 +12,6 @@ namespace NeoActPlugin
 {
     public static class SanityChecker
     {
-        /**
-         * The assembly load order is as follows:
-         * 
-         *   * OverlayPlugin
-         *   * OverlayPlugin.Common (PluginLoader.InitPlugin: version check, Logger & Registry)
-         *   * OverlayPlugin.Updater (PluginLoader.InitPluginCore: CEF installer / updater)
-         *   * OverlayPlugin.Core (PluginLoader.InitPluginCore)
-         *   * OverlayPlugin.Core (PluginMain.InitPlugin)
-         */
-
         public static bool LoadSaneAssembly(string name)
         {
             var loaderVersion = Assembly.GetExecutingAssembly().GetName().Version;

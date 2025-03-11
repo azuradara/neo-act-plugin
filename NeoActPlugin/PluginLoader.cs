@@ -59,7 +59,7 @@ namespace NeoActPlugin
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private async void Initialize()
+        private void Initialize()
         {
             pluginStatusText.Text = Resources.InitRuntime;
 
@@ -84,30 +84,27 @@ namespace NeoActPlugin
                 CurlWrapper.Init(pluginDirectory);
             }
             catch (Exception ex)
-            { 
+            {
                 logger.Log(LogLevel.Error, ex.ToString());
                 ActGlobals.oFormActMain.WriteDebugLog(ex.ToString());
             }
 
-            await FinishInit(container);
+            FinishInit(container);
         }
 
-        public async Task FinishInit(TinyIoCContainer container)
+        public void FinishInit(TinyIoCContainer container)
         {
-            ActGlobals.oFormActMain.Invoke((Action)(() =>
+            try
             {
-                try
-                {
-                    pluginMain.InitPlugin(pluginScreenSpace, pluginStatusText);
-                    initFailed = false;
-                }
-                catch (Exception ex)
-                {
-                    initFailed = true;
+                pluginMain.InitPlugin(pluginScreenSpace, pluginStatusText);
+                initFailed = false;
+            }
+            catch (Exception ex)
+            {
+                initFailed = true;
 
-                    MessageBox.Show("Failed to init OverlayPlugin: " + ex.ToString(), "OverlayPlugin Error");
-                }
-            }));
+                MessageBox.Show("Failed to init plugin: " + ex.ToString(), "NeoActPlugin Error");
+            }
         }
 
         public void DeInitPlugin()
