@@ -16,7 +16,7 @@ namespace NeoActPlugin.Core
     public class PluginMain
     {
         private TinyIoCContainer _container;
-        private ILogger _logger;
+        private static ILogger _logger;
 
         TabPage tab;
         Label label;
@@ -101,7 +101,7 @@ namespace NeoActPlugin.Core
             catch (Exception ex)
             {
                 ActGlobals.oFormActMain.WriteInfoLog(ex.Message);
-                LogParserMessage("Exception during InitPlugin: " + ex.ToString().Replace(Environment.NewLine, " "));
+                WriteLog(LogLevel.Error, "Exception during InitPlugin: " + ex.ToString().Replace(Environment.NewLine, " "));
                 this.label.Text = "InitPlugin Error.";
             }
         }
@@ -141,10 +141,9 @@ namespace NeoActPlugin.Core
         }
 
 
-        public static void LogParserMessage(string message)
+        public static void WriteLog(LogLevel level,string message)
         {
-            //if (lstMessages != null && !lstMessages.IsDisposed)
-            //    lstMessages.Invoke(new Action(() => lstMessages.Items.Add(message)));
+            _logger.Log(level, message);
         }
 
         private void cmdClearMessages_Click(object sender, EventArgs e)
@@ -223,7 +222,7 @@ namespace NeoActPlugin.Core
             }
             catch (Exception ex)
             {
-                PluginMain.LogParserMessage("Error [BNS_Log.Uninitialize] " + ex.ToString().Replace(Environment.NewLine, " "));
+                PluginMain.WriteLog(LogLevel.Error, "Error [BNS_Log.Uninitialize] " + ex.ToString().Replace(Environment.NewLine, " "));
             }
         }
 
@@ -258,7 +257,7 @@ namespace NeoActPlugin.Core
             {
                 string errorMessage = string.Format("{0}|Error [{1}] {2}", DateTime.Now.ToString("HH:mm:ss.fff"), context, ex.ToString());
                 _logWriter.WriteLine(_logFilePath, errorMessage);
-                PluginMain.LogParserMessage(errorMessage);
+                PluginMain.WriteLog(LogLevel.Error, errorMessage);
             }
             catch { /* Prevent logging failures from crashing thread */ }
         }
@@ -302,14 +301,14 @@ namespace NeoActPlugin.Core
                     if (!DateTime.TryParse(timestampPart, out ret))
                     {
 
-                        PluginMain.LogParserMessage("Failed to parse timestamp");
+                        PluginMain.WriteLog(LogLevel.Error, "Failed to parse timestamp");
                         return DateTime.MinValue;
                     }
                 }
             }
             catch (Exception ex)
             {
-                PluginMain.LogParserMessage("Error [ParseLogDateTime] " + ex.ToString().Replace(Environment.NewLine, " "));
+                PluginMain.WriteLog(LogLevel.Error, "Error [ParseLogDateTime] " + ex.ToString().Replace(Environment.NewLine, " "));
             }
             return ret;
         }
@@ -547,12 +546,12 @@ namespace NeoActPlugin.Core
                 if (ex.InnerException != null)
                     exception += " " + ex.InnerException.ToString().Replace(Environment.NewLine, " ");
 
-                PluginMain.LogParserMessage("Error [LogParse.BeforeLogLineRead] " + exception + " " + logInfo.logLine);
+                PluginMain.WriteLog(LogLevel.Error, "Error [LogParse.BeforeLogLineRead] " + exception + " " + logInfo.logLine);
             }
 
             // For debugging
             if (!string.IsNullOrWhiteSpace(logLine))
-                PluginMain.LogParserMessage("Unhandled Line: " + logInfo.logLine);
+                PluginMain.WriteLog(LogLevel.Warning, "Unhandled Line: " + logInfo.logLine);
         }
 
         private static string DecodeString(string data)
@@ -678,7 +677,7 @@ namespace NeoActPlugin.Core
             }
             catch (Exception ex)
             {
-                PluginMain.LogParserMessage("Error refreshing pointers: " + ex.Message);
+                PluginMain.WriteLog(LogLevel.Error, "Error refreshing pointers: " + ex.Message);
             }
         }
 
