@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NeoActPlugin")]
+[assembly: AssemblyTitle("NeoActPlugin.Core")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("NeoActPlugin")]
+[assembly: AssemblyProduct("NeoActPlugin.Core")]
 [assembly: AssemblyCopyright("Copyright ©  2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("47a35b8b-4285-4651-ac11-2d05756e2bee")]
+[assembly: Guid("f5ab1af0-dedc-4bc3-8259-ba47255acd7a")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -30,5 +30,3 @@ using System.Runtime.InteropServices;
 //      Revision
 //
 [assembly: AssemblyVersion("0.2.0.0")]
-
-[assembly: InternalsVisibleTo("NeoActPlugin.Test")]
