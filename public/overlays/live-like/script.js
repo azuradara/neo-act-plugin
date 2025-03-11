@@ -1,10 +1,8 @@
 const nf = new Intl.NumberFormat('en-US')
 
-document.addEventListener("onOverlayStateUpdate", function (e) {
-  if (!e.detail.isLocked) {
-      displayResizeHandle()
-  } else {
-      hideResizeHandle()
+layer.on('status', function (e) {
+  if (e.type === 'lock') {
+    e.message ? hideResizeHandle() : displayResizeHandle();
   }
 });
 
@@ -17,8 +15,9 @@ function hideResizeHandle() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  addOverlayListener('CombatData', updateDPSMeter)
-  startOverlayEvents()
+  layer.connect();
+  console.log(layer);
+  layer.on('data', updateDPSMeter);
 
   setupZoomControls()
 })
@@ -161,11 +160,6 @@ function hideSkills() {
     popperInstance = null
   }
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-  addOverlayListener('CombatData', updateDPSMeter)
-  startOverlayEvents()
-})
 
 function setupZoomControls() {
   const zoomOutBtn = document.getElementById('zoom-out');
