@@ -38,8 +38,6 @@ namespace NeoActPlugin.Core
 
         public void InitPlugin(System.Windows.Forms.TabPage pluginScreenSpace, System.Windows.Forms.Label pluginStatusText)
         {
-            ActGlobals.oFormActMain.WriteInfoLog("init started");
-
             try
             {
                 this.tab = pluginScreenSpace;
