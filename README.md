@@ -1,6 +1,8 @@
-This is an [ACT](https://advancedcombattracker.com/home.php) plugin for BnS NEO.
+# Blade & Soul NEO - ACT Plugin & DPS Meter
 
-> [!WARNING]  
+This is an [ACT](https://advancedcombattracker.com/home.php) plugin for Blade & Soul NEO that parses combat logs and sends them to ACT for processing. It also includes an overlay that you can use to display your DPS in-game.
+
+> [!WARNING]
 > This plugin connects to the game's memory to read combat log data, this is very much against the game's EULA. I am not sure whether the Anti-cheat detects memory reads, but, if it makes you feel better - I am using this personally on my main account.
 >
 > This is the first time I'm writing any .NET/C# code so don't make fun of me thx.
@@ -14,53 +16,50 @@ This is an [ACT](https://advancedcombattracker.com/home.php) plugin for BnS NEO.
 
 ### Installation
 
-1. Download the latest `.cs` file from [Releases](https://github.com/azuradara/neo-act-plugin/releases).
-2. Run ACT as an administrator, otherwise the plugin will not be able to access your game's memory.
-3. Go to the "Plugins" tab and click the "Browse" button then locate the file you just downloaded and click OK.
-4. Enable the plugin and run BnS.
-5. Make sure you always run it with other characters **shown**, otherwise their crit hit rate will always 0%.
+If you're updating from a previous version (pre `v0.2.0`), make sure to delete the old `NeoActPlugin.cs` from your list of plugins on ACT before you install this one.
+
+1. Download the latest `.7z` or `.zip` archive from [Releases](https://github.com/azuradara/neo-act-plugin/releases).
+2. Extract the contents of the archive to a folder of your choice.
+3. Run ACT as an administrator, otherwise the plugin will not be able to access your game's memory.
+4. Go to the "Plugins" tab and click the "Browse" button then locate `NeoActPlugin.dll` in the folder you extracted the archive to.
+5. Enable the plugin and run BnS.
+6. Make sure you always run it with other characters **shown**, otherwise their crit hit rate will always 0%.
+
+> [!NOTE]
+> Starting from `v0.2.0`, this plugin comes with an auto update feature, so you don't have to worry about checking back here for updates.
 
 ### Adding overlays
 
-This plugin is only responsible for parsing combat logs to a form that ACT can understand, if you want an overlay over your game you will have to install other plugins on top of this one. Here's a quick walkthrough of how to install "Ember" (The only overlay I tested).
+This plugin is only responsible for parsing combat logs to a form that ACT can understand, if you want an overlay over your game you will have to install other plugins on top of this one. Here's a quick walkthrough of how to install our custom "Live-like" overlay:
 
 1. Download the latest version of the ACT setup file from their [Downloads page](https://advancedcombattracker.com/download.php) and install it.
 
-2.  Open ACT and go to the "Plugins" tab.
+2. Open ACT and go to the "Plugins" tab.
 
 3. Click "Get Plugins..." on the right and pick "Overlay Plugin" then click "Download and Enable".
-   
+
 4. Once finished, click the "OverlayPlugin.dll" tab and click "New" on the left.
-   
+
 5. Pick "Custom" from the Preset dropdown and then give it any name you'd like.
-   
+
 6. Select "MiniParse" from the Type dropdown and click OK.
-    
-7. Click the new overlay you just added on the sidebar on the left, and change the "URL" to:
-  ```
-  https://azuradara.github.io/neo-act-plugin/overlays/live-like/
-  ```
+
+7. Click the new overlay you just added on the sidebar on the left, and change the "URL" to: `https://azuradara.github.io/neo-act-plugin/overlays/live-like/`
 
 8. Move it somewhere you like, then click "Enable clickthrough" to prevent your mouse from clicking it while you're playing.
-    
-9. For the time being, overlay doesn't recognize BNSR.exe as being the game client, so you will need to do some extra steps to make it stay on top:
-  - Go to Plugins > OverlayPlugin.dll > General
-  - Uncheck "Automatically hide overlays when the game is in the background"
 
-10. If you would like to configure hotkeys for locking/unlocking and toggling visibility:
-  - Click the overlay you just added on the sidebar and go to the "Hotkeys" tab.
-  - Click "Add new hotkey", select your action, and bind it to whatever key you'd like.
+9. For the time being, overlay doesn't recognize BNSR.exe as being the game client, so to make it always show up when you're in-game, you will have to disable the "Automatically hide overlays when the game is in the background" option in Plugins > OverlayPlugin.dll > General.
+  
+10. If you would like to configure hotkeys for locking/unlocking and toggling visibility, click the overlay you just added on the sidebar and go to the "Hotkeys" tab. Then click "Add new hotkey", select your action, and bind it to whatever key you'd like.
 
-The overlay will update automatically every time we push something new to this repository (unlike the plugin), so check back from time to time to see what changed.
+The overlay will update automatically every time we push something new to this repository.
 
-There are tons of overlay configuration videos on YouTube - mostly related to FFXIV - but it's the same principal, overlays should be mostly game-agnostic.
-
-You can even use one provided in our github from [Overlays](https://github.com/azuradara/neo-act-plugin/tree/main/Overlays)
+There are tons of overlay configuration videos on YouTube - mostly related to FFXIV - but it's the same principle, overlays should be mostly game-agnostic.
 
 ### Troubleshooting
 
 - The parser does not read DPS and/or reads logs from a different chat (e.g. faction chat).
-    - Fix: Click "Chat Tab Options" (the cog icon on the left of ur chat tabs) > Reset > All Settings. This is because the plugin reads from the default combat chat tab and does not support custom ones.
+  - Fix: Click "Chat Tab Options" (the cog icon on the left of ur chat tabs) > Reset > All Settings. This is because the plugin reads from the default combat chat tab and does not support custom ones.
 - It keeps spewing "Failed to reolve pointer chain" errors:
   - Make sure ACT is running as administrator.
 
@@ -83,7 +82,6 @@ You can even use one provided in our github from [Overlays](https://github.com/a
 - Fix the limitations
 - Find more limitations
 - Repeat
-- Custom overlay (?)
 
 ## Contributing
 
