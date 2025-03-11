@@ -60,9 +60,9 @@ try {
   mkdir NeoActPlugin\libs
 
   Copy-Item @("NeoActPlugin.dll", "NeoActPlugin.dll.config", "README.md", "LICENSE") NeoActPlugin
-#   Copy-Item -Recurse libs\resources NeoActPlugin
-#   Copy-Item -Recurse libs\*.dll NeoActPlugin\libs
-#   Remove-Item NeoActPlugin\libs\CefSharp.*
+  # Copy-Item -Recurse libs\resources NeoActPlugin
+  Copy-Item -Recurse libs\*.dll NeoActPlugin\libs
+  # Remove-Item NeoActPlugin\libs\CefSharp.*
 
   $text = [System.IO.File]::ReadAllText("$PWD\..\..\NeoActPlugin\Properties\AssemblyInfo.cs");
   $regex = [regex]::New('\[assembly: AssemblyVersion\("([0-9]+\.[0-9]+\.[0-9]+)\.[0-9]+"\)');
@@ -74,14 +74,14 @@ try {
   }
 
   $version = $m.Groups[1]
-  $archive = "..\NeoActPlugin-$version.7z"
+  $archive = "..\neo-act-plugin-v$version.7z"
 
   if (Test-Path $archive) { Remove-Item $archive }
   Set-Location NeoActPlugin
   7z a ..\$archive .
   Set-Location ..
 
-  $archive = "..\NeoActPlugin-$version.zip"
+  $archive = "..\neo-act-plugin-v$version.zip"
 
   if (Test-Path $archive) { Remove-Item $archive }
   7z a $archive NeoActPlugin

@@ -67,7 +67,7 @@ namespace NeoActPlugin.Updater
 
                     foreach (var rel in tmp["content"])
                     {
-                        var version = Version.Parse(rel["tag_name"].ToString().Substring(1));
+                        var version = Version.Parse(rel["tag_name"].ToString());
                         if (version < options.currentVersion) break;
 
                         releaseNotes += "---\n\n# " + rel["name"].ToString() + "\n\n" + rel["body"].ToString() + "\n\n";
@@ -112,71 +112,6 @@ namespace NeoActPlugin.Updater
         private static string RenderMarkdown(string input)
         {
             return Markdown.ToHtml(input);
-        }
-
-        public static Task<(bool, Version, string, string)> CheckForManifestUpdate(UpdaterOptions options)
-        {
-            return Task.Run(() =>
-            {
-                Version remoteVersion;
-                string response;
-                try
-                {
-                    response = CurlWrapper.Get(options.manifestUrl);
-                }
-                catch (CurlException ex)
-                {
-                    MessageBox.Show(
-                        string.Format(Resources.UpdateCheckException, ex.ToString()),
-                        string.Format(Resources.UpdateCheckTitle, options.project),
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error
-                    );
-                    return (false, null, "", "");
-                }
-
-                var releaseNotes = "";
-                var downloadUrl = "";
-                try
-                {
-                    var tmp = JObject.Parse(response);
-                    remoteVersion = Version.Parse(tmp["version"].ToString());
-                    if (remoteVersion.CompareTo(options.currentVersion) <= 0)
-                    {
-                        // Exit early if no new version is available.
-                        return (false, remoteVersion, "", "");
-                    }
-
-                    response = CurlWrapper.Get(options.notesUrl);
-
-                    // JObject doesn't accept arrays so we have to package the response in a JSON object.
-                    tmp = JObject.Parse("{\"content\":" + response + "}");
-                    downloadUrl = tmp[0]["download"].ToString();
-
-                    foreach (var rel in tmp["content"])
-                    {
-                        var version = Version.Parse(rel["version"].ToString());
-                        if (version.CompareTo(options.currentVersion) <= 0) break;
-
-                        releaseNotes += rel["notes"];
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ActGlobals.oFormActMain.Invoke((Action)(() =>
-                    {
-                        MessageBox.Show(
-                            string.Format(Resources.UpdateParseVersionError, ex.ToString()),
-                            string.Format(Resources.UpdateTitle, options.project),
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error
-                        );
-                    }));
-                    return (false, null, "", "");
-                }
-
-                return (remoteVersion.CompareTo(options.currentVersion) > 0, remoteVersion, releaseNotes, downloadUrl);
-            });
         }
 
         public static bool TryRestartACT(bool showIgnoreButton, string message)
@@ -322,8 +257,7 @@ namespace NeoActPlugin.Updater
                 currentVersion = Assembly.GetExecutingAssembly().GetName().Version,
                 checkInterval = TimeSpan.FromMinutes(5),
                 repo = "azuradara/neo-act-plugin",
-                downloadUrl = "https://github.com/{REPO}/releases/download/{VERSION}/neo-act-plugin-{VERSION}.7z",
-                actPluginId = checkPreRelease ? 86 : 77,
+                downloadUrl = "https://github.com/{REPO}/releases/download/{VERSION}/neo-act-plugin-v{VERSION}.7z",
             };
 
             await RunAutoUpdater(options, manualCheck);
@@ -344,9 +278,6 @@ namespace NeoActPlugin.Updater
         // GitHub parameters
         public string repo;
         public string downloadUrl;
-
-        // GitHub+ACT parameters
-        public int actPluginId;
 
         // Manifest parameters
         public string manifestUrl;
