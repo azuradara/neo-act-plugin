@@ -88,6 +88,21 @@ There are tons of overlay configuration videos on YouTube - mostly related to FF
 I'm too lazy to write a contribution guidelines doc, feel free to submit PRs or issues if you'd like. This project will always be free.
 If you don't want to submit an issue, contact `azuradara` on Discord.
 
+### Building from source
+
+Follow these instructions if you would like to build the plugin from source or modify it. If you only want to install it, check the [Installation](#installation) section.
+
+- Install Visual Studio 2019 or later and .NET desktop workload with .NET 4.8.1 SDK.
+- Clone this repository or download the source code as an archive.
+- Run `tools/fetch_deps.py` to download the required dependencies.
+- Run `build.ps1` to build the project.
+
+Once done, the `NeoActPlugin.dll` will be in the `out/` folder, either in `Release` or `Debug` depending on the configuration you built it with.
+
+## License
+
+MIT License, see [LICENSE](LICENSE) for more information.
+
 ## Motivation
 
 That shit ain't worth $15 dawg.
