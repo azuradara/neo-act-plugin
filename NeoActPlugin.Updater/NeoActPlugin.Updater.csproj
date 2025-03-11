@@ -36,7 +36,6 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <!-- Add platform configurations -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <OutputPath>..\out\Debug\libs\</OutputPath>
     <PlatformTarget>AnyCPU</PlatformTarget>

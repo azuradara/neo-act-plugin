@@ -69,7 +69,7 @@ namespace NeoActPlugin.Core
 
                 _logger.Log(LogLevel.Info, "Initialized.");
 
-                NeoActPlugin.Updater.Updater.PerformUpdateIfNecessary(PluginDirectory, _container);
+                Updater.Updater.PerformUpdateIfNecessary(PluginDirectory, _container);
 
                 Advanced_Combat_Tracker.ActGlobals.oFormActMain.UpdateCheckClicked += new Advanced_Combat_Tracker.FormActMain.NullDelegate(UpdateCheckClicked);
                 if (Advanced_Combat_Tracker.ActGlobals.oFormActMain.GetAutomaticUpdatesAllowed())
