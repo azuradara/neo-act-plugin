@@ -16,7 +16,6 @@ function hideResizeHandle() {
 
 document.addEventListener('DOMContentLoaded', function () {
   layer.connect();
-  console.log(layer);
   layer.on('data', updateDPSMeter);
 
   setupZoomControls()
