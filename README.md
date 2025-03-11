@@ -63,6 +63,12 @@ There are tons of overlay configuration videos on YouTube - mostly related to FF
 - It keeps spewing "Failed to reolve pointer chain" errors:
   - Make sure ACT is running as administrator.
 
+### How to add the overlay to OBS (for streamers)
+
+1. In ACT, go to Plugins > OverlayPlugin WSServer > Stream/Local overlay.
+2. Leave settings as default, but **Enable SSL** and click Start.
+3. Add a browser source in OBS and paste this URL, making sure the substitue the host and port if you changed the default settings.: `https://azuradara.github.io/neo-act-plugin/overlays/live-like?HOST_PORT=ws://127.0.0.1:10501/`.
+
 ## Limitations
 
 - This is a POC - it works fine but it's missing support for a lot of features provided by ACT (e.g. blocks, buffs, debuffs, etc..).
