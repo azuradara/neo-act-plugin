@@ -27,22 +27,6 @@ namespace NeoActPlugin.Updater
                 Version remoteVersion = null;
                 string response;
 
-                if (options.actPluginId > 0)
-                {
-                    try
-                    {
-                        response = ActGlobals.oFormActMain.PluginGetRemoteVersion(options.actPluginId);
-                        if (!response.StartsWith("v") || !Version.TryParse(response.Substring(1), out remoteVersion))
-                        {
-                            logger.Log(LogLevel.Warning, string.Format(Resources.ActUpdateCheckFailed, options.project));
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.Log(LogLevel.Error, string.Format(Resources.ActUpdateException, options.project, ex));
-                    }
-                }
-
                 if (remoteVersion == null)
                 {
                     try
@@ -50,7 +34,7 @@ namespace NeoActPlugin.Updater
                         response = CurlWrapper.Get(CHECK_URL.Replace("{REPO}", options.repo));
 
                         var tmp = JObject.Parse(response);
-                        remoteVersion = Version.Parse(tmp["tag_name"].ToString().Substring(1));
+                        remoteVersion = Version.Parse(tmp["tag_name"].ToString());
                     }
                     catch (Exception ex)
                     {
@@ -286,14 +270,8 @@ namespace NeoActPlugin.Updater
             string releaseNotes;
             string downloadUrl;
 
-            if (options.repo != null)
-            {
-                (newVersion, remoteVersion, releaseNotes, downloadUrl) = await CheckForGitHubUpdate(options, container);
-            }
-            else
-            {
-                (newVersion, remoteVersion, releaseNotes, downloadUrl) = await CheckForManifestUpdate(options);
-            }
+            (newVersion, remoteVersion, releaseNotes, downloadUrl) = await CheckForGitHubUpdate(options, container);
+ 
 
             if (remoteVersion != null)
             {
@@ -333,13 +311,14 @@ namespace NeoActPlugin.Updater
 
         public static async void PerformUpdateIfNecessary(string pluginDirectory, TinyIoCContainer container, bool manualCheck = false, bool checkPreRelease = false)
         {
-            var config = container.Resolve<IPluginConfig>();
+            //var config = container.Resolve<IPluginConfig>();
 
             var options = new UpdaterOptions
             {
                 project = "NeoActPlugin",
                 pluginDirectory = pluginDirectory,
-                lastCheck = config.LastUpdateCheck,
+                //lastCheck = config.LastUpdateCheck,
+                lastCheck = DateTime.MinValue,
                 currentVersion = Assembly.GetExecutingAssembly().GetName().Version,
                 checkInterval = TimeSpan.FromMinutes(5),
                 repo = "azuradara/neo-act-plugin",
@@ -348,7 +327,7 @@ namespace NeoActPlugin.Updater
             };
 
             await RunAutoUpdater(options, manualCheck);
-            config.LastUpdateCheck = options.lastCheck;
+            //config.LastUpdateCheck = options.lastCheck;
         }
     }
 

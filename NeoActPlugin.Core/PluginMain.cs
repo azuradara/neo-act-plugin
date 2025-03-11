@@ -67,6 +67,10 @@ namespace NeoActPlugin.Core
                 this.tab.Controls.Add(this.panel);
                 this.tab.Name = "Neo ACT Plugin";
 
+                _logger.Log(LogLevel.Info, "Initialized.");
+
+                NeoActPlugin.Updater.Updater.PerformUpdateIfNecessary(PluginDirectory, _container);
+
                 Advanced_Combat_Tracker.ActGlobals.oFormActMain.UpdateCheckClicked += new Advanced_Combat_Tracker.FormActMain.NullDelegate(UpdateCheckClicked);
                 if (Advanced_Combat_Tracker.ActGlobals.oFormActMain.GetAutomaticUpdatesAllowed())
                 {

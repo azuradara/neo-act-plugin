@@ -88,6 +88,10 @@
       <Name>NeoActPlugin.Common</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\NeoActPlugin.Updater\NeoActPlugin.Updater.csproj">
+      <Project>{eb4b99e9-b101-427f-94a6-84f8a9500685}</Project>
+      <Name>NeoActPlugin.Updater</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Fleck">
