@@ -20,6 +20,7 @@ namespace NeoActPlugin.Core
 
         TabPage tab;
         Label label;
+        ControlPanel panel;
 
         internal string PluginDirectory { get; private set; }
 
@@ -61,6 +62,11 @@ namespace NeoActPlugin.Core
                     return;
                 }
 
+                this.panel = new ControlPanel(_container);
+                this.panel.Dock = DockStyle.Fill;
+                this.tab.Controls.Add(this.panel);
+                this.tab.Name = "Neo ACT Plugin";
+
                 Advanced_Combat_Tracker.ActGlobals.oFormActMain.UpdateCheckClicked += new Advanced_Combat_Tracker.FormActMain.NullDelegate(UpdateCheckClicked);
                 if (Advanced_Combat_Tracker.ActGlobals.oFormActMain.GetAutomaticUpdatesAllowed())
                 {
@@ -90,6 +96,7 @@ namespace NeoActPlugin.Core
             }
             catch (Exception ex)
             {
+                ActGlobals.oFormActMain.WriteInfoLog(ex.Message);
                 LogParserMessage("Exception during InitPlugin: " + ex.ToString().Replace(Environment.NewLine, " "));
                 this.label.Text = "InitPlugin Error.";
             }
