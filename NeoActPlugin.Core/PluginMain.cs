@@ -636,7 +636,7 @@ namespace NeoActPlugin.Core
         private IntPtr _baseAddress;
         private IntPtr _currentAddress;
         private int _offsetCounter = 1;
-        private readonly long[] _offsets = { 0x07423C90, 0x490, 0x490, 0x670, 0x8, 0x70 };
+        private readonly long[] _offsets = { 0x07485098, 0x490, 0x490, 0x670, 0x8, 0x70 };
         private DateTime _lastRefreshTime = DateTime.MinValue;
 
         // not sure what i should set this to, but i like 4
