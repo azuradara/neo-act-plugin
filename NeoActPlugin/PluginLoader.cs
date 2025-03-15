@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NeoActPlugin
@@ -36,7 +37,7 @@ namespace NeoActPlugin
 #if DEBUG
                     Path.Combine(pluginDirectory, "libs", Environment.Is64BitProcess ? "x64" : "x86"),
 #else
-                    //GetCefPath()
+                    GetCefPath()
 #endif
                 });
             }
@@ -55,7 +56,7 @@ namespace NeoActPlugin
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private void Initialize()
+        private async void Initialize()
         {
             pluginStatusText.Text = Resources.InitRuntime;
 
@@ -85,21 +86,30 @@ namespace NeoActPlugin
                 ActGlobals.oFormActMain.WriteDebugLog(ex.ToString());
             }
 
-            FinishInit(container);
+            await FinishInit(container);
         }
 
-        public void FinishInit(TinyIoCContainer container)
+        public async Task FinishInit(TinyIoCContainer container)
         {
-            try
+            if (await CefInstaller.EnsureCef(GetCefPath()))
             {
-                pluginMain.InitPlugin(pluginScreenSpace, pluginStatusText);
-                initFailed = false;
-            }
-            catch (Exception ex)
-            {
-                initFailed = true;
+                ActGlobals.oFormActMain.Invoke((Action)(() =>
+                {
+                    try
+                    {
+                        pluginMain.InitPlugin(pluginScreenSpace, pluginStatusText);
+                        initFailed = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        initFailed = true;
 
-                MessageBox.Show("Failed to init plugin: " + ex.ToString(), "NeoActPlugin Error");
+                        MessageBox.Show("Failed to init plugin: " + ex.ToString(), "NeoActPlugin Error");
+                    }
+                }));
+            } else
+            {
+                pluginScreenSpace.Controls.Add(new CefMissingTab(GetCefPath(), this, container));
             }
         }
 
@@ -121,8 +131,13 @@ namespace NeoActPlugin
             }
             else
             {
-                throw new Exception("Could not find ourselves in the plugin list!");
+                throw new Exception("Could not find neo act plugin in the plugin list!");
             }
+        }
+
+        private string GetCefPath()
+        {
+            return Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "NeoActPluginCef", Environment.Is64BitProcess ? "x64" : "x86");
         }
     }
 }

@@ -80,6 +80,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CefInstaller.cs" />
     <Compile Include="CurlWrapper.cs" />
     <Compile Include="HttpClientWrapper.cs" />
     <Compile Include="Installer.cs" />
