@@ -142,14 +142,14 @@
     <data name="InitCef" xml:space="preserve">
     <value>Initializing CEF...</value>
   </data>
-    <data name="CoreOrHtmlRendererInsane" xml:space="preserve">
-    <value>Core or HtmlRenderer aren't sane.</value>
-    <comment>Displayed if the version for NeoActPlugin.Core or HtmlRenderer doesn't match the NeoActPlugin version.</comment>
+    <data name="CoreOrRendererInsane" xml:space="preserve">
+    <value>Core or Renderer aren't sane.</value>
+    <comment>Displayed if the version for NeoActPlugin.Core or NeoActPlugin.Renderer doesn't match the NeoActPlugin version.</comment>
   </data>
     <data name="AssemblyMismatch" xml:space="preserve">
     <value>ACT tried to load {0} {1} which doesn't match your NeoActPlugin version ({2}). Aborting plugin load.
 
-Please make sure the old NeoActPlugin is disabled and restart ACT. If that doesn't fix the issue, remove the above mentioned file and any NeoActPlugin*.dll, CEF or HtmlRenderer.dll files in the same directory.
+Please make sure the old NeoActPlugin is disabled and restart ACT. If that doesn't fix the issue, remove the above mentioned file and any NeoActPlugin*.dll, CEF or NeoActPlugin.Renderer.dll files in the same directory.
 </value>
   </data>
     <data name="AssemblyMissing" xml:space="preserve">

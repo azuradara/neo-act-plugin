@@ -72,7 +72,7 @@ namespace NeoActPlugin
         /// <summary>
         ///   Looks up a localized string similar to ACT tried to load {0} {1} which doesn&apos;t match your NeoActPlugin version ({2}). Aborting plugin load.
         ///
-        ///Please make sure the old NeoActPlugin is disabled and restart ACT. If that doesn&apos;t fix the issue, remove the above mentioned file and any NeoActPlugin*.dll, CEF or HtmlRenderer.dll files in the same directory.
+        ///Please make sure the old NeoActPlugin is disabled and restart ACT. If that doesn&apos;t fix the issue, remove the above mentioned file and any NeoActPlugin*.dll, CEF or NeoActPlugin.Renderer.dll files in the same directory.
         ///.
         /// </summary>
         internal static string AssemblyMismatch
@@ -129,13 +129,13 @@ namespace NeoActPlugin
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Core or HtmlRenderer aren&apos;t sane..
+        ///   Looks up a localized string similar to Core or NeoActPlugin.Renderer aren&apos;t sane..
         /// </summary>
-        internal static string CoreOrHtmlRendererInsane
+        internal static string CoreOrRendererInsane
         {
             get
             {
-                return ResourceManager.GetString("CoreOrHtmlRendererInsane", resourceCulture);
+                return ResourceManager.GetString("CoreOrRendererInsane", resourceCulture);
             }
         }
 
