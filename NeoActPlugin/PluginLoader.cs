@@ -93,20 +93,23 @@ namespace NeoActPlugin
         {
             if (await CefInstaller.EnsureCef(GetCefPath()))
             {
-                ActGlobals.oFormActMain.Invoke((Action)(() =>
+               if (SanityChecker.LoadSaneAssembly("NeoActPlugin.Renderer"))
                 {
-                    try
+                    ActGlobals.oFormActMain.Invoke((Action)(() =>
                     {
-                        pluginMain.InitPlugin(pluginScreenSpace, pluginStatusText);
-                        initFailed = false;
-                    }
-                    catch (Exception ex)
-                    {
-                        initFailed = true;
+                        try
+                        {
+                            pluginMain.InitPlugin(pluginScreenSpace, pluginStatusText);
+                            initFailed = false;
+                        }
+                        catch (Exception ex)
+                        {
+                            initFailed = true;
 
-                        MessageBox.Show("Failed to init plugin: " + ex.ToString(), "NeoActPlugin Error");
-                    }
-                }));
+                            MessageBox.Show("Failed to init plugin: " + ex.ToString(), "NeoActPlugin Error");
+                        }
+                    }));
+                }
             } else
             {
                 pluginScreenSpace.Controls.Add(new CefMissingTab(GetCefPath(), this, container));
