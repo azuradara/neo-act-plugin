@@ -1,15 +1,13 @@
-﻿using System;
+﻿using Advanced_Combat_Tracker;
+using Markdig;
+using NeoActPlugin.Common;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using Newtonsoft.Json.Linq;
-using Advanced_Combat_Tracker;
-using Markdig;
-using System.Runtime.CompilerServices;
-using System.Resources;
-using System.Xml.Linq;
-using NeoActPlugin.Common;
 
 namespace NeoActPlugin.Updater
 {
@@ -206,7 +204,7 @@ namespace NeoActPlugin.Updater
             string downloadUrl;
 
             (newVersion, remoteVersion, releaseNotes, downloadUrl) = await CheckForGitHubUpdate(options, container);
- 
+
 
             if (remoteVersion != null)
             {

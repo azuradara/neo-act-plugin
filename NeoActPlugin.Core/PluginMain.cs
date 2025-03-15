@@ -135,7 +135,7 @@ namespace NeoActPlugin.Core
         }
 
 
-        public static void WriteLog(LogLevel level,string message)
+        public static void WriteLog(LogLevel level, string message)
         {
             _logger.Log(level, message);
         }

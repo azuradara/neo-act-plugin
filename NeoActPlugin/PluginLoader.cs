@@ -1,17 +1,13 @@
 ﻿using Advanced_Combat_Tracker;
+using NeoActPlugin.Common;
+using NeoActPlugin.Core;
+using NeoActPlugin.Updater;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using NeoActPlugin.Common;
-using NeoActPlugin.Updater;
-using NeoActPlugin.Core;
 
 namespace NeoActPlugin
 {

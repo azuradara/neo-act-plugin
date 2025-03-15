@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
+using System.IO;
 using System.Net.Http;
 using System.Reflection;
-using System.IO;
+using System.Threading;
 
 namespace NeoActPlugin.Updater
 {
@@ -37,7 +37,8 @@ namespace NeoActPlugin.Updater
             Exception error = null;
             var retry = false;
 
-            Action action = (async () => {
+            Action action = (async () =>
+            {
                 try
                 {
                     var response = await client.GetAsync(url);

@@ -1,10 +1,6 @@
 ﻿using NeoActPlugin.Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NeoActPlugin.Core
 {
@@ -225,20 +221,20 @@ namespace NeoActPlugin.Core
         [DllImport("user32.dll")]
         public static extern IntPtr GetWindow(
             IntPtr hWnd,
-            uint uCmd  
+            uint uCmd
         );
 
         public const uint GW_HWNDPREV = 0x0003;
 
         [DllImport("user32.dll")]
         public static extern bool SetWindowPos(
-            IntPtr hWnd,             
-            IntPtr hWndInsertAfter, 
-            int X,                   
-            int Y,                
-            int cx,                
-            int cy,                  
-            uint uFlags             
+            IntPtr hWnd,
+            IntPtr hWndInsertAfter,
+            int X,
+            int Y,
+            int cx,
+            int cy,
+            uint uFlags
         );
 
         public static readonly IntPtr HWND_TOP = new IntPtr(0);

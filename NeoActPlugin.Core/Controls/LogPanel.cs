@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NeoActPlugin.Common;
+using System;
 using System.Windows.Forms;
-using NeoActPlugin.Common;
 
 namespace NeoActPlugin.Core.Controls
 {
