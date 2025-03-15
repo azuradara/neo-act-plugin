@@ -81,6 +81,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CefInstaller.cs" />
+    <Compile Include="CefMissingTab.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CefMissingTab.Designer.cs">
+      <DependentUpon>CefMissingTab.cs</DependentUpon>
+    </Compile>
     <Compile Include="CurlWrapper.cs" />
     <Compile Include="HttpClientWrapper.cs" />
     <Compile Include="Installer.cs" />
@@ -125,6 +131,11 @@
       <Name>NeoActPlugin.Common</Name>
       <Private>False</Private>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CefMissingTab.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
