@@ -1,18 +1,7 @@
-﻿using System;
+﻿using NeoActPlugin.Common;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Globalization;
-using System.Threading;
-using Microsoft.Win32;
-using NeoActPlugin.Common;
-using System.Diagnostics.Tracing;
-using System.Web.UI;
 
 namespace NeoActPlugin.Core
 {

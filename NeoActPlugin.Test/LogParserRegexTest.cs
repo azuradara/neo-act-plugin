@@ -1,5 +1,5 @@
-﻿using System.Text.RegularExpressions;
-using NeoActPlugin.Core;
+﻿using NeoActPlugin.Core;
+using System.Text.RegularExpressions;
 
 namespace NeoActPlugin.Test
 {
