@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 
 namespace NeoActPlugin.Core
 {
@@ -47,18 +46,16 @@ namespace NeoActPlugin.Core
         private readonly int _pid;
         private IntPtr _baseAddress;
         private IntPtr _currentAddress;
-        private int _offsetCounter = 1;
-        private readonly long[] _offsets = { 0x07485098, 0x490, 0x490, 0x670, 0x8, 0x70 };
+        private readonly long[] _offsets = { 0x07485098, 0x490, 0x490, 0x670, 0x8 };
         private DateTime _lastRefreshTime = DateTime.MinValue;
-
-        // not sure what i should set this to, but i like 4
         private TimeSpan _refreshInterval = TimeSpan.FromSeconds(4);
+        private string[] _lastLines = new string[600];
 
         public Reader()
         {
             var pid = GetProcessId("BNSR.exe");
             if (!pid.HasValue)
-                throw new ArgumentException("Process not found: " + "BNSR");
+                throw new ArgumentException("Process not found: BNSR");
 
             _pid = pid.Value;
             RefreshPointers();
@@ -74,17 +71,6 @@ namespace NeoActPlugin.Core
                 if (_currentAddress == IntPtr.Zero)
                     throw new InvalidOperationException("Failed to resolve pointer chain");
 
-                int currentOffset = 0;
-                while (true)
-                {
-                    var targetAddress = new IntPtr(_currentAddress.ToInt64() + (currentOffset * 0x70));
-                    var pointerBuffer = ReadMemory(targetAddress, 8);
-                    if (pointerBuffer == null || IsAllZero(pointerBuffer))
-                        break;
-                    currentOffset++;
-                }
-
-                _offsetCounter = currentOffset;
                 _lastRefreshTime = DateTime.Now;
             }
             catch (Exception ex)
@@ -93,51 +79,55 @@ namespace NeoActPlugin.Core
             }
         }
 
-        public IEnumerable<string> Read()
+        public string[] Read()
         {
             if (DateTime.Now - _lastRefreshTime > _refreshInterval)
             {
                 RefreshPointers();
             }
 
-            int lastOffset = -1;
-
-            while (true)
+            string[] currentLines = new string[600];
+            for (int i = 0; i < 600; i++)
             {
-                lastOffset = _offsetCounter;
-
-                var targetAddress = new IntPtr(_currentAddress.ToInt64() + (_offsetCounter * 0x70));
-                _offsetCounter++;
-
-                var pointerBuffer = ReadMemory(targetAddress, 8);
-                if (pointerBuffer == null) yield break;
-
-                Thread.Sleep(1);
-
-                while (IsAllZero(pointerBuffer))
+                IntPtr targetAddress = new IntPtr(_currentAddress.ToInt64() + (i * 0x70));
+                byte[] pointerBuffer = ReadMemory(targetAddress, 8);
+                if (pointerBuffer == null || IsAllZero(pointerBuffer))
                 {
-                    Thread.Sleep(100);
-
-                    if (DateTime.Now - _lastRefreshTime > _refreshInterval)
-                    {
-                        RefreshPointers();
-                        targetAddress = new IntPtr(_currentAddress.ToInt64() + ((_offsetCounter - 1) * 0x70));
-                    }
-
-                    pointerBuffer = ReadMemory(targetAddress, 8);
-                    if (pointerBuffer == null) yield break;
+                    currentLines[i] = string.Empty;
+                    continue;
                 }
 
-                var nextAddress = new IntPtr(BitConverter.ToInt64(pointerBuffer, 0));
-                if (nextAddress == IntPtr.Zero) yield break;
+                IntPtr nextAddress = new IntPtr(BitConverter.ToInt64(pointerBuffer, 0));
+                if (nextAddress == IntPtr.Zero)
+                {
+                    currentLines[i] = string.Empty;
+                    continue;
+                }
 
-                var stringBuffer = ReadMemory(nextAddress, 2048);
-                if (stringBuffer == null) yield break;
+                byte[] stringBuffer = ReadMemory(nextAddress, 512);
+                if (stringBuffer == null)
+                {
+                    currentLines[i] = string.Empty;
+                    continue;
+                }
 
-                var decoded = DecodeString(stringBuffer);
-                if (!string.IsNullOrEmpty(decoded) && _offsetCounter != lastOffset)
-                    yield return decoded;
+                string decoded = DecodeString(stringBuffer);
+                int periodIndex = decoded.IndexOf('.');
+                if (periodIndex != -1)
+                    decoded = decoded.Substring(0, periodIndex + 1);
+
+                currentLines[i] = decoded;
             }
+
+            List<string> newEntries = new List<string>();
+            for (int i = 0; i < 600; i++)
+            {
+                if (currentLines[i] != _lastLines[i] && !string.IsNullOrEmpty(currentLines[i]))
+                    newEntries.Add(currentLines[i]);
+            }
+
+            _lastLines = (string[])currentLines.Clone();
+            return newEntries.ToArray();
         }
 
         private byte[] ReadMemory(IntPtr address, int size)
@@ -148,10 +138,9 @@ namespace NeoActPlugin.Core
 
             try
             {
-                var buffer = new byte[size];
+                byte[] buffer = new byte[size];
                 int bytesRead;
                 bool success = ReadProcessMemory(processHandle, address, buffer, size, out bytesRead);
-
                 return success && bytesRead == size ? buffer : null;
             }
             finally
@@ -172,14 +161,14 @@ namespace NeoActPlugin.Core
 
         private static bool IsAllZero(byte[] buffer)
         {
-            for (int i = 0; i < buffer.Length; i++)
-                if (buffer[i] != 0) return false;
+            foreach (byte b in buffer)
+                if (b != 0) return false;
             return true;
         }
 
         private static int? GetProcessId(string processName)
         {
-            var processes = Process.GetProcessesByName(processName.Replace(".exe", ""));
+            Process[] processes = Process.GetProcessesByName(processName.Replace(".exe", ""));
             return processes.Length > 0 ? processes[0].Id : (int?)null;
         }
 
@@ -187,19 +176,16 @@ namespace NeoActPlugin.Core
         {
             IntPtr hProcess = OpenProcess(ProcessAccessFlags.PROCESS_QUERY_INFORMATION | ProcessAccessFlags.PROCESS_VM_READ, false, pid);
             if (hProcess == IntPtr.Zero)
-            {
                 return IntPtr.Zero;
-            }
 
-            uint bytesNeeded;
-            if (!EnumProcessModules(hProcess, null, 0, out bytesNeeded))
+            if (!EnumProcessModules(hProcess, null, 0, out uint bytesNeeded))
             {
                 CloseHandle(hProcess);
                 return IntPtr.Zero;
             }
 
             IntPtr[] modules = new IntPtr[bytesNeeded / IntPtr.Size];
-            if (!EnumProcessModules(hProcess, modules, bytesNeeded, out bytesNeeded))
+            if (!EnumProcessModules(hProcess, modules, bytesNeeded, out _))
             {
                 CloseHandle(hProcess);
                 return IntPtr.Zero;
@@ -211,13 +197,11 @@ namespace NeoActPlugin.Core
 
         private IntPtr FollowPointerChain(int pid, IntPtr baseAddress, long[] offsets)
         {
-            var currentAddress = baseAddress;
-            for (int i = 0; i < offsets.Length; i++)
+            IntPtr currentAddress = baseAddress;
+            foreach (long offset in offsets)
             {
-                currentAddress = new IntPtr(currentAddress.ToInt64() + offsets[i]);
-                if (i >= offsets.Length - 1) continue;
-
-                var buffer = ReadMemory(currentAddress, 8);
+                currentAddress = new IntPtr(currentAddress.ToInt64() + offset);
+                byte[] buffer = ReadMemory(currentAddress, 8);
                 if (buffer == null) return IntPtr.Zero;
                 currentAddress = new IntPtr(BitConverter.ToInt64(buffer, 0));
             }
