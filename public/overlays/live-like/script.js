@@ -1,6 +1,4 @@
-const nf = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }); 
-const previousDPSValues = {};
-const previousBarWidths = {};
+const nf = new Intl.NumberFormat('en-US')
 
 layer.on('status', function (e) {
   if (e.type === 'lock') {
@@ -9,137 +7,70 @@ layer.on('status', function (e) {
 });
 
 function displayResizeHandle() {
-  document.documentElement.classList.add("resizeHandle");
+  document.documentElement.classList.add("resizeHandle")
 }
 
 function hideResizeHandle() {
-  document.documentElement.classList.remove("resizeHandle");
+  document.documentElement.classList.remove("resizeHandle")
 }
 
 document.addEventListener('DOMContentLoaded', function () {
   layer.connect();
   layer.on('data', updateDPSMeter);
-  setupZoomControls();
-});
 
-let popperInstance = null;
+  setupZoomControls()
+})
 
-function animateDpsValue(element, start, end) {
-  if (start === end) {
-    element.textContent = `${nf.format(end)}/sec`;
-    return;
-  }
-
-  const duration = 1000; 
-  const startTime = Date.now();
-  let lastValue = start;
-
-  const update = () => {
-    const elapsed = Date.now() - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    const currentValue = Math.floor(start + (end - start) * progress); 
-    
-    if (currentValue !== lastValue) {
-      element.textContent = `${nf.format(currentValue)}/sec`;
-      lastValue = currentValue;
-    }
-
-    if (progress < 1) {
-      requestAnimationFrame(update);
-    } else {
-      element.textContent = `${nf.format(end)}/sec`;
-    }
-  };
-
-  requestAnimationFrame(update);
-}
-
-function animateBarWidth(element, startPercent, endPercent) {
-  const duration = 1000;
-  const startTime = Date.now();
-
-  const update = () => {
-    const elapsed = Date.now() - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    const currentPercent = startPercent + (endPercent - startPercent) * progress;
-    element.style.clipPath = `inset(0 ${100 - currentPercent}% 0 0)`;
-
-    if (progress < 1) {
-      requestAnimationFrame(update);
-    } else {
-      element.style.clipPath = `inset(0 ${100 - endPercent}% 0 0)`;
-    }
-  };
-
-  requestAnimationFrame(update);
-}
+let popperInstance = null
 
 function updateDPSMeter(data) {
-  document.getElementById('boss-name').innerText = data.Encounter.title || 'No Data';
-  let table = document.getElementById('combatantTable');
-  table.innerHTML = '';
+  document.getElementById('boss-name').innerText = data.Encounter.title || 'No Data'
 
-  let combatants = Object.values(data.Combatant);
-  combatants.sort((a, b) => parseFloat(b.encdps) - parseFloat(a.encdps));
+  let table = document.getElementById('combatantTable')
+  table.innerHTML = ''
 
-  const maxEncdps = combatants.length > 0 
-    ? Math.max(...combatants.map((c) => parseFloat(c.encdps) || 0)) 
-    : 0;
+  let combatants = Object.values(data.Combatant)
+  combatants.sort((a, b) => parseFloat(b.encdps) - parseFloat(a.encdps))
 
-  const currentNames = combatants.map(c => c.name);
-  Object.keys(previousDPSValues).forEach(name => {
-    if (!currentNames.includes(name)) delete previousDPSValues[name];
-  });
-  Object.keys(previousBarWidths).forEach(name => {
-    if (!currentNames.includes(name)) delete previousBarWidths[name];
-  });
+  const maxEncdps = combatants.length > 0 ? Math.max(...combatants.map((c) => parseFloat(c.encdps) || 0)) : 0
 
   combatants.forEach((combatant) => {
-    const currentDps = parseFloat(combatant.encdps) || 0;
-    const widthPercentage = maxEncdps > 0 ? (currentDps / maxEncdps) * 100 : 0;
+    const currentDps = parseFloat(combatant.encdps) || 0
+    const widthPercentage = maxEncdps > 0 ? (currentDps / maxEncdps) * 100 : 0
 
-    let playerDiv = document.createElement('div');
-    playerDiv.className = 'player' + (combatant.name === data.Combatant?.You?.name ? ' you' : '');
-    playerDiv.setAttribute('data-player', combatant.name);
-
-    let dpsBar = document.createElement('div');
-    dpsBar.className = 'dps-bar';
-
-    let gradientBg = document.createElement('div');
-    gradientBg.className = 'gradient-bg';
-
-    // Get previous width percentage
-    const previousWidth = previousBarWidths[combatant.name] || 0;
-    previousBarWidths[combatant.name] = widthPercentage;
+    let playerDiv = document.createElement('div')
+    playerDiv.className = 'player' + (combatant.name === data.Combatant?.You?.name ? ' you' : '')
+    playerDiv.setAttribute('data-player', combatant.name)
     
-    // Animate the bar width
-    animateBarWidth(gradientBg, previousWidth, widthPercentage);
+    playerDiv.addEventListener('mouseenter', (event) => showSkills(combatant, event))
+    playerDiv.addEventListener('mouseleave', hideSkills)
 
-    let barContent = document.createElement('div');
-    barContent.className = 'bar-content';
+    let dpsBar = document.createElement('div')
+    dpsBar.className = 'dps-bar'
 
-    const name = document.createElement('span');
-    name.className = 'dps-bar-label';
-    name.textContent = combatant.name;
+    let gradientBg = document.createElement('div')
+    gradientBg.className = 'gradient-bg'
 
-    const dps = document.createElement('span');
-    dps.className = 'dps-bar-value';
-    
-    const encdpsValue = combatant.encdps === '∞' ? 0 : Math.floor(parseFloat(combatant.encdps));
-    const previousDps = previousDPSValues[combatant.name] !== undefined 
-      ? previousDPSValues[combatant.name] 
-      : encdpsValue;
+    gradientBg.style.clipPath = `inset(0 ${100 - widthPercentage}% 0 0)`
 
-    previousDPSValues[combatant.name] = encdpsValue;
-    animateDpsValue(dps, previousDps, encdpsValue);
+    let barContent = document.createElement('div')
+    barContent.className = 'bar-content'
 
-    barContent.appendChild(name);
-    barContent.appendChild(dps);
-    dpsBar.appendChild(gradientBg);
-    dpsBar.appendChild(barContent);
-    playerDiv.appendChild(dpsBar);
-    table.appendChild(playerDiv);
-  });
+    const name = document.createElement('span')
+    name.className = 'dps-bar-label'
+    name.textContent = combatant.name
+
+    const dps = document.createElement('span')
+    dps.className = 'dps-bar-value'
+    dps.textContent = `${nf.format(combatant.ENCDPS === '∞' ? 0 : combatant.ENCDPS)}/sec`
+
+    barContent.appendChild(name)
+    barContent.appendChild(dps)
+    dpsBar.appendChild(gradientBg)
+    dpsBar.appendChild(barContent)
+    playerDiv.appendChild(dpsBar)
+    table.appendChild(playerDiv)
+  })
 }
 
 function showSkills(combatant, event) {
