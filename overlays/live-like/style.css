@@ -1,10 +1,22 @@
 * {
   box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 html {
   height: 100%;
   font-size: 16px;
+}
+
+html * {
+  font-family: Roboto, sans-serif !important;
+}
+
+html[lang="kr"] * {
+  font-family: "42dot Sans", sans-serif !important;
+  font-weight: 700 !important;
 }
 
 body {
@@ -116,13 +128,6 @@ a {
   width: 16.25rem;
   color: white;
   height: auto;
-}
-
-.dps-meter,
-.encounter-info,
-.dps-bar,
-.skill-details-container {
-  font-family: Roboto, sans-serif;
 }
 
 .encounter-info {

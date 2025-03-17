@@ -15,6 +15,12 @@ function hideResizeHandle() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+  const q = new URLSearchParams(this.location.search);
+
+  if (q.get('font') === 'kr') {
+    document.documentElement.setAttribute('lang', 'kr')
+  }
+
   layer.connect();
   layer.on('data', updateDPSMeter);
 
