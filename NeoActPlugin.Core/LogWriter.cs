@@ -72,11 +72,12 @@ namespace NeoActPlugin.Core
 
         private static void WorkerMain()
         {
+            var reader = new Reader();
+
             while (!_stopRequested)
             {
                 try
                 {
-                    var reader = new Reader();
                     foreach (var result in reader.Read())
                     {
                         if (_stopRequested) break;
