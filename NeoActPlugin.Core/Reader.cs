@@ -43,33 +43,27 @@ namespace NeoActPlugin.Core
             PROCESS_QUERY_INFORMATION = 0x0400
         }
 
-        // Instance state
         private int? _pid;
         private IntPtr _baseAddress;
         private IntPtr _currentAddress;
         private readonly long[] _offsets = { 0x07485098, 0x490, 0x490, 0x670, 0x8 };
         private string[] _lastLines = new string[600];
 
-        // Handle management
         private IntPtr _processHandle = IntPtr.Zero;
         private bool _needsHandleRefresh = true;
 
-        // Timing and performance
         private DateTime _lastReadTime = DateTime.MinValue;
         private TimeSpan _baseReadInterval = TimeSpan.FromMilliseconds(14);
         private TimeSpan _currentReadInterval = TimeSpan.FromMilliseconds(14);
 
-        // Error handling
         private bool _isInErrorState = false;
         private DateTime _lastErrorLogTime = DateTime.MinValue;
         private TimeSpan _errorLogInterval = TimeSpan.FromSeconds(10);
 
-        // Process cache
         private static int? _cachedPid;
 
         public Reader()
         {
-            // Initialization handled through RefreshPointers
         }
 
         private void LogErrorThrottled(string message)
@@ -103,7 +97,6 @@ namespace NeoActPlugin.Core
                     return false;
                 }
 
-                // Process changed or needs reinitialization
                 if (newPid != _pid || _baseAddress == IntPtr.Zero)
                 {
                     InvalidateHandles();
@@ -181,14 +174,14 @@ namespace NeoActPlugin.Core
                 if (!string.IsNullOrEmpty(currentLines[i])) validEntries++;
             }
 
-            UpdateChangeTracking(currentLines);
+            var newEntries = UpdateChangeTracking(currentLines);
             AdjustReadInterval(validEntries);
             _lastReadTime = DateTime.Now;
 
-            return GetNewEntries(currentLines);
+            return newEntries;
         }
 
-        private void UpdateChangeTracking(string[] currentLines)
+        private string[] UpdateChangeTracking(string[] currentLines)
         {
             List<string> newEntries = new List<string>();
             for (int i = 0; i < 600; i++)
@@ -197,6 +190,7 @@ namespace NeoActPlugin.Core
                     newEntries.Add(currentLines[i]);
             }
             _lastLines = (string[])currentLines.Clone();
+            return newEntries.ToArray();
         }
 
         private void AdjustReadInterval(int validEntries)
@@ -283,7 +277,6 @@ namespace NeoActPlugin.Core
         {
             var cleanName = processName.Replace(".exe", "");
 
-            // Check cached PID first
             if (_cachedPid.HasValue)
             {
                 try
@@ -295,7 +288,6 @@ namespace NeoActPlugin.Core
                 catch { /* Process died */ }
             }
 
-            // Full scan
             var processes = Process.GetProcessesByName(cleanName);
             if (processes.Length == 0)
             {
