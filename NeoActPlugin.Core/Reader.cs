@@ -282,10 +282,13 @@ namespace NeoActPlugin.Core
                 try
                 {
                     var proc = Process.GetProcessById(_cachedPid.Value);
-                    if (proc.ProcessName.Equals(cleanName, StringComparison.OrdinalIgnoreCase))
+                    if (proc.ProcessName.Equals(cleanName, StringComparison.OrdinalIgnoreCase) &&
+                        !IsProcessSuspended(proc))
+                    {
                         return _cachedPid;
+                    }
                 }
-                catch { /* Process died */ }
+                catch { /* Process might have exited */ }
             }
 
             var processes = Process.GetProcessesByName(cleanName);
@@ -295,8 +298,39 @@ namespace NeoActPlugin.Core
                 return null;
             }
 
-            _cachedPid = processes[0].Id;
-            return _cachedPid;
+            foreach (var process in processes)
+            {
+                if (!IsProcessSuspended(process))
+                {
+                    _cachedPid = process.Id;
+                    return _cachedPid;
+                }
+            }
+
+            _cachedPid = null;
+            return null;
+        }
+
+        private static bool IsProcessSuspended(Process process)
+        {
+            try
+            {
+                if (process.Threads.Count == 0)
+                    return true;
+
+                foreach (ProcessThread thread in process.Threads)
+                {
+                    if (thread.ThreadState != System.Diagnostics.ThreadState.Wait || thread.WaitReason != ThreadWaitReason.Suspended)
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch
+            {
+                return true;
+            }
+            return true;
         }
 
         private IntPtr GetBaseAddress(int pid)
