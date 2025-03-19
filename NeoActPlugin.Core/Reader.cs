@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -59,6 +60,8 @@ namespace NeoActPlugin.Core
         private bool _isInErrorState = false;
         private DateTime _lastErrorLogTime = DateTime.MinValue;
         private TimeSpan _errorLogInterval = TimeSpan.FromSeconds(10);
+
+        private bool _initialized = false;
 
         private static int? _cachedPid;
 
@@ -136,50 +139,62 @@ namespace NeoActPlugin.Core
             {
                 _currentReadInterval = TimeSpan.FromMilliseconds(1000);
                 _lastReadTime = DateTime.Now;
+                _initialized = false;
                 return Array.Empty<string>();
             }
 
-            string[] currentLines = new string[600];
-            int validEntries = 0;
+            string[] currentLines = ReadAllLines();
 
-            for (int i = 0; i < 600; i++)
+            if (!_initialized)
             {
-                IntPtr targetAddress = new IntPtr(_currentAddress.ToInt64() + (i * 0x70));
-                byte[] pointerBuffer = ReadMemory(targetAddress, 8);
-
-                if (pointerBuffer == null || IsAllZero(pointerBuffer))
-                {
-                    currentLines[i] = string.Empty;
-                    continue;
-                }
-
-                IntPtr nextAddress = new IntPtr(BitConverter.ToInt64(pointerBuffer, 0));
-                if (nextAddress == IntPtr.Zero)
-                {
-                    currentLines[i] = string.Empty;
-                    continue;
-                }
-
-                byte[] stringBuffer = ReadMemory(nextAddress, 512);
-                if (stringBuffer == null)
-                {
-                    currentLines[i] = string.Empty;
-                    continue;
-                }
-
-                string decoded = DecodeString(stringBuffer);
-                int periodIndex = decoded.IndexOf('.');
-                currentLines[i] = periodIndex != -1 ? decoded.Substring(0, periodIndex + 1) : decoded;
-
-                if (!string.IsNullOrEmpty(currentLines[i])) validEntries++;
+                currentLines.CopyTo(_lastLines, 0);
+                _initialized = true;
+                _lastReadTime = DateTime.Now;
+                return Array.Empty<string>();
             }
 
+            int validEntries = currentLines.Count(line => !string.IsNullOrEmpty(line));
             var newEntries = UpdateChangeTracking(currentLines);
             AdjustReadInterval(validEntries);
             _lastReadTime = DateTime.Now;
 
             return newEntries;
         }
+
+        private string[] ReadAllLines()
+    {
+        string[] currentLines = new string[600];
+        for (int i = 0; i < 600; i++)
+        {
+            IntPtr targetAddress = new IntPtr(_currentAddress.ToInt64() + (i * 0x70));
+            byte[] pointerBuffer = ReadMemory(targetAddress, 8);
+
+            if (pointerBuffer == null || IsAllZero(pointerBuffer))
+            {
+                currentLines[i] = string.Empty;
+                continue;
+            }
+
+            IntPtr nextAddress = new IntPtr(BitConverter.ToInt64(pointerBuffer, 0));
+            if (nextAddress == IntPtr.Zero)
+            {
+                currentLines[i] = string.Empty;
+                continue;
+            }
+
+            byte[] stringBuffer = ReadMemory(nextAddress, 512);
+            if (stringBuffer == null)
+            {
+                currentLines[i] = string.Empty;
+                continue;
+            }
+
+            string decoded = DecodeString(stringBuffer);
+            int periodIndex = decoded.IndexOf('.');
+            currentLines[i] = periodIndex != -1 ? decoded.Substring(0, periodIndex + 1) : decoded;
+        }
+        return currentLines;
+    }
 
         private string[] UpdateChangeTracking(string[] currentLines)
         {
