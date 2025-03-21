@@ -47,7 +47,7 @@ namespace NeoActPlugin.Core
         private int? _pid;
         private IntPtr _baseAddress;
         private IntPtr _currentAddress;
-        private readonly long[] _offsets = { 0x074840D8, 0xA0, 0x670, 0x8 };
+        private readonly long[] _offsets = { 0x7485118, 0xA0, 0x670, 0x8 };
         private string[] _lastLines = new string[600];
 
         private IntPtr _processHandle = IntPtr.Zero;
