@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{84CCF15D
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoActPlugin.Renderer", "NeoActPlugin.Renderer\NeoActPlugin.Renderer.csproj", "{04392428-E903-4127-9AA1-306AD45AE614}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,6 +90,18 @@ Global
 		{F5AB1AF0-DEDC-4BC3-8259-BA47255ACD7A}.Release|x64.Build.0 = Release|x64
 		{F5AB1AF0-DEDC-4BC3-8259-BA47255ACD7A}.Release|x86.ActiveCfg = Release|Any CPU
 		{F5AB1AF0-DEDC-4BC3-8259-BA47255ACD7A}.Release|x86.Build.0 = Release|Any CPU
+		{04392428-E903-4127-9AA1-306AD45AE614}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04392428-E903-4127-9AA1-306AD45AE614}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04392428-E903-4127-9AA1-306AD45AE614}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{04392428-E903-4127-9AA1-306AD45AE614}.Debug|x64.Build.0 = Debug|Any CPU
+		{04392428-E903-4127-9AA1-306AD45AE614}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{04392428-E903-4127-9AA1-306AD45AE614}.Debug|x86.Build.0 = Debug|Any CPU
+		{04392428-E903-4127-9AA1-306AD45AE614}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04392428-E903-4127-9AA1-306AD45AE614}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04392428-E903-4127-9AA1-306AD45AE614}.Release|x64.ActiveCfg = Release|Any CPU
+		{04392428-E903-4127-9AA1-306AD45AE614}.Release|x64.Build.0 = Release|Any CPU
+		{04392428-E903-4127-9AA1-306AD45AE614}.Release|x86.ActiveCfg = Release|Any CPU
+		{04392428-E903-4127-9AA1-306AD45AE614}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
