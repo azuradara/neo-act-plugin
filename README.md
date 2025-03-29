@@ -106,6 +106,6 @@ Once done, the `NeoActPlugin.dll` will be in the `out/` folder, either in `Relea
 
 MIT License, see [LICENSE](LICENSE) for more information.
 
-## Motivation
+## Alternatives
 
-That shit ain't worth $15 dawg.
+If you don't want to use ACT, or prefer to go with something easier to set up, you can join [Caera's Discord](https://discord.gg/gMsCaHhtzv) for a non-free but standalone alternative.
