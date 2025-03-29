@@ -86,6 +86,10 @@ There are tons of overlay configuration videos on YouTube - mostly related to FF
 - Find more limitations
 - Repeat
 
+## Alternatives
+
+If you don't want to use ACT, or prefer to go with something easier to set up, you can join <a href="https://discord.gg/gMsCaHhtzv" target="_blank">Caera's Discord</a> for a non-free but standalone alternative.
+
 ## Contributing
 
 I'm too lazy to write a contribution guidelines doc, feel free to submit PRs or issues if you'd like. This project will always be free.
@@ -105,7 +109,3 @@ Once done, the `NeoActPlugin.dll` will be in the `out/` folder, either in `Relea
 ## License
 
 MIT License, see [LICENSE](LICENSE) for more information.
-
-## Alternatives
-
-If you don't want to use ACT, or prefer to go with something easier to set up, you can join <a href="https://discord.gg/gMsCaHhtzv" target="_blank">Caera's Discord</a> for a non-free but standalone alternative.
