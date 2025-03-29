@@ -108,4 +108,4 @@ MIT License, see [LICENSE](LICENSE) for more information.
 
 ## Alternatives
 
-If you don't want to use ACT, or prefer to go with something easier to set up, you can join [Caera's Discord](https://discord.gg/gMsCaHhtzv) for a non-free but standalone alternative.
+If you don't want to use ACT, or prefer to go with something easier to set up, you can join <a href="https://discord.gg/gMsCaHhtzv" target="_blank">Caera's Discord</a> for a non-free but standalone alternative.
