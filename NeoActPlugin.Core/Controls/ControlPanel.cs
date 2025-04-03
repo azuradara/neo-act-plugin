@@ -117,8 +117,8 @@ namespace NeoActPlugin.Core
 
         private void RegionPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Reader._region = regionPicker.SelectedItem.ToString();
-            PluginMain.WriteLog(LogLevel.Info, "Selected Region: " + regionPicker.SelectedItem.ToString());
+            Reader._region = regionPicker.SelectedItem.ToString().Split(' ')[0];
+            PluginMain.WriteLog(LogLevel.Info, "Selected Region: " + Reader._region);
             Reader _ = new Reader();
             _.RefreshPointers();
         }

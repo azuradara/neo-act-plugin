@@ -70,11 +70,11 @@ namespace NeoActPlugin.Core
             this.checkBoxFollowLog.CheckedChanged += new System.EventHandler(this.checkBoxFollowLog_CheckedChanged);
             // 
             // regionPicker
-            //
+            // 
             resources.ApplyResources(this.regionPicker, "regionPicker");
             this.regionPicker.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.regionPicker.Name = "regionPicker";
-            this.regionPicker.Items.AddRange(new string[] { "Global", "Japan", "Taiwan" });
+            this.regionPicker.Items.AddRange(new string[] { "Global", "Japan (EN Patch)", "Taiwan (EN Patch)" });
             this.regionPicker.SelectedIndexChanged += new System.EventHandler(this.RegionPicker_SelectedIndexChanged);
             this.regionPicker.SelectedIndex = 0;
             // 
