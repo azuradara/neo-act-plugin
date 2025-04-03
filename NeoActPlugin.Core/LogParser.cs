@@ -12,10 +12,12 @@ namespace NeoActPlugin.Core
         public static Regex regex_yourdamage = new Regex(@"(?<skill>.+?)\s+(?<critical>(critically hit)|(hit))\s+(?<target>.+?)\s+for\s+(?<damage>\d+(,\d+)*)\s+damage(((, draining| and drained)\s+((?<HPDrain>\d+(,\d+)*)\s+HP)?(\s+and\s+)?((?<FocusDrain>\d+)\s+Focus)?))?(,\s+removing\s+(?<skillremove>.+?))?\.", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         public static Regex regex_debuff2 = new Regex(@"((?<actor>.+?)&apos;s )?(?<skill>.+?)( (?<critical>(critically hit)|(hit)) (?<target>.+?))? ((and )?inflicted (?<debuff>.+?))?(but (?<debuff2>.+?) was resisted)?\.", RegexOptions.Compiled);
         public static Regex regex_evade = new Regex(@"(?<target>.+?) evaded (?<skill>.+?)\.", RegexOptions.Compiled);
-        public static Regex regex_defeat = new Regex(@"(?<target>.+?) (was|were) (defeated|rendered near death|killed) by ((?<actor>.+?)&apos;s )?(?<skill>.+?)\.", RegexOptions.Compiled);
+        public static Regex regex_defeat = new Regex(@"(?<target>.+?) (was|were) (defeated|rendered near death|rendered Near Death|rendered Near death|killed) by ((?<actor>.+?)&apos;s )?(?<skill>.+?)\.", RegexOptions.Compiled);
         public static Regex regex_debuff = new Regex(@"(?<target>.+?) (receives|resisted) (?<skill>.+?)\.", RegexOptions.Compiled);
         public static Regex regex_heal = new Regex(@"(?<target>.+?)?( recovered|Recovered) ((?<HPAmount>\d+(,\d+)*) HP)?((?<FocusAmount>\d+) Focus)? (with|from) (?<skill>.+?)\.");
         public static Regex regex_buff = new Regex(@"(?<skill>.+?) is now active\.", RegexOptions.Compiled);
+        public static Regex regex_resist = new Regex(@"((?<actor>.+?)&apos;s )?(?<skill>.+?)(hit)\s+(?<target>.+?)\s(but was resisted|but  was resisted)", RegexOptions.Compiled);
+        public static Regex regex_resist2 = new Regex(@"^Resisted\s+Daze", RegexOptions.Compiled);
 
         private static IACTWrapper _ACT = null;
 
@@ -124,7 +126,11 @@ namespace NeoActPlugin.Core
                 if (m.Success)
                 {
                     string target = m.Groups["target"].Success ? DecodeString(m.Groups["target"].Value) : "";
+                    if (target == "Unknown")
+                        target = "_Unknown";
                     string actor = m.Groups["actor"].Success ? DecodeString(m.Groups["actor"].Value) : "";
+                    if (actor == "Unknown")
+                        actor = "_Unknown";
                     string skill = m.Groups["skill"].Success ? DecodeString(m.Groups["skill"].Value) : "";
                     string damage = (m.Groups["damage"].Value ?? "").Replace(",", "");
                     string hpdrain = (m.Groups["HPDrain"].Value ?? "").Replace(",", "");
@@ -266,11 +272,28 @@ namespace NeoActPlugin.Core
                     return;
                 }
 
+                m = regex_resist.Match(logLine);
+                if (!m.Success)
+                    m = regex_resist2.Match(logLine);
+                if (m.Success)
+                {
+                    // todo: add resist support
+                    return;
+                }
+
                 m = regex_defeat.Match(logLine);
                 if (m.Success)
                 {
+                    // leaving this out for now
+                    // causing too many wrong actors to appear
+
+                    /*
                     string target = m.Groups["target"].Success ? DecodeString(m.Groups["target"].Value) : "";
+                    if (target == "Unknown")
+                        target = "_Unknown";
                     string actor = m.Groups["actor"].Success ? DecodeString(m.Groups["actor"].Value) : "";
+                    if (target == "Unknown")
+                        actor = "_Unknown";
                     if (string.IsNullOrWhiteSpace(actor))
                         actor = "Unknown";
 
@@ -288,6 +311,7 @@ namespace NeoActPlugin.Core
                             target,
                             "");
                     }
+                    */
 
                     return;
                 }

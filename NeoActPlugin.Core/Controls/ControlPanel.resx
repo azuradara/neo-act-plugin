@@ -291,6 +291,39 @@
   <data name="&gt;&gt;checkBoxFollowLog.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="regionPicker.Items" xml:space="preserve">
+    <value>Global</value>
+  </data>
+  <data name="regionPicker.Items1" xml:space="preserve">
+    <value>Japan (EN Patch)</value>
+  </data>
+  <data name="regionPicker.Items2" xml:space="preserve">
+    <value>Taiwan (EN Patch)</value>
+  </data>
+  <data name="regionPicker.Location" type="System.Drawing.Point, System.Drawing">
+    <value>215, 6</value>
+  </data>
+  <data name="regionPicker.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 6, 3, 3</value>
+  </data>
+  <data name="regionPicker.Size" type="System.Drawing.Size, System.Drawing">
+    <value>125, 23</value>
+  </data>
+  <data name="regionPicker.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;regionPicker.Name" xml:space="preserve">
+    <value>regionPicker</value>
+  </data>
+  <data name="&gt;&gt;regionPicker.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;regionPicker.Parent" xml:space="preserve">
+    <value>flowLayoutPanel</value>
+  </data>
+  <data name="&gt;&gt;regionPicker.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
   <data name="flowLayoutPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>
   </data>

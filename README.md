@@ -19,7 +19,8 @@ If you're updating from a previous version (pre `v0.2.0`), make sure to delete t
 3. Run ACT as an administrator, otherwise the plugin will not be able to access your game's memory.
 4. Go to the "Plugins" tab and click the "Browse" button then locate `NeoActPlugin.dll` in the folder you extracted the archive to.
 5. Enable the plugin and run BnS.
-6. Make sure you always run it with other characters **shown**, otherwise their crit hit rate will always 0%.
+6. In the `NeoActPlugin.dll` tab, choose your region (regions that are not `Global` require an **English Patch** to work).
+7. Make sure you always run it with other characters **shown**, otherwise their crit hit rate will always be 0%.
 
 > [!NOTE]
 > Starting from `v0.2.0`, this plugin comes with an auto update feature, so you don't have to worry about checking back here for updates.
@@ -58,6 +59,8 @@ There are tons of overlay configuration videos on YouTube - mostly related to FF
   - Fix: Click "Chat Tab Options" (the cog icon on the left of ur chat tabs) > Reset > All Settings. This is because the plugin reads from the default combat chat tab and does not support custom ones.
 - It keeps spewing "Failed to reolve pointer chain" errors:
   - Make sure ACT is running as administrator.
+  - Make sure you have selected the correct region.
+  - Make sure you have the latest version of the plugin.
 
 ### How to add the overlay to OBS (for streamers)
 

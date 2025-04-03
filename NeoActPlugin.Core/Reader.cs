@@ -47,7 +47,9 @@ namespace NeoActPlugin.Core
         private int? _pid;
         private IntPtr _baseAddress;
         private IntPtr _currentAddress;
+        public static string _region = "Global";
         private readonly long[] _offsets = { 0x7485118, 0xA0, 0x670, 0x8 };
+        private readonly long[] _offsetsTWJP = { 0x74850e8, 0xA0, 0x670, 0x8 };
         private string[] _lastLines = new string[600];
 
         private IntPtr _processHandle = IntPtr.Zero;
@@ -88,7 +90,7 @@ namespace NeoActPlugin.Core
             }
         }
 
-        private bool RefreshPointers()
+        public bool RefreshPointers()
         {
             try
             {
@@ -112,11 +114,15 @@ namespace NeoActPlugin.Core
                         return false;
                     }
                 }
+                if (_region == "Global")
+                    _currentAddress = FollowPointerChain(_pid.Value, _baseAddress, _offsets);
 
-                _currentAddress = FollowPointerChain(_pid.Value, _baseAddress, _offsets);
+                else if (_region == "Taiwan" || _region == "Japan")
+                    _currentAddress = FollowPointerChain(_pid.Value, _baseAddress, _offsetsTWJP);
+
                 if (_currentAddress == IntPtr.Zero)
                 {
-                    LogErrorThrottled("Failed to resolve pointer chain");
+                    PluginMain.WriteLog(LogLevel.Info, "Failed to resolve pointer chain. Make sure you have selected your character and the correct region.");
                     return false;
                 }
 
@@ -137,7 +143,7 @@ namespace NeoActPlugin.Core
 
             if (!RefreshPointers())
             {
-                _currentReadInterval = TimeSpan.FromMilliseconds(1000);
+                _currentReadInterval = TimeSpan.FromMilliseconds(3000);
                 _lastReadTime = DateTime.Now;
                 _initialized = false;
                 return Array.Empty<string>();
