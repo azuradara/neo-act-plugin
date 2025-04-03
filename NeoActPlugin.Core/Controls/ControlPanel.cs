@@ -115,10 +115,23 @@ namespace NeoActPlugin.Core
             logBox.Clear();
         }
 
+        private void RegionPicker_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Reader._region = regionPicker.SelectedItem.ToString();
+            PluginMain.WriteLog(LogLevel.Info, "Selected Region: " + regionPicker.SelectedItem.ToString());
+            Reader _ = new Reader();
+            _.RefreshPointers();
+        }
+
         private class ConfigTabPage : TabPage
         {
             public bool IsOverlay = false;
             public bool IsEventSource = false;
+        }
+
+        private void checkBoxFollowLog_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
 
         private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)

@@ -16,6 +16,7 @@ namespace NeoActPlugin.Core
             this.flowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonClearLog = new System.Windows.Forms.Button();
             this.checkBoxFollowLog = new System.Windows.Forms.CheckBox();
+            this.regionPicker = new System.Windows.Forms.ComboBox();
             this.tabPageMain.SuspendLayout();
             this.flowLayoutPanel.SuspendLayout();
             this.SuspendLayout();
@@ -51,6 +52,7 @@ namespace NeoActPlugin.Core
             resources.ApplyResources(this.flowLayoutPanel, "flowLayoutPanel");
             this.flowLayoutPanel.Controls.Add(this.buttonClearLog);
             this.flowLayoutPanel.Controls.Add(this.checkBoxFollowLog);
+            this.flowLayoutPanel.Controls.Add(this.regionPicker);
             this.flowLayoutPanel.Name = "flowLayoutPanel";
             // 
             // buttonClearLog
@@ -58,12 +60,23 @@ namespace NeoActPlugin.Core
             resources.ApplyResources(this.buttonClearLog, "buttonClearLog");
             this.buttonClearLog.Name = "buttonClearLog";
             this.buttonClearLog.UseVisualStyleBackColor = true;
+            this.buttonClearLog.Click += new System.EventHandler(this.ButtonClearLog_Click);
             // 
             // checkBoxFollowLog
             // 
             resources.ApplyResources(this.checkBoxFollowLog, "checkBoxFollowLog");
             this.checkBoxFollowLog.Name = "checkBoxFollowLog";
             this.checkBoxFollowLog.UseVisualStyleBackColor = true;
+            this.checkBoxFollowLog.CheckedChanged += new System.EventHandler(this.checkBoxFollowLog_CheckedChanged);
+            // 
+            // regionPicker
+            //
+            resources.ApplyResources(this.regionPicker, "regionPicker");
+            this.regionPicker.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.regionPicker.Name = "regionPicker";
+            this.regionPicker.Items.AddRange(new string[] { "Global", "Japan", "Taiwan" });
+            this.regionPicker.SelectedIndexChanged += new System.EventHandler(this.RegionPicker_SelectedIndexChanged);
+            this.regionPicker.SelectedIndex = 0;
             // 
             // ControlPanel
             // 
@@ -88,5 +101,6 @@ namespace NeoActPlugin.Core
         private FlowLayoutPanel flowLayoutPanel;
         private Button buttonClearLog;
         private CheckBox checkBoxFollowLog;
+        private ComboBox regionPicker;
     }
 }
