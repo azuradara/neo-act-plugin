@@ -20,7 +20,7 @@ If you're updating from a previous version (pre `v0.2.0`), make sure to delete t
 4. Go to the "Plugins" tab and click the "Browse" button then locate `NeoActPlugin.dll` in the folder you extracted the archive to.
 5. Enable the plugin and run BnS.
 6. In the `NeoActPlugin.dll` tab, choose your region (regions that are not `Global` require an **English Patch** to work).
-7. Make sure you always run it with other characters **shown**, otherwise their crit hit rate will always 0%.
+7. Make sure you always run it with other characters **shown**, otherwise their crit hit rate will always be 0%.
 
 > [!NOTE]
 > Starting from `v0.2.0`, this plugin comes with an auto update feature, so you don't have to worry about checking back here for updates.
