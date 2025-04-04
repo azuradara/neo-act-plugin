@@ -73,7 +73,7 @@ There are tons of overlay configuration videos on YouTube - mostly related to FF
 
 - This is a POC - it works fine but it's missing support for a lot of features provided by ACT (e.g. blocks, buffs, debuffs, etc..).
 - If you have characters hidden (CTRL+F, either partially or fully), the combat log does not specify if their damage is a crit or not, so their %CH will always be 0, but the damage itself will be parsed correctly.
-- Only supports EN.
+- Only supports EU/NA with English localization, or JP/TW with EN Patch.
 - Damage over time skills and damage from effects that have no explicit actor in the combat log will be attributed to an "Unknown" actor.
 - Zone names are not provided in the combat log, so all logs are combined into a single zone on ACT.
 - This will break every time NC updates the .exe, which means you will have to wait a while until I (or a benevolent soul) update the offsets.
