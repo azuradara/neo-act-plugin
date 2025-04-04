@@ -36,20 +36,29 @@ function updateDPSMeter(data) {
   table.innerHTML = ''
 
   let combatants = Object.values(data.Combatant)
-  combatants.sort((a, b) => parseFloat(b.encdps) - parseFloat(a.encdps))
+  combatants.sort((a, b) => parseFloat(b['damage']) - parseFloat(a['damage']))
 
-  const maxEncdps = combatants.length > 0 ? Math.max(...combatants.map((c) => parseFloat(c.encdps) || 0)) : 0
+  const maxDamage = combatants.length > 0 
+    ? Math.max(...combatants.map((c) => parseFloat(c['damage']) || 0)) 
+    : 0
 
   combatants.forEach((combatant) => {
-    const currentDps = parseFloat(combatant.encdps) || 0
-    const widthPercentage = maxEncdps > 0 ? (currentDps / maxEncdps) * 100 : 0
+    const currentDamage = parseFloat(combatant['damage']) || 0
+    const widthPercentage = maxDamage > 0 
+      ? (currentDamage / maxDamage) * 100 
+      : 0
 
     let playerDiv = document.createElement('div')
-    playerDiv.className = 'player' + (combatant.name === data.Combatant?.You?.name ? ' you' : '')
-    playerDiv.setAttribute('data-player', combatant.name)
     
+    playerDiv.setAttribute('data-player', combatant.name)
     playerDiv.addEventListener('mouseenter', (event) => showSkills(combatant, event))
     playerDiv.addEventListener('mouseleave', hideSkills)
+    
+    playerDiv.classList.add('player')
+
+    if (combatant.name === 'You') {
+      playerDiv.classList.add('you')
+    }
 
     let dpsBar = document.createElement('div')
     dpsBar.className = 'dps-bar'
@@ -68,7 +77,7 @@ function updateDPSMeter(data) {
 
     const dps = document.createElement('span')
     dps.className = 'dps-bar-value'
-    dps.textContent = `${nf.format(combatant.ENCDPS === '∞' ? 0 : combatant.ENCDPS)}/sec`
+    dps.textContent = `${nf.format(combatant.DPS === '∞' ? 0 : combatant.DPS)}/sec`
 
     barContent.appendChild(name)
     barContent.appendChild(dps)
