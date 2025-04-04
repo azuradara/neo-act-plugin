@@ -49,11 +49,16 @@ function updateDPSMeter(data) {
       : 0
 
     let playerDiv = document.createElement('div')
-    playerDiv.className = 'player' + (combatant.name === data.Combatant?.You?.name ? ' you' : '')
-    playerDiv.setAttribute('data-player', combatant.name)
     
+    playerDiv.setAttribute('data-player', combatant.name)
     playerDiv.addEventListener('mouseenter', (event) => showSkills(combatant, event))
     playerDiv.addEventListener('mouseleave', hideSkills)
+    
+    playerDiv.classList.add('player')
+
+    if (combatant.name === 'You') {
+      playerDiv.classList.add('you')
+    }
 
     let dpsBar = document.createElement('div')
     dpsBar.className = 'dps-bar'
