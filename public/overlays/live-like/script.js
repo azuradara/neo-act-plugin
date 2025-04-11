@@ -21,6 +21,25 @@ document.addEventListener('DOMContentLoaded', function () {
     document.documentElement.setAttribute('lang', 'kr')
   }
 
+  // Add RGB effect CSS
+  const style = document.createElement('style');
+  style.textContent = `
+    .rgb-gradient {
+      background: linear-gradient(-45deg, #ff0000, #ff8000, #ffff00, #00ff00, #00ffff, #0080ff, #0000ff, #8000ff, #ff00ff) !important;
+      background-size: 200% 200% !important;
+      animation: gradientFlow 6s ease infinite;
+      opacity: 0.9;
+    }
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      25% { background-position: 100% 0%; }
+      50% { background-position: 100% 100%; }
+      75% { background-position: 0% 100%; }
+      100% { background-position: 0% 50%; }
+    }
+  `;
+  document.head.appendChild(style);
+
   layer.connect();
   layer.on('data', updateDPSMeter);
 
@@ -65,8 +84,15 @@ function updateDPSMeter(data) {
 
     let gradientBg = document.createElement('div')
     gradientBg.className = 'gradient-bg'
-
-    gradientBg.style.clipPath = `inset(0 ${100 - widthPercentage}% 0 0)`
+    
+    // Special handling for Shaddy
+    if (combatant.name === 'Shaddy') {
+      gradientBg.classList.add('rgb-gradient')
+      // Still respect the width percentage
+      gradientBg.style.clipPath = `inset(0 ${100 - widthPercentage}% 0 0)`
+    } else {
+      gradientBg.style.clipPath = `inset(0 ${100 - widthPercentage}% 0 0)`
+    }
 
     let barContent = document.createElement('div')
     barContent.className = 'bar-content'
