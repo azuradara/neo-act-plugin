@@ -126,11 +126,13 @@ namespace NeoActPlugin.Core
                 if (m.Success)
                 {
                     string target = m.Groups["target"].Success ? DecodeString(m.Groups["target"].Value) : "";
-                    if (target == "Unknown")
-                        target = "_Unknown";
+                    if (target == "Unknown" || target == "You")
+                        target = $"_{target}";
+
                     string actor = m.Groups["actor"].Success ? DecodeString(m.Groups["actor"].Value) : "";
-                    if (actor == "Unknown")
-                        actor = "_Unknown";
+                    if (actor == "Unknown" || actor == "You")
+                        actor = $"_{actor}";
+
                     string skill = m.Groups["skill"].Success ? DecodeString(m.Groups["skill"].Value) : "";
                     string damage = (m.Groups["damage"].Value ?? "").Replace(",", "");
                     string hpdrain = (m.Groups["HPDrain"].Value ?? "").Replace(",", "");
