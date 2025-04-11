@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', function () {
     document.documentElement.setAttribute('lang', 'kr')
   }
 
-  // Add RGB effect CSS
   const style = document.createElement('style');
   style.textContent = `
     .rgb-gradient {
@@ -85,10 +84,8 @@ function updateDPSMeter(data) {
     let gradientBg = document.createElement('div')
     gradientBg.className = 'gradient-bg'
     
-    // Special handling for Shaddy
     if (combatant.name === 'Shaddy') {
       gradientBg.classList.add('rgb-gradient')
-      // Still respect the width percentage
       gradientBg.style.clipPath = `inset(0 ${100 - widthPercentage}% 0 0)`
     } else {
       gradientBg.style.clipPath = `inset(0 ${100 - widthPercentage}% 0 0)`
