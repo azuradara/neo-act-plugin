@@ -270,7 +270,25 @@ namespace NeoActPlugin.Core
                 m = regex_evade.Match(logLine);
                 if (m.Success)
                 {
-                    // todo: add evade support
+                    string target = m.Groups["target"].Success ? DecodeString(m.Groups["target"].Value) : "";
+                    string skill = m.Groups["skill"].Success ? DecodeString(m.Groups["skill"].Value) : "";
+                    string actor = "You";
+                    
+                    if (_ACT.SetEncounter(timestamp, actor, target))
+                    {
+                        _ACT.AddCombatAction(
+                            (int)Advanced_Combat_Tracker.SwingTypeEnum.NonMelee,
+                            false,
+                            "Miss",
+                            actor,
+                            skill,
+                            Advanced_Combat_Tracker.Dnum.Miss,
+                            timestamp,
+                            _ACT.GlobalTimeSorter,
+                            target,
+                            "");
+                    }
+                    
                     return;
                 }
 
