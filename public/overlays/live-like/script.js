@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
       opacity: 0.9;
     }
     .black-gradient {
-      background: linear-gradient(-45deg, #000000, #222222, #333333, #3A3A3A) !important;
+      background: linear-gradient(to right, #000000 0%, #000000 15%, #101010 20%, #303030 30%, #707070 40%, #A0A0A0 50%, #D0D0D0 60%, #E8E8E8 70%, #FFFFFF 80%, #FFFFFF 90%, #FFFFFF 100%) !important;
       background-size: 200% 200% !important;
       animation: gradientFlow 6s ease infinite;
       opacity: 0.9;
