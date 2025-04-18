@@ -29,6 +29,18 @@ document.addEventListener('DOMContentLoaded', function () {
       animation: gradientFlow 6s ease infinite;
       opacity: 0.9;
     }
+    .black-gradient {
+      background: linear-gradient(-45deg, #000000, #222222, #333333, #3A3A3A) !important;
+      background-size: 200% 200% !important;
+      animation: gradientFlow 6s ease infinite;
+      opacity: 0.9;
+    }
+    .white-gradient {
+      background: linear-gradient(-45deg, #ffffff, #f0f0f0, #e8e8e8, #d0d0d0) !important;
+      background-size: 200% 200% !important;
+      animation: gradientFlow 6s ease infinite;
+      opacity: 0.9;
+    }
     @keyframes gradientFlow {
       0% { background-position: 0% 50%; }
       25% { background-position: 100% 0%; }
@@ -86,11 +98,18 @@ function updateDPSMeter(data) {
     
     if (combatant.name === 'Shaddy') {
       gradientBg.classList.add('rgb-gradient')
-      gradientBg.style.clipPath = `inset(0 ${100 - widthPercentage}% 0 0)`
-    } else {
-      gradientBg.style.clipPath = `inset(0 ${100 - widthPercentage}% 0 0)`
     }
 
+    if (combatant.name === 'lll') {
+      gradientBg.classList.add('black-gradient')
+    }
+
+    if (combatant.name === 'K Z') {
+      gradientBg.classList.add('white-gradient')
+    }
+
+    gradientBg.style.clipPath = `inset(0 ${100 - widthPercentage}% 0 0)`
+    
     let barContent = document.createElement('div')
     barContent.className = 'bar-content'
 
