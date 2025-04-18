@@ -22,9 +22,6 @@ If you're updating from a previous version (pre `v0.2.0`), make sure to delete t
 6. In the `NeoActPlugin.dll` tab, choose your region (regions that are not `Global` require an **English Patch** to work).
 7. Make sure you always run it with other characters **shown**, otherwise their crit hit rate will always be 0%.
 
-> [!NOTE]
-> Starting from `v0.2.0`, this plugin comes with an auto update feature, so you don't have to worry about checking back here for updates.
-
 ### Adding overlays
 
 This plugin is only responsible for parsing combat logs to a form that ACT can understand, if you want an overlay over your game you will have to install other plugins on top of this one. Here's a quick walkthrough of how to install our custom "Live-like" overlay:
