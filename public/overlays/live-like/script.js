@@ -35,8 +35,14 @@ document.addEventListener('DOMContentLoaded', function () {
       animation: gradientFlow 6s ease infinite;
       opacity: 0.9;
     }
+    .pink-gradient {
+      background: linear-gradient(-45deg, #ff69b4, #ff1493, #ff007f, #db7093, #ffc0cb) !important;
+      background-size: 200% 200% !important;
+      animation: gradientFlow 6s ease infinite;
+      opacity: 0.9;
+    }
     .white-gradient {
-      background: linear-gradient(-45deg, #ffffff, #f0f0f0, #e8e8e8, #d0d0d0) !important;
+      background: linear-gradient(-45deg, #ffffff, #f8f8f8, #f0f0f0, #e0e0e0, #c0c0c0) !important;
       background-size: 200% 200% !important;
       animation: gradientFlow 6s ease infinite;
       opacity: 0.9;
@@ -108,6 +114,10 @@ function updateDPSMeter(data) {
       gradientBg.classList.add('white-gradient')
     }
 
+    if (combatant.name === 'Tamed') {
+      gradientBg.classList.add('pink-gradient')
+    }
+
     gradientBg.style.clipPath = `inset(0 ${100 - widthPercentage}% 0 0)`
     
     let barContent = document.createElement('div')
@@ -115,7 +125,7 @@ function updateDPSMeter(data) {
 
     const name = document.createElement('span')
     name.className = 'dps-bar-label'
-    name.textContent = combatant.name
+    name.textContent = combatant.name === 'renless' ? combatant.name + ' 🫃' : combatant.name
 
     const dps = document.createElement('span')
     dps.className = 'dps-bar-value'
