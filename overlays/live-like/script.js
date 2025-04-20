@@ -106,7 +106,7 @@ function updateDPSMeter(data) {
       gradientBg.classList.add('rgb-gradient')
     }
 
-    if (combatant.name === 'lll') {
+    if (combatant.name === 'lll' || combatant.name === 'hiya') {
       gradientBg.classList.add('black-gradient')
     }
 
