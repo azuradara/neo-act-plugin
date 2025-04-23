@@ -47,6 +47,13 @@ document.addEventListener('DOMContentLoaded', function () {
       animation: gradientFlow 6s ease infinite;
       opacity: 0.9;
     }
+    .panacea-gradient {
+      background: #020024;
+      background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(47, 47, 196, 1) 66%, rgba(0, 212, 255, 1) 91%) !important;
+      background-size: 200% 200% !important;
+      animation: gradientFlow 6s ease infinite;
+      opacity: 0.9;
+    }
     @keyframes gradientFlow {
       0% { background-position: 0% 50%; }
       25% { background-position: 100% 0%; }
@@ -116,6 +123,10 @@ function updateDPSMeter(data) {
 
     if (combatant.name === 'Tamed') {
       gradientBg.classList.add('pink-gradient')
+    }
+
+    if (combatant.name === 'Panacea') {
+      gradientBg.classList.add('panacea-gradient')
     }
 
     gradientBg.style.clipPath = `inset(0 ${100 - widthPercentage}% 0 0)`
