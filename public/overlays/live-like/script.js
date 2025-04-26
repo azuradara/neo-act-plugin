@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
 let popperInstance = null
 
 function updateDPSMeter(data) {
+  console.log(data)
   document.getElementById('boss-name').innerText = data.Encounter.title || 'No Data'
 
   let table = document.getElementById('combatantTable')
@@ -100,8 +101,8 @@ function updateDPSMeter(data) {
     let playerDiv = document.createElement('div')
     
     playerDiv.setAttribute('data-player', combatant.name)
-    playerDiv.addEventListener('mouseenter', (event) => showSkills(combatant, event))
-    playerDiv.addEventListener('mouseleave', hideSkills)
+    // playerDiv.addEventListener('mouseenter', (event) => showSkills(combatant, event))
+    // playerDiv.addEventListener('mouseleave', hideSkills)
     
     playerDiv.classList.add('player')
 
