@@ -2,6 +2,7 @@
 
 > [!NOTE]
 > [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/azuradara)
+>
 > If you find this plugin helpful, please consider supporting its development with a small donation. Every contribution helps maintain and improve the plugin!
 
 This is an [ACT](https://advancedcombattracker.com/home.php) plugin for Blade & Soul NEO that parses combat logs and sends them to ACT for processing. It also includes an overlay that you can use to display your DPS in-game.
