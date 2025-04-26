@@ -1,9 +1,11 @@
 # Blade & Soul NEO - ACT Plugin & DPS Meter
 
-This is an [ACT](https://advancedcombattracker.com/home.php) plugin for Blade & Soul NEO that parses combat logs and sends them to ACT for processing. It also includes an overlay that you can use to display your DPS in-game.
+> [!NOTE]
+> [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/azuradara)
+>
+> If you find this plugin helpful, please consider supporting its development with a small donation. Every contribution helps maintain and improve the plugin!
 
-> [!WARNING]
-> This plugin connects to the game's memory to read combat log data, this is very much against the game's EULA.
+This is an [ACT](https://advancedcombattracker.com/home.php) plugin for Blade & Soul NEO that parses combat logs and sends them to ACT for processing. It also includes an overlay that you can use to display your DPS in-game.
 
 ![image](https://github.com/user-attachments/assets/766a99c0-7986-4164-8e9e-709ab4b0db77)
 ![image](https://github.com/user-attachments/assets/9e32022f-e340-4d0b-934b-883d810b7702)
