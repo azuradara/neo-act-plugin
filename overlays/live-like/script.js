@@ -60,6 +60,20 @@ document.addEventListener('DOMContentLoaded', function () {
       animation: gradientFlow 6s ease infinite;
       opacity: 0.9;
     }
+    .eve-gradient {
+      background: #2a0866fc;
+      background: linear-gradient(194deg, rgba(42, 8, 102, 1) 0%, rgba(12, 79, 130, 1) 52%, rgba(31, 2, 2, 1) 98%) !important;
+      background-size: 200% 200% !important;
+      animation: gradientFlow 6s ease infinite;
+      opacity: 0.9;
+    }
+    .whoah-gradient {
+      background: #841617;
+      background: radial-gradient(circle, rgba(132, 22, 23, 1) 0%, rgba(253, 29, 29, 1) 50%, rgba(48, 0, 0, 1) 100%) !important;
+      background-size: 200% 200% !important;
+      animation: gradientFlow 6s ease infinite;
+      opacity: 0.9;
+    }
     @keyframes gradientFlow {
       0% { background-position: 0% 50%; }
       25% { background-position: 100% 0%; }
@@ -174,7 +188,9 @@ function updateDPSMeter(data) {
       combatant.name === 'K Z' || 
       combatant.name === 'Tamed' || 
       combatant.name === 'Panacea' || 
-      combatant.name === 'NellanFM';
+      combatant.name === 'NellanFM' ||
+      combatant.name === 'Eve' ||
+      combatant.name === 'Whoah';
 
     if ((combatant.name === 'You' || combatant.isSelf === 'true') && !hasCustomGradient) {
       playerDiv.classList.add('you')
@@ -208,6 +224,14 @@ function updateDPSMeter(data) {
 
     if (combatant.name === 'NellanFM') {
       gradientBg.classList.add('pepe-gradient')
+    }
+
+    if (combatant.name === 'Eve') {
+      gradientBg.classList.add('eve-gradient')
+    }
+
+    if (combatant.name === 'Whoah') {
+      gradientBg.classList.add('whoah-gradient')
     }
 
     gradientBg.style.clipPath = `inset(0 ${100 - widthPercentage}% 0 0)`
