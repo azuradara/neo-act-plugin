@@ -78,6 +78,47 @@ document.addEventListener('DOMContentLoaded', function () {
 
 let popperInstance = null
 
+function parseAnyNumberFormat(value) {
+  if (value === undefined || value === null || value === '') {
+    return 0;
+  }
+  
+  if (typeof value === 'number') {
+    return value;
+  }
+  
+  if (value === '∞') {
+    return 0;
+  }
+  
+  const stringValue = String(value);
+  
+  if (stringValue.includes('.') && stringValue.includes(',')) {
+    if (stringValue.lastIndexOf('.') < stringValue.lastIndexOf(',')) {
+      return Number(stringValue.replace(/\./g, '').replace(',', '.'));
+    } 
+    else {
+      return Number(stringValue.replace(/,/g, ''));
+    }
+  }
+  
+  if (stringValue.includes('.') && !stringValue.includes(',')) {
+    if ((stringValue.match(/\./g) || []).length > 1) {
+      return Number(stringValue.replace(/\./g, ''));
+    }
+    return Number(stringValue);
+  }
+  
+  if (stringValue.includes(',') && !stringValue.includes('.')) {
+    if ((stringValue.match(/,/g) || []).length > 1) {
+      return Number(stringValue.replace(/,/g, ''));
+    }
+    return Number(stringValue.replace(',', '.'));
+  }
+  
+  return Number(stringValue);
+}
+
 function updateDPSMeter(data) {
   console.log(data)
   document.getElementById('boss-name').innerText = data.Encounter.title || 'No Data'
@@ -87,36 +128,25 @@ function updateDPSMeter(data) {
 
   let combatants = Object.values(data.Combatant)
   
-  // Normalize combatant data to ensure consistent numeric values
   combatants.forEach(combatant => {
-    // Parse damage value, handling both numeric and string formats with commas
-    if (typeof combatant.damage === 'string') {
-      // Remove commas and convert to number
-      combatant.damageValue = Number(combatant.damage.replace(/,/g, ''))
+    combatant.damageValue = parseAnyNumberFormat(combatant.damage);
+    
+    if (combatant.DPS !== undefined) {
+      combatant.dpsValue = parseAnyNumberFormat(combatant.DPS);
+    } else if (combatant.encdps !== undefined) {
+      combatant.dpsValue = parseAnyNumberFormat(combatant.encdps);
     } else {
-      // Already a number
-      combatant.damageValue = Number(combatant.damage)
+      combatant.dpsValue = 0;
     }
     
-    // Parse DPS, handling string with commas, infinity, and already numeric values
-    if (typeof combatant.DPS === 'string') {
-      if (combatant.DPS === '∞') {
-        combatant.dpsValue = 0
-      } else {
-        combatant.dpsValue = Number(combatant.DPS.replace(/,/g, ''))
-      }
-    } else if (combatant.DPS !== undefined) {
-      // Already a number
-      combatant.dpsValue = Number(combatant.DPS)
-    } else if (typeof combatant.encdps === 'string') {
-      // Some backends use encdps instead of DPS
-      combatant.dpsValue = Number(combatant.encdps.replace(/,/g, ''))
+    if (combatant['damage%'] !== undefined) {
+      const damagePercentStr = String(combatant['damage%']).replace('%', '');
+      combatant.damagePercent = parseAnyNumberFormat(damagePercentStr);
     } else {
-      combatant.dpsValue = 0
+      combatant.damagePercent = 0;
     }
   })
   
-  // Use the normalized values for sorting
   combatants.sort((a, b) => b.damageValue - a.damageValue)
 
   const maxDamage = combatants.length > 0 
@@ -132,12 +162,21 @@ function updateDPSMeter(data) {
     let playerDiv = document.createElement('div')
     
     playerDiv.setAttribute('data-player', combatant.name)
-    playerDiv.addEventListener('mouseenter', (event) => showSkills(combatant, event))
-    playerDiv.addEventListener('mouseleave', hideSkills)
+    // playerDiv.addEventListener('mouseenter', (event) => showSkills(combatant, event))
+    // playerDiv.addEventListener('mouseleave', hideSkills)
     
     playerDiv.classList.add('player')
 
-    if (combatant.name === 'You' || combatant.isSelf === 'true') {
+    const hasCustomGradient = 
+      combatant.name === 'Shaddy' || 
+      combatant.name === 'lll' || 
+      combatant.name === 'hiya' || 
+      combatant.name === 'K Z' || 
+      combatant.name === 'Tamed' || 
+      combatant.name === 'Panacea' || 
+      combatant.name === 'NellanFM';
+
+    if ((combatant.name === 'You' || combatant.isSelf === 'true') && !hasCustomGradient) {
       playerDiv.classList.add('you')
     }
 
@@ -227,26 +266,6 @@ function showSkills(combatant, event) {
           <span>Damage</span>
       </div>`
       
-  /* TODO: Add skill details and stats for them.
-  let damageTypes = combatant.Items || []
-
-  if (damageTypes.length > 0) {
-    damageTypes.forEach((damageType) => {
-      damageType.Items.forEach((attack) => {
-        skillHTML += `
-                      <div class="skill">
-                          <div class="skill-name">${attack.Type}</div>
-                          <div class="skill-hits">${attack.Hits || 0}</div>
-                          <div class="skill-crit">${attack.CritRate || 0}%</div>
-                          <div class="skill-damage">${attack.Damage || 0}</div>
-                      </div>`
-      })
-    })
-  } else {
-    skillHTML += `<div class="skill">No skill data available</div>`
-  }
-  */
-
   skillHTML += `<div class="skill">No skill data available</div>`
   skillDetails.innerHTML = skillHTML
   skillDetails.style.display = 'block'
