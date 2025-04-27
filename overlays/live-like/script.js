@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
 let popperInstance = null
 
 function updateDPSMeter(data) {
+  console.log(data)
   document.getElementById('boss-name').innerText = data.Encounter.title || 'No Data'
 
   let table = document.getElementById('combatantTable')
@@ -86,28 +87,44 @@ function updateDPSMeter(data) {
 
   let combatants = Object.values(data.Combatant)
   
-  // Convert string damage values to numbers properly by removing commas
+  // Normalize combatant data to ensure consistent numeric values
   combatants.forEach(combatant => {
+    // Parse damage value, handling both numeric and string formats with commas
     if (typeof combatant.damage === 'string') {
       // Remove commas and convert to number
-      combatant.damage = Number(combatant.damage.replace(/,/g, ''))
+      combatant.damageValue = Number(combatant.damage.replace(/,/g, ''))
+    } else {
+      // Already a number
+      combatant.damageValue = Number(combatant.damage)
     }
     
-    if (typeof combatant.DPS === 'string' && combatant.DPS !== '∞') {
-      // Remove commas and convert to number
-      combatant.DPS = Number(combatant.DPS.replace(/,/g, ''))
+    // Parse DPS, handling string with commas, infinity, and already numeric values
+    if (typeof combatant.DPS === 'string') {
+      if (combatant.DPS === '∞') {
+        combatant.dpsValue = 0
+      } else {
+        combatant.dpsValue = Number(combatant.DPS.replace(/,/g, ''))
+      }
+    } else if (combatant.DPS !== undefined) {
+      // Already a number
+      combatant.dpsValue = Number(combatant.DPS)
+    } else if (typeof combatant.encdps === 'string') {
+      // Some backends use encdps instead of DPS
+      combatant.dpsValue = Number(combatant.encdps.replace(/,/g, ''))
+    } else {
+      combatant.dpsValue = 0
     }
   })
   
-  // Sort by damage value (now as numbers, not strings)
-  combatants.sort((a, b) => b.damage - a.damage)
+  // Use the normalized values for sorting
+  combatants.sort((a, b) => b.damageValue - a.damageValue)
 
   const maxDamage = combatants.length > 0 
-    ? Math.max(...combatants.map((c) => c.damage || 0)) 
+    ? Math.max(...combatants.map(c => c.damageValue || 0)) 
     : 0
 
   combatants.forEach((combatant) => {
-    const currentDamage = combatant.damage || 0
+    const currentDamage = combatant.damageValue || 0
     const widthPercentage = maxDamage > 0 
       ? (currentDamage / maxDamage) * 100 
       : 0
@@ -115,12 +132,12 @@ function updateDPSMeter(data) {
     let playerDiv = document.createElement('div')
     
     playerDiv.setAttribute('data-player', combatant.name)
-    // playerDiv.addEventListener('mouseenter', (event) => showSkills(combatant, event))
-    // playerDiv.addEventListener('mouseleave', hideSkills)
+    playerDiv.addEventListener('mouseenter', (event) => showSkills(combatant, event))
+    playerDiv.addEventListener('mouseleave', hideSkills)
     
     playerDiv.classList.add('player')
 
-    if (combatant.name === 'You' || combatant.isSelf === "true") {
+    if (combatant.name === 'You') {
       playerDiv.classList.add('you')
     }
 
@@ -174,7 +191,7 @@ function updateDPSMeter(data) {
 
     const dps = document.createElement('span')
     dps.className = 'dps-bar-value'
-    dps.textContent = `${nf.format(combatant.DPS === '∞' ? 0 : combatant.DPS)}/sec`
+    dps.textContent = `${nf.format(combatant.dpsValue)}/sec`
 
     barContent.appendChild(name)
     barContent.appendChild(dps)
@@ -313,365 +330,3 @@ function setupZoomControls() {
 }
 
 document.removeEventListener('DOMContentLoaded', setupZoomControls);
-
-
-updateDPSMeter({
-  "type": "CombatData",
-  "Encounter": {
-      "encdps": "82832.67",
-      "duration": "91",
-      "damage": "7152519",
-      "damage-m": "7.15",
-      "damage-b": "0.01",
-      "DURATION": "1:31",
-      "title": "⚔ Vice Admiral Poharan",
-      "zone": "Current Zone",
-      "name": "Vice Admiral Poharan",
-      "CurrentZoneName": "Current Zone",
-      "dps": "82832.67",
-      "pulls": "1",
-      "maxhit": "",
-      "maxhitname": "",
-      "maxhitvalue": "0",
-      "kills": "0",
-      "healed": "0",
-      "enchps": "0.00",
-      "deaths": "0",
-      "crithits": "0",
-      "crithit%": "0.0",
-      "misses": "0",
-      "hitfailed": "0",
-      "tohit": "100",
-      "TOHIT": "100.00",
-      "DPS": "82833",
-      "DPS-k": "82.83",
-      "DPS-m": "0.08",
-      "IsActive": "True",
-      "Last10DPS": "82832.67",
-      "Last30DPS": "82832.67",
-      "Last60DPS": "82832.67",
-      "damagetaken": "0",
-      "powerdrain": "0",
-      "powerheal": "0"
-  },
-  "Combatant": {
-      "NellanFM": {
-          "n": "\n",
-          "t": "\t",
-          "name": "NellanFM",
-          "Job": "Unknown",
-          "duration": "01:26",
-          "DURATION": "86",
-          "damage": "3,063,705",
-          "damage-m": "3.06",
-          "damage-b": "0.00",
-          "damage-*": "3.06M",
-          "damage%": "42.8%",
-          "dps": "35341.02",
-          "DPS": "35341",
-          "DPS-k": "35.34",
-          "DPS-m": "0.04",
-          "encdps": "33571.32",
-          "ENCDPS": "33571",
-          "ENCDPS-k": "33.57",
-          "ENCDPS-m": "0.03",
-          "isSelf": "false",
-          "hits": "488",
-          "crithits": "0",
-          "crithit%": "0.0",
-          "enchps": "0.00",
-          "hps": "0.00",
-          "ENCHPS": "0",
-          "ENCHPS-k": "0.00",
-          "healed": "0",
-          "healed%": "0.00",
-          "OverHealPct": "0",
-          "tohit": "100.00",
-          "TOHIT": "100.00",
-          "misses": "0",
-          "hitfailed": "0",
-          "swings": "488",
-          "maxhit": "Fiend Fire",
-          "MAXHIT": "Fiend Fire-64392",
-          "maxhitname": "Fiend Fire",
-          "maxhitvalue": "64392",
-          "damagetaken": "0",
-          "healstaken": "0",
-          "deaths": "0",
-          "Last10DPS": "35341.02",
-          "Last30DPS": "35341.02",
-          "Last60DPS": "35341.02",
-          "ParryPct": "0",
-          "BlockPct": "0",
-          "powerheal": "0",
-          "kills": "0",
-          "threatstr": "0",
-          "threatdelta": "0"
-      },
-      "Azura": {
-          "n": "\n",
-          "t": "\t",
-          "name": "Azura",
-          "Job": "Unknown",
-          "duration": "01:25",
-          "DURATION": "85",
-          "damage": "2,473,994",
-          "damage-m": "2.47",
-          "damage-b": "0.00",
-          "damage-*": "2.47M",
-          "damage%": "34.6%",
-          "dps": "28932.69",
-          "DPS": "28932",
-          "DPS-k": "28.93",
-          "DPS-m": "0.03",
-          "encdps": "27109.41",
-          "ENCDPS": "27109",
-          "ENCDPS-k": "27.11",
-          "ENCDPS-m": "0.03",
-          "isSelf": "true",
-          "hits": "302",
-          "crithits": "197",
-          "crithit%": "0.7",
-          "enchps": "0.00",
-          "hps": "0.00",
-          "ENCHPS": "0",
-          "ENCHPS-k": "0.00",
-          "healed": "0",
-          "healed%": "0.00",
-          "OverHealPct": "0",
-          "tohit": "100.00",
-          "TOHIT": "100.00",
-          "misses": "0",
-          "hitfailed": "0",
-          "swings": "302",
-          "maxhit": "Gubong's Explosive Rage",
-          "MAXHIT": "Gubong's Explosive Rage-35629",
-          "maxhitname": "Gubong's Explosive Rage",
-          "maxhitvalue": "35629",
-          "damagetaken": "0",
-          "healstaken": "0",
-          "deaths": "0",
-          "Last10DPS": "28932.69",
-          "Last30DPS": "28932.69",
-          "Last60DPS": "28932.69",
-          "ParryPct": "0",
-          "BlockPct": "0",
-          "powerheal": "0",
-          "kills": "0",
-          "threatstr": "0",
-          "threatdelta": "0"
-      },
-      "Dezero": {
-          "n": "\n",
-          "t": "\t",
-          "name": "Dezero",
-          "Job": "Unknown",
-          "duration": "01:28",
-          "DURATION": "88",
-          "damage": "581,268",
-          "damage-m": "0.58",
-          "damage-b": "0.00",
-          "damage-*": "581.27K",
-          "damage%": "8.1%",
-          "dps": "6604.95",
-          "DPS": "6604",
-          "DPS-k": "6.60",
-          "DPS-m": "0.01",
-          "encdps": "6369.39",
-          "ENCDPS": "6369",
-          "ENCDPS-k": "6.37",
-          "ENCDPS-m": "0.01",
-          "isSelf": "false",
-          "hits": "265",
-          "crithits": "0",
-          "crithit%": "0.0",
-          "enchps": "0.00",
-          "hps": "0.00",
-          "ENCHPS": "0",
-          "ENCHPS-k": "0.00",
-          "healed": "0",
-          "healed%": "0.00",
-          "OverHealPct": "0",
-          "tohit": "100.00",
-          "TOHIT": "100.00",
-          "misses": "0",
-          "hitfailed": "0",
-          "swings": "265",
-          "maxhit": "Fatal Blade",
-          "MAXHIT": "Fatal Blade-37753",
-          "maxhitname": "Fatal Blade",
-          "maxhitvalue": "37753",
-          "damagetaken": "0",
-          "healstaken": "0",
-          "deaths": "0",
-          "Last10DPS": "6604.95",
-          "Last30DPS": "6604.95",
-          "Last60DPS": "6604.95",
-          "ParryPct": "0",
-          "BlockPct": "0",
-          "powerheal": "0",
-          "kills": "0",
-          "threatstr": "0",
-          "threatdelta": "0"
-      },
-      "Onezblade": {
-          "n": "\n",
-          "t": "\t",
-          "name": "Onezblade",
-          "Job": "Unknown",
-          "duration": "01:24",
-          "DURATION": "84",
-          "damage": "432,935",
-          "damage-m": "0.43",
-          "damage-b": "0.00",
-          "damage-*": "432.94K",
-          "damage%": "6.1%",
-          "dps": "5117.66",
-          "DPS": "5117",
-          "DPS-k": "5.12",
-          "DPS-m": "0.01",
-          "encdps": "4743.99",
-          "ENCDPS": "4743",
-          "ENCDPS-k": "4.74",
-          "ENCDPS-m": "0.00",
-          "isSelf": "false",
-          "hits": "146",
-          "crithits": "0",
-          "crithit%": "0.0",
-          "enchps": "0.00",
-          "hps": "0.00",
-          "ENCHPS": "0",
-          "ENCHPS-k": "0.00",
-          "healed": "0",
-          "healed%": "0.00",
-          "OverHealPct": "0",
-          "tohit": "100.00",
-          "TOHIT": "100.00",
-          "misses": "0",
-          "hitfailed": "0",
-          "swings": "146",
-          "maxhit": "Sun Stroke",
-          "MAXHIT": "Sun Stroke-13631",
-          "maxhitname": "Sun Stroke",
-          "maxhitvalue": "13631",
-          "damagetaken": "0",
-          "healstaken": "0",
-          "deaths": "0",
-          "Last10DPS": "5117.66",
-          "Last30DPS": "5117.66",
-          "Last60DPS": "5117.66",
-          "ParryPct": "0",
-          "BlockPct": "0",
-          "powerheal": "0",
-          "kills": "0",
-          "threatstr": "0",
-          "threatdelta": "0"
-      },
-      "Makotomakimura": {
-          "n": "\n",
-          "t": "\t",
-          "name": "Makotomakimura",
-          "Job": "Unknown",
-          "duration": "01:26",
-          "DURATION": "86",
-          "damage": "278,669",
-          "damage-m": "0.28",
-          "damage-b": "0.00",
-          "damage-*": "278.67K",
-          "damage%": "3.9%",
-          "dps": "3239.95",
-          "DPS": "3239",
-          "DPS-k": "3.24",
-          "DPS-m": "0.00",
-          "encdps": "3053.59",
-          "ENCDPS": "3053",
-          "ENCDPS-k": "3.05",
-          "ENCDPS-m": "0.00",
-          "isSelf": "false",
-          "hits": "111",
-          "crithits": "0",
-          "crithit%": "0.0",
-          "enchps": "0.00",
-          "hps": "0.00",
-          "ENCHPS": "0",
-          "ENCHPS-k": "0.00",
-          "healed": "0",
-          "healed%": "0.00",
-          "OverHealPct": "0",
-          "tohit": "100.00",
-          "TOHIT": "100.00",
-          "misses": "0",
-          "hitfailed": "0",
-          "swings": "111",
-          "maxhit": "Gubong's Explosive Rage",
-          "MAXHIT": "Gubong's Explosive Rage-26699",
-          "maxhitname": "Gubong's Explosive Rage",
-          "maxhitvalue": "26699",
-          "damagetaken": "0",
-          "healstaken": "0",
-          "deaths": "0",
-          "Last10DPS": "3239.95",
-          "Last30DPS": "3239.95",
-          "Last60DPS": "3239.95",
-          "ParryPct": "0",
-          "BlockPct": "0",
-          "powerheal": "0",
-          "kills": "0",
-          "threatstr": "0",
-          "threatdelta": "0"
-      },
-      "H GkomenaTouKaneki": {
-          "n": "\n",
-          "t": "\t",
-          "name": "H GkomenaTouKaneki",
-          "Job": "Unknown",
-          "duration": "01:29",
-          "DURATION": "89",
-          "damage": "263,155",
-          "damage-m": "0.26",
-          "damage-b": "0.00",
-          "damage-*": "263.16K",
-          "damage%": "3.7%",
-          "dps": "2928.31",
-          "DPS": "2928",
-          "DPS-k": "2.93",
-          "DPS-m": "0.00",
-          "encdps": "2883.59",
-          "ENCDPS": "2883",
-          "ENCDPS-k": "2.88",
-          "ENCDPS-m": "0.00",
-          "isSelf": "false",
-          "hits": "180",
-          "crithits": "0",
-          "crithit%": "0.0",
-          "enchps": "0.00",
-          "hps": "0.00",
-          "ENCHPS": "0",
-          "ENCHPS-k": "0.00",
-          "healed": "0",
-          "healed%": "0.00",
-          "OverHealPct": "0",
-          "tohit": "100.00",
-          "TOHIT": "100.00",
-          "misses": "0",
-          "hitfailed": "0",
-          "swings": "180",
-          "maxhit": "Dual Dragons",
-          "MAXHIT": "Dual Dragons-5858",
-          "maxhitname": "Dual Dragons",
-          "maxhitvalue": "5858",
-          "damagetaken": "0",
-          "healstaken": "0",
-          "deaths": "0",
-          "Last10DPS": "2928.31",
-          "Last30DPS": "2928.31",
-          "Last60DPS": "2928.31",
-          "ParryPct": "0",
-          "BlockPct": "0",
-          "powerheal": "0",
-          "kills": "0",
-          "threatstr": "0",
-          "threatdelta": "0"
-      }
-  }
-})
