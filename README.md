@@ -95,7 +95,7 @@ If you don't want to use ACT, or prefer to go with something easier to set up, y
 ## Contributing
 
 I'm too lazy to write a contribution guidelines doc, feel free to submit PRs or issues if you'd like. This project will always be free.
-If you don't want to submit an issue, join our [Discord](https://discord.gg/cEc3wKsUb4).
+If you don't want to submit an issue, join our [Discord](https://discord.gg/Hztf5UTGkm).
 
 ### Building from source
 
