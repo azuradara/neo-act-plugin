@@ -137,7 +137,7 @@ function updateDPSMeter(data) {
     
     playerDiv.classList.add('player')
 
-    if (combatant.name === 'You') {
+    if (combatant.name === 'You' || combatant.isSelf === 'true') {
       playerDiv.classList.add('you')
     }
 
