@@ -198,7 +198,8 @@ function updateDPSMeter(data) {
       combatant.name === 'NellanFM' ||
       combatant.name === 'Eve' ||
       combatant.name === 'Whoah' ||
-      combatant.name === 'renless';
+      combatant.name === 'renless' ||
+      combatant.name === 'Geaven';
 
     if ((combatant.name === 'You' || combatant.isSelf === 'true') && !hasCustomGradient) {
       playerDiv.classList.add('you')
@@ -246,6 +247,10 @@ function updateDPSMeter(data) {
       gradientBg.classList.add('renless-gradient')
     }
 
+    if (combatant.name === 'Geaven') {
+      gradientBg.style.background = '#2980B9';
+    }
+
     gradientBg.style.clipPath = `inset(0 ${100 - widthPercentage}% 0 0)`
     
     let barContent = document.createElement('div')
@@ -260,6 +265,10 @@ function updateDPSMeter(data) {
       name.innerHTML = combatant.name + ' <img src="./eve.svg" style="width: 1rem; height: 1rem; vertical-align: middle;" />'
     } else if (combatant.name === 'NellanFM') {
       name.innerHTML = combatant.name + ' <img src="./nellan.webp" style="width: 1rem; height: 1rem; vertical-align: middle;" />'
+    } else if (combatant.name === 'Feomatharia') {
+      name.innerHTML = combatant.name + ' <img src="./wizard.png" style="width: 1rem; height: 1rem; vertical-align: middle;" />'
+    } else if (combatant.name === 'Geaven') {
+      name.innerHTML = combatant.name + ' <img src="./geaven.png" style="width: 1rem; height: 1rem; vertical-align: middle;" />'
     } else {
       name.textContent = combatant.name
     }
