@@ -35,6 +35,12 @@ document.addEventListener('DOMContentLoaded', function () {
       animation: gradientFlow 6s ease infinite;
       opacity: 0.9;
     }
+    .coca-cola-gradient {
+      background: url('./cola-bg.jpg') !important;
+      background-size: cover !important;
+      background-position: center !important;
+      opacity: 0.9;
+    }
     .pink-gradient {
       background: linear-gradient(-45deg, #ff69b4, #ff1493, #ff007f, #db7093, #ffc0cb) !important;
       background-size: 200% 200% !important;
@@ -94,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
   layer.connect();
   layer.on('data', updateDPSMeter);
 
-  setupZoomControls()
+  setupZoomControls();
 })
 
 let popperInstance = null
@@ -199,7 +205,8 @@ function updateDPSMeter(data) {
       combatant.name === 'Eve' ||
       combatant.name === 'Whoah' ||
       combatant.name === 'renless' ||
-      combatant.name === 'Geaven';
+      combatant.name === 'Geaven' ||
+      combatant.name === 'Coca Cola';
 
     if ((combatant.name === 'You' || combatant.isSelf === 'true') && !hasCustomGradient) {
       playerDiv.classList.add('you')
@@ -251,6 +258,10 @@ function updateDPSMeter(data) {
       gradientBg.style.background = '#2980B9';
     }
 
+    if (combatant.name === 'Coca Cola') {
+      gradientBg.classList.add('coca-cola-gradient');
+    }
+
     gradientBg.style.clipPath = `inset(0 ${100 - widthPercentage}% 0 0)`
     
     let barContent = document.createElement('div')
@@ -269,6 +280,8 @@ function updateDPSMeter(data) {
       name.innerHTML = combatant.name + ' <img src="./wizard.png" style="width: 1rem; height: 1rem; vertical-align: middle;" />'
     } else if (combatant.name === 'Geaven') {
       name.innerHTML = combatant.name + ' <img src="./geaven.png" style="width: 1rem; height: 1rem; vertical-align: middle;" />'
+    } else if (combatant.name === 'Coca Cola') {
+      name.innerHTML = '<img src="./cola.png" style="height: 1rem; vertical-align: middle;" />'
     } else {
       name.textContent = combatant.name
     }
