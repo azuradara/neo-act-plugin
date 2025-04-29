@@ -206,7 +206,8 @@ function updateDPSMeter(data) {
       combatant.name === 'Whoah' ||
       combatant.name === 'renless' ||
       combatant.name === 'Geaven' ||
-      combatant.name === 'Coca Cola';
+      combatant.name === 'Coca Cola' ||
+      combatant.name === 'neen';
 
     if ((combatant.name === 'You' || combatant.isSelf === 'true') && !hasCustomGradient) {
       playerDiv.classList.add('you')
@@ -262,6 +263,10 @@ function updateDPSMeter(data) {
       gradientBg.classList.add('coca-cola-gradient');
     }
 
+    if (combatant.name === 'neen') {
+      gradientBg.style.background = '#FF2134';
+    }
+
     gradientBg.style.clipPath = `inset(0 ${100 - widthPercentage}% 0 0)`
     
     let barContent = document.createElement('div')
@@ -282,6 +287,8 @@ function updateDPSMeter(data) {
       name.innerHTML = combatant.name + ' <img src="./geaven.png" style="width: 1rem; height: 1rem; vertical-align: middle;" />'
     } else if (combatant.name === 'Coca Cola') {
       name.innerHTML = '<img src="./cola.png" style="height: 1rem; vertical-align: middle;" />'
+    } else if (combatant.name === 'neen') {
+      name.innerHTML = combatant.name + ' <img src="./neen.png" style="width: 1rem; height: 1rem; vertical-align: middle;" />'
     } else {
       name.textContent = combatant.name
     }
