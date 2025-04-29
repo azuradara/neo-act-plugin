@@ -1,9 +1,10 @@
 # Blade & Soul NEO - ACT Plugin & DPS Meter
 
 > [!NOTE]
-> [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/azuradara)
->
+> This project is now archived. If you're looking for a DPS meter, check out the new standalone version at https://discord.gg/Hztf5UTGkm.
+> 
 > If you find this plugin helpful, please consider supporting its development with a small donation. Every contribution helps maintain and improve the plugin!
+> [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/azuradara)
 
 This is an [ACT](https://advancedcombattracker.com/home.php) plugin for Blade & Soul NEO that parses combat logs and sends them to ACT for processing. It also includes an overlay that you can use to display your DPS in-game.
 
